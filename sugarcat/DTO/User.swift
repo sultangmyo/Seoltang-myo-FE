@@ -15,7 +15,7 @@ struct CreateUserRequestDTO: Codable {
     let notificationEnabled: Bool
 }
 // response dto
-struct CreateUserResponseDTO: Codable {
+struct MessageResponseDTO: Codable {
     let message: String
 }
 
@@ -30,3 +30,21 @@ struct UserInfoResponseDTO: Codable {
 struct FamilyMemberDTO: Codable {
     let nickname: String
 }
+
+// MARK: - 7.2 사용자 수정
+// request dto
+struct UpdateUserRequestDTO: Codable {
+    let nickname: String
+}
+
+// response dto
+// MessageResponseDTO를 재활용 합니다
+
+//MARK: - 사용자 삭제
+// response dto
+// MessageResponseDTO를 재활용 합니다
+
+// MARK: - 사용자 알림 정보 조회
+// 알림 정보 api가 만들어지면 코드를 추가합니다.
+
+
