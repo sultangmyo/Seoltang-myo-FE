@@ -22,10 +22,6 @@ struct BloodSugarCreateRequestDTO: Codable {
     let sugarValue: Int        // 혈당 수치
 }
 
-struct BloodSugarCreateResponseDTO: Codable {
-    let message: String // "혈당 기록이 저장되었습니다."
-}
-
 // MARK: - FETCH (GET 요청)
 struct BloodSugarFetchResponseDTO: Codable {
     let records: [BloodSugarRecordDTO] // 혈당 기록 배열
@@ -49,14 +45,12 @@ struct BloodSugarUpdateRequestDTO: Codable {
     let sugarValue: Int        // 혈당 수치
 }
 
-struct BloodSugarUpdateResponseDTO: Codable {
-    let message: String // "혈당 정보가 수정되었습니다."
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
 
 // MARK: - DELETE (DELETE 요청)
-struct BloodSugarDeleteResponseDTO: Codable {
-    let message: String // "혈당 기록이 삭제되었습니다."
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
 
 // MARK: - WEEK REPORT (GET 요청)
 struct BloodSugarWeekReportResponseDTO: Codable {
