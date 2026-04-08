@@ -14,9 +14,8 @@ struct InsulinCreateRequestDTO: Codable {
     let recordDate: String   // 기록 일자 (ex: 2026-04-08)
 }
 
-struct InsulinCreateResponseDTO: Codable {
-    let message: String // "인슐린 투여 기록이 저장되었습니다."
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
 
 // MARK: - FETCH (GET 요청)
 struct InsulinFetchResponseDTO: Codable {
