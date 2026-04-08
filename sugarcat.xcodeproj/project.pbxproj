@@ -10,9 +10,33 @@
 		12EB41B72F83DDB9000CD2BF /* sugarcat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sugarcat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1271E7702F8631D1003830FE /* Exceptions for "sugarcat" folder in "sugarcat" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DTO/Cat.swift,
+			);
+			target = 12EB41B62F83DDB9000CD2BF /* sugarcat */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		1271E7712F8631D1003830FE /* Exceptions for "sugarcat" folder in "Copy Bundle Resources" phase from "sugarcat" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 12EB41B52F83DDB9000CD2BF /* Resources */;
+			membershipExceptions = (
+				DTO/Cat.swift,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		12EB41B92F83DDB9000CD2BF /* sugarcat */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1271E7702F8631D1003830FE /* Exceptions for "sugarcat" folder in "sugarcat" target */,
+				1271E7712F8631D1003830FE /* Exceptions for "sugarcat" folder in "Copy Bundle Resources" phase from "sugarcat" target */,
+			);
 			path = sugarcat;
 			sourceTree = "<group>";
 		};
