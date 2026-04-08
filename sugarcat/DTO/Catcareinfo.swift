@@ -24,9 +24,8 @@ struct CatCareSettingOnboardingRequestDTO: Codable {
     let insulin: CareSettingDTO      // 인슐린 투약 설정
 }
 
-struct CatCareSettingOnboardingResponseDTO: Codable {
-    let message: String // "고양이 관리 정보가 저장되었습니다."
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
 
 // MARK: - FETCH (GET 요청)
 // 식사 / 혈당 / 인슐린 조회 응답 구조가 동일해서 공통 DTO 사용
@@ -40,14 +39,5 @@ typealias CatCareMealUpdateRequestDTO       = CareSettingDTO  // 식사 수정
 typealias CatCareBloodSugarUpdateRequestDTO = CareSettingDTO  // 혈당 체크 수정
 typealias CatCareInsulinUpdateRequestDTO    = CareSettingDTO  // 인슐린 수정
 
-struct CatCareMealUpdateResponseDTO: Codable {
-    let message: String // "식사 관리 설정이 수정되었습니다."
-}
-
-struct CatCareBloodSugarUpdateResponseDTO: Codable {
-    let message: String // "혈당 체크 설정이 수정되었습니다."
-}
-
-struct CatCareInsulinUpdateResponseDTO: Codable {
-    let message: String // "인슐린 관리 설정이 수정되었습니다."
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
