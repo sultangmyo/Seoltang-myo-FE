@@ -8,13 +8,6 @@ type: Feature
 
 ---
 
----
-name: ✨ Feature
-about: 새로운 기능 추가
-title: "[FEATURE] "
-labels: feature
-assignees: ''
----
 ## ✔️  Check-list
 - [ ] Label을 지정해 주세요.
 
