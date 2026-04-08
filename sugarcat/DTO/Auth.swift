@@ -32,3 +32,11 @@ struct KakaoLoginResponseDTO: Codable {
     let refreshToken: String
     let isNewUser: Bool
 }
+
+// MARK: - JWT Refresh
+
+// 1.3 jwt 재발급
+struct RefreshTokenResponseDTO: Codable {
+    let accessToken: String
+    let userId: String
+}
