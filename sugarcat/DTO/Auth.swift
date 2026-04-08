@@ -19,3 +19,16 @@ struct AppleLoginResponseDTO: Codable {
     let isNewUser: Bool
 }
 
+// MARK: -
+
+// 1.2 kakao 소셜로그인 request dto
+struct KakaoLoginRequestDTO: Codable {
+    let accessToken: String
+}
+
+// 1.2 kakao 소셜로그인 response dto
+struct KakaoLoginResponseDTO: Codable {
+    let accessToken: String
+    let refreshToken: String
+    let isNewUser: Bool
+}
