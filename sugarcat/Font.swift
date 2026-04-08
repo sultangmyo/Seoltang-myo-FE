@@ -41,7 +41,7 @@ struct Body1SBModifier: ViewModifier {
     }
 }
 
-struct Body1MBModifier: ViewModifier {
+struct Body1MModifier: ViewModifier {
     @ScaledMetric(relativeTo: .body) private var fontSize: CGFloat = 20
 
     func body(content: Content) -> some View {
@@ -127,8 +127,43 @@ extension View {
     func mainTitleB() -> some View {
         modifier(MainTitleBModifier())
     }
-
     func subTitle1B() -> some View {
         modifier(SubTitle1BModifier())
+    }
+    func subTitle2B() -> some View {
+        modifier(SubTitle2BModifier())
+    }
+    func body1SB() -> some View {
+        modifier(Body1SBModifier())
+    }
+    func body1M() -> some View {
+        modifier(Body1MModifier())
+    }
+    func body2R() -> some View {
+        modifier(Body2RModifier())
+    }
+    func caption1SB() -> some View {
+        modifier(Caption1SBModifier())
+    }
+    func caption2R() -> some View {
+        modifier(Caption2RModifier())
+    }
+    func caption3R() -> some View {
+        modifier(Caption3RModifier())
+    }
+    func graphBarTitle() -> some View {
+        modifier(GraphBarTitleModifier())
+    }
+    func buttontitle1() -> some View {
+        modifier(Buttontitle1Modifier())
+    }
+    func buttontitle2() -> some View {
+        modifier(Buttontitle2Modifier())
+    }
+    func numberCaption1() -> some View {
+        modifier(NumberCaption1Modifier())
+    }
+    func numberCaption2() -> some View {
+        modifier(NumberCaption2Modifier())
     }
 }
