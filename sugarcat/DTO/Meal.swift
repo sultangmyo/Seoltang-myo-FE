@@ -25,9 +25,8 @@ struct MealCreateRequestDTO: Codable {
     }
 }
 
-struct MealCreateResponseDTO: Codable {
-    let message: String // "식사 기록이 저장되었습니다"
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
 
 // MARK: - FETCH (GET 요청)
 struct MealFetchResponseDTO: Codable {
@@ -55,6 +54,5 @@ struct MealUpdateRequestDTO: Codable {
     }
 }
 
-struct MealUpdateResponseDTO: Codable {
-    let message: String // "식사 기록이 수정되었습니다"
-}
+// responseDTO
+// MessageResponseDTO를 재활용 합니다
