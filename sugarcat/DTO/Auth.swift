@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - apple 소셜로그인
 // 1.1 apple 소셜로그인 request dto
 struct AppleLoginRequestDTO: Codable {
     let identityToken: String
@@ -19,7 +20,7 @@ struct AppleLoginResponseDTO: Codable {
     let isNewUser: Bool
 }
 
-// MARK: -
+// MARK: -kakao 소셜로그인
 
 // 1.2 kakao 소셜로그인 request dto
 struct KakaoLoginRequestDTO: Codable {
