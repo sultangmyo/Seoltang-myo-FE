@@ -33,6 +33,14 @@ struct SubTitle2BModifier: ViewModifier {
     }
 }
 
+struct BodyEmphasizedModifier: ViewModifier {
+    @ScaledMetric(relativeTo: .largeTitle) private var fontSize: CGFloat = 17
+
+    func body(content: Content) -> some View {
+        content.font(.system(size: fontSize, weight: .semibold, design: .default))
+    }
+}
+
 struct Body1SBModifier: ViewModifier {
     @ScaledMetric(relativeTo: .body) private var fontSize: CGFloat = 20
 
@@ -132,6 +140,9 @@ extension View {
     }
     func subTitle2B() -> some View {
         modifier(SubTitle2BModifier())
+    }
+    func BodyEmphasized() -> some View {
+        modifier(BodyEmphasizedModifier())
     }
     func body1SB() -> some View {
         modifier(Body1SBModifier())

@@ -16,25 +16,12 @@ struct HomeView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            headerSection
+            NavigationHeaderView(title: viewModel.titleText)
             Spacer()
         }
         .background(Color.white)
         .task {
             await viewModel.loadHeader()
-        }
-    }
-}
-
-private extension HomeView {
-    
-    var headerSection: some View {
-        VStack(spacing: 0) {
-            Text(viewModel.titleText)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 11)
-            
-            Divider()
         }
     }
 }
