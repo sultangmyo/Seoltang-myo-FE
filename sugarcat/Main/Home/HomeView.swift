@@ -16,8 +16,14 @@ struct HomeView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            // 네비게이션
             NavigationHeaderView(title: viewModel.titleText)
             Spacer()
+            //그래프
+            
+            //인슐린 투여기록
+            InsulinChecklistSectionView(insulinService: MockInsulinService())
+
         }
         .background(Color.white)
         .task {
