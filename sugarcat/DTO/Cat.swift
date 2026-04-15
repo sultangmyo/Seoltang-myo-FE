@@ -25,7 +25,7 @@ struct CreateCatResponseDTO: Codable {
 struct CatInfoResponseDTO: Codable {
     let name: String
     let birthDate: String?
-    let diagnosisDate: String
+    let diagnosedDate: String
 }
 
 // MARK: - 7.3 고양이 기본정보 수정

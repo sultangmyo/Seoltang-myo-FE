@@ -35,13 +35,13 @@ final class HomeHeaderViewModel: ObservableObject {
             let catInfo = try await catService.fetchCatInfo(userId: userId)
             
             // 3. String → Date 변환
-            guard let diagnosisDate = DateParser.parse(catInfo.diagnosisDate) else {
+            guard let diagnosedDate = DateParser.parse(catInfo.diagnosedDate) else {
                 titleText = "날짜 오류"
                 return
             }
             
             // 4. D+ 계산
-            let dDayText = DDayFormatter.makeDDayText(from: diagnosisDate)
+            let dDayText = DDayFormatter.makeDDayText(from: diagnosedDate)
             
             // 5. 최종 문자열 조합
             titleText = "\(catInfo.name) \(dDayText)"

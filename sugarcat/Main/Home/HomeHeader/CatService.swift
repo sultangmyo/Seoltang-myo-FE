@@ -19,7 +19,7 @@ final class MockCatService: CatServiceProtocol {
         return CatInfoResponseDTO(
             name: "나비",
             birthDate: nil,
-            diagnosisDate: "2025-01-01"
+            diagnosedDate: "2025-01-01"
         )
     }
 }
