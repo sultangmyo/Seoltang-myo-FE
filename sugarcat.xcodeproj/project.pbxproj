@@ -29,6 +29,11 @@
 			path = sugarcat;
 			sourceTree = "<group>";
 		};
+		DB7277A62F8D50F100E2B970 /* OnBording */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OnBording;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +52,7 @@
 			children = (
 				12EB41B92F83DDB9000CD2BF /* sugarcat */,
 				12EB41B82F83DDB9000CD2BF /* Products */,
+				DB7277A62F8D50F100E2B970 /* OnBording */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +81,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				12EB41B92F83DDB9000CD2BF /* sugarcat */,
+				DB7277A62F8D50F100E2B970 /* OnBording */,
 			);
 			name = sugarcat;
 			packageProductDependencies = (
