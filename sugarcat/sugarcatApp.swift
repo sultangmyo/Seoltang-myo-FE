@@ -12,7 +12,7 @@ struct sugarcatApp: App {
         
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            NicknameInputView()
         }
     }
 }
