@@ -10,14 +10,32 @@ import Foundation
 // MARK: - 2.2 고양이 생성
 // requestdto
 struct CreateCatRequestDTO: Codable {
+    let cat: CatInfo
+    let meal: ScheduleGroup
+    let bloodSugar: ScheduleGroup
+    let insulin: ScheduleGroup
+}
+
+struct CatInfo: Codable {
     let name: String
-    let birthDate: String?       // null이 가능한 변수 옵셔널 처리
+    let birthDate: String?
     let diagnosedDate: String
+    let mealCount: Int
+    let bloodsugarCount: Int
+    let insulinCount: Int
+}
+
+struct ScheduleGroup: Codable {
+    let schedules: [Schedule]
+}
+
+struct Schedule: Codable {
+    let sequence: Int?
+    let time: String?
 }
 // response dto
-struct CreateCatResponseDTO: Codable {
-    let catId: String
-}
+// MessageResponseDTO를 재활용 합니다
+
 
 // MARK: - 7.2 고양이 기본정보 조회
 
