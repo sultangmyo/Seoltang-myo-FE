@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: - 2.1 사용자 생성
 // request dto
-struct CreateUserRequestDTO: Codable {
-    let nickname: String
-    let catId: String
-    let notificationEnabled: Bool
-}
+//struct CreateUserRequestDTO: Codable {
+//    let nickname: String
+//    let catId: String
+//    let notificationEnabled: Bool
+//}
 // response dto
 struct MessageResponseDTO: Codable {
     let message: String
