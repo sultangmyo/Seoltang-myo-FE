@@ -14,7 +14,8 @@ enum OnboardingPage: Hashable {
     case catSetup
     // 고양이 기본 정보 입력 뷰
     case catProfile
-    // 추가될 페이지들
+    // 고양이 초대 입력 뷰
+    case catInvite
 }
 
 struct OnBoardingContainerView: View {
@@ -28,9 +29,12 @@ struct OnBoardingContainerView: View {
                     case .nickname:
                         NicknameInputView(path: $path)
                     case .catSetup:
-                        CatSetupView()
+                        CatSetupView(path: $path)
                     case .catProfile:
                         CatInfoInputView()
+                    case .catInvite:
+                        CatInfoInputView()
+                    }
                     }
                 }
         }
