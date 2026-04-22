@@ -39,4 +39,4 @@ struct OnBoardingContainerView: View {
                 }
         }
     }
-}
+
