@@ -11,6 +11,7 @@ struct NicknameInputView: View {
     // ViewModel 인스턴스 생성
     @StateObject private var viewModel = NicknameViewModel()
     @FocusState private var isFocused: Bool
+    @Binding var path: NavigationPath
     
     
     var body: some View {
@@ -78,7 +79,7 @@ struct NicknameInputView: View {
         Task {
             let success = await viewModel.submitNickname()
             if success {
-                // 성공 시 다음 화면으로 이동하는 로직 추가
+                path.append(OnboardingPage.catSetup)
             }
         }
     }
@@ -103,7 +104,7 @@ struct NicknameInputView: View {
 
 struct NicknameInputView_Previews: PreviewProvider {
     static var previews: some View {
-        NicknameInputView()
+        NicknameInputView(path: .constant(NavigationPath()))
     }
 }
 
