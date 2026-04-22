@@ -57,22 +57,13 @@ struct NicknameInputView: View {
             Spacer()
             
             // 3. 다음 버튼
-            Button(action: executeSubmit) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(viewModel.isValidNickname ? Color("primary0") : Color("gray1"))
-
-                                if viewModel.isLoading {
-                                    ProgressView().tint(Color("textbg2"))
-                                } else {
-                                    Text("다음")
-                                        .buttontitle1()
-                                        .foregroundColor(Color("textbg2"))
-                                }
-                            }
-                            .frame(height: 68)
-                            .padding(.horizontal, 16)
-                        }
+            Button("다음") {
+                executeSubmit()
+            }
+            .buttonStyle(OnboardingButtonStyle(
+                isValid: viewModel.isValidNickname,
+                isLoading: viewModel.isLoading
+            ))
                         .disabled(!viewModel.isValidNickname || viewModel.isLoading)
                         .padding(.bottom, 40)
                     }
@@ -96,7 +87,11 @@ struct NicknameInputView: View {
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("환영합니다!").mainTitleB().foregroundColor(Color("textbg1"))
-            Text("당신의 닉네임을").mainTitleB().foregroundColor(Color("primary0"))
+            (Text("당신의 닉네임")
+                        .foregroundColor(Color("primary0")) +
+                     Text("을")
+                        .foregroundColor(Color("textbg1")))
+                        .mainTitleB()
             Text("입력해주세요").mainTitleB().foregroundColor(Color("textbg1"))
         }
         .padding(.top, 70)
