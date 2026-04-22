@@ -33,7 +33,7 @@ struct OnBoardingContainerView: View {
                     case .catProfile:
                         CatInfoInputView()
                     case .catInvite:
-                        CatInfoInputView()
+                        CatInviteView()
                     }
                     }
                 }
