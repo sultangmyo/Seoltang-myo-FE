@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct BloodSugarView: View {
-    @State private var selectedItem: BloodSugarRecordItem?
+    //네비게이션
+    @State private var path = NavigationPath()
     
     @StateObject private var viewModel = BloodSugarViewModel(
         bloodSugarService: MockBloodSugarService()
     )
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             //네비게이션 헤더
             VStack{
                 NavigationHeaderView(title: "혈당 기록")
@@ -38,33 +39,12 @@ struct BloodSugarView: View {
             .task {
                 await viewModel.loadRecords()
             }
-            .sheet(item: $selectedItem) { item in
+            .navigationDestination(for: BloodSugarRecordItem.self) { item in
                 BloodSugarInputView(
                     item: item,
-                    selectedDate: viewModel.selectedDate
-                ) { value, time in
-                    Task {
-                        if let value {
-                            if item.hasRecord {
-                                await viewModel.updateRecord(
-                                    sequence: item.sequence,
-                                    sugarValue: value,
-                                    recordedTime: time
-                                )
-                            } else {
-                                await viewModel.createRecord(
-                                    sequence: item.sequence,
-                                    sugarValue: value,
-                                    recordedTime: time
-                                )
-                            }
-                        } else {
-                            if item.hasRecord {
-                                await viewModel.deleteRecord(sequence: item.sequence)
-                            }
-                        }
-                    }
-                }
+                    selectedDate: viewModel.selectedDate,
+                    viewModel: viewModel
+                )
             }
         }
     }
@@ -94,7 +74,7 @@ private extension BloodSugarView {
         VStack {
             ForEach(viewModel.items) { item in
                 Button {
-                    selectedItem = item
+                    path.append(item)
                 } label: {
                     BloodSugarRecordButtonView(item: item)
                 }

@@ -11,7 +11,7 @@ struct BloodSugarInputView: View {
     
     let item: BloodSugarRecordItem
     let selectedDate: Date
-    let onComplete: (Int?, Date) -> Void
+    @ObservedObject var viewModel: BloodSugarViewModel
     
     @Environment(\.dismiss) private var dismiss
     
@@ -21,11 +21,11 @@ struct BloodSugarInputView: View {
     init(
         item: BloodSugarRecordItem,
         selectedDate: Date,
-        onComplete: @escaping (Int?, Date) -> Void
+        viewModel: BloodSugarViewModel
     ) {
         self.item = item
         self.selectedDate = selectedDate
-        self.onComplete = onComplete
+        self.viewModel = viewModel
         _sugarText = State(initialValue: item.sugarValue.map { String($0) } ?? "")
     }
     
@@ -37,13 +37,32 @@ struct BloodSugarInputView: View {
             TextField("혈당 입력", text: $sugarText)
                 .keyboardType(.numberPad)
             
-            Button("완료") {
+            Button("입력 완료") {
                 let trimmed = sugarText.trimmingCharacters(in: .whitespacesAndNewlines)
                 let value = Int(trimmed)
                 let time = selectedTime
-                
-                onComplete(value, time)
-                dismiss()
+
+                Task {
+                    if let value {
+                        if item.hasRecord {
+                            await viewModel.updateRecord(
+                                sequence: item.sequence,
+                                sugarValue: value,
+                                recordedTime: time
+                            )
+                        } else {
+                            await viewModel.createRecord(
+                                sequence: item.sequence,
+                                sugarValue: value,
+                                recordedTime: time
+                            )
+                        }
+                    } else if item.hasRecord {
+                        await viewModel.deleteRecord(sequence: item.sequence)
+                    }
+
+                    dismiss()
+                }
             }
             
             Spacer()
@@ -60,6 +79,9 @@ struct BloodSugarInputView: View {
             sugarValue: nil,
             sugarStatus: nil
         ),
-        selectedDate: Date()
-    ) { _, _ in }
+        selectedDate: Date(),
+        viewModel: BloodSugarViewModel(
+            bloodSugarService: MockBloodSugarService()
+        )
+    )
 }
