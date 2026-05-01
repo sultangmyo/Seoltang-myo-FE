@@ -43,9 +43,13 @@ private extension BloodSugarRecordButtonView {
     var recordedButton: some View {
         
         VStack(alignment: .leading) {
-            Text(item.recordTime ?? "")
-                .subTitle2B()
-                .foregroundColor(.textbg2)
+            Text(
+                item.recordTime.map {
+                    DateStringFormatter.displayTime(from: $0)
+                } ?? ""
+            )
+            .subTitle2B()
+            .foregroundColor(.textbg2)
             
             HStack(alignment: .firstTextBaseline){
                 Spacer()

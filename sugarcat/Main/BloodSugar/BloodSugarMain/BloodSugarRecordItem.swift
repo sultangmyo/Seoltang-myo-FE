@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct BloodSugarRecordItem: Identifiable {
+struct BloodSugarRecordItem: Identifiable, Hashable {
     
     // sequence를 고유 식별자로 사용
     var id: Int { sequence }
