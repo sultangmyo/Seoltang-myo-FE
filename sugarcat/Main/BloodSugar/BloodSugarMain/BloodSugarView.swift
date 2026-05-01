@@ -21,7 +21,6 @@ struct BloodSugarView: View {
             VStack{
                 NavigationHeaderView(title: "혈당 기록")
             }
-            .padding(.bottom, 10)
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("오늘의 혈당을 \n기록해주세요")
@@ -33,6 +32,7 @@ struct BloodSugarView: View {
                     recordButtonList
                 }
                 .padding(.horizontal, 16)
+                .padding(.top, 10)
             }
             .background(Color.white)
 
