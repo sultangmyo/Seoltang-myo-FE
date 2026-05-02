@@ -53,6 +53,7 @@ private extension MealRecordButtonView {
                     .subTitle2B()
                     .foregroundColor(recordColorText)
                 recordIcon
+                    .renderingMode(.original)
             }
         }
         .padding(16)
