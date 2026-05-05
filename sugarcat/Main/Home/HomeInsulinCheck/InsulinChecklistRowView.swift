@@ -25,6 +25,7 @@ struct InsulinChecklistRowView: View {
         HStack (alignment: .top){
 
             checkButton
+                .padding(.top, 2)
 
             textSection
             
