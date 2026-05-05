@@ -79,6 +79,7 @@ private extension BloodSugarView {
                     BloodSugarRecordButtonView(item: item)
                 }
                 .buttonStyle(.plain)
+                .padding(.bottom, 10)
             }
         }
     }

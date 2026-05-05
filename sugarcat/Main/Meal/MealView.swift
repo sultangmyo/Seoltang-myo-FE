@@ -79,6 +79,7 @@ private extension MealView {
                     MealRecordButtonView(item: item)
                 }
                 .buttonStyle(.plain)
+                .padding(.bottom, 10)
             }
         }
     }
