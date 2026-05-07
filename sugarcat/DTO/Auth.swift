@@ -39,3 +39,15 @@ struct RefreshTokenResponseDTO: Codable {
     let accessToken: String
     let userId: String
 }
+
+// MARK: -온보딩 완료
+
+// 1.4.1 온보딩 완료 여부 검사
+struct OnboardingCheckResponseDTO: Codable {
+    let onboardingCompleted: Bool
+}
+// 1.4.2 온보딩 완료 여부 저장
+struct OnboardingSaveResponseDTO: Codable {
+    let onboardingCompleted: Bool
+    let message: String
+}
