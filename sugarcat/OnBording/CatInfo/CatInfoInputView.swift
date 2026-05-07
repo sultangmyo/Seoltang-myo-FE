@@ -97,7 +97,6 @@ struct CatInfoInputView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color("gray2"), lineWidth: 1)
         )
-        // 이 overlay 부분이 추가/수정되었습니다.
         .overlay {
             if !isDisabled {
                 DatePicker("", selection: date, in: ...Date(), displayedComponents: .date)
