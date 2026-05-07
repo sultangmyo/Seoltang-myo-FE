@@ -8,6 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 
+
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     // 부모 뷰에서 온보딩 다음 단계로 넘기기 위한 액션
@@ -107,8 +108,8 @@ struct LoginView: View {
         nextAction()
     }
 }
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView(nextAction: {})
-    }
-}
+//struct LoginView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginView(nextAction: {})
+//    }
+//}
