@@ -19,54 +19,59 @@ struct CatInfoInputView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 32) {
+            NavigationHeaderView(title: "기본 정보 입력")
+            
+            VStack(alignment: .leading, spacing: 32) {
+                
 
-                    // 1. 고양이 이름 (일반 텍스트 입력)
-                    inputSection(title: "고양이 이름") {
-                        inputField(
-                            text: $viewModel.catName,
-                            placeholder: "여기에 이름을 입력해주세요",
-                            isDisabled: false,
-                            field: .catName
-                        )
-                    }
+                // 고양이 이름
+                inputSection(title: "고양이 이름") {
+                    inputField(
+                        text: $viewModel.catName,
+                        placeholder: "여기에 이름을 입력해주세요",
+                        isDisabled: false,
+                        field: .catName
+                    )
+                }
 
-                    // 2. 생년월일 (터치 시 데이트 피커)
-                    inputSection(title: "생년월일") {
-                        dateInputField(
-                            date: $viewModel.birthDate,
-                            placeholder: "0000.00.00",
-                            isDisabled: viewModel.isBirthDateUnknown
-                        )
-                        checkboxRow(
-                            label: "생년월일을 모르겠어요.",
-                            isChecked: $viewModel.isBirthDateUnknown
-                        )
-                    }
+                // 생년월일
+                inputSection(title: "생년월일") {
+                    dateInputField(
+                        date: $viewModel.birthDate,
+                        placeholder: "0000.00.00",
+                        isDisabled: viewModel.isBirthDateUnknown
+                    )
+                    checkboxRow(
+                        label: "생년월일을 모르겠어요.",
+                        isChecked: $viewModel.isBirthDateUnknown
+                    )
+                }
 
-                    // 3. 당뇨 진단 날짜 (터치 시 데이트 피커)
-                    inputSection(title: "당뇨 진단 날짜") {
-                        dateInputField(
-                            date: $viewModel.diagnosedDate,
-                            placeholder: "0000.00.00",
-                            isDisabled: viewModel.isDiagnosedDateUnknown
-                        )
-                        checkboxRow(
-                            label: "진단 일자를 모르겠어요.",
-                            isChecked: $viewModel.isDiagnosedDateUnknown
-                        )
+                // 당뇨 진단 날짜
+                inputSection(title: "당뇨 진단 날짜") {
+                    dateInputField(
+                        date: $viewModel.diagnosedDate,
+                        placeholder: "0000.00.00",
+                        isDisabled: viewModel.isDiagnosedDateUnknown
+                    )
+                    checkboxRow(
+                        label: "진단 일자를 모르겠어요.",
+                        isChecked: $viewModel.isDiagnosedDateUnknown
+                    )
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 24)
+
+            
+            Spacer()
+            Button("다음") {
+                Task {
+                    let success = await viewModel.submit()
+                    if success {
+                        path.append(OnboardingPage.catProfile)
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 24)
-            }
-
-            Spacer()
-
-            // 다음 버튼
-            Button("다음") {
-                path.append(OnboardingPage.catProfile)
             }
             .buttonStyle(OnboardingButtonStyle(
                 isValid: viewModel.isValid,
@@ -75,20 +80,21 @@ struct CatInfoInputView: View {
             .disabled(!viewModel.isValid || viewModel.isLoading)
             .padding(.bottom, 40)
         }
-        .navigationTitle("기본 정보 입력")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
         .background(Color.white)
         .onTapGesture { focusedField = nil }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 
-    // MARK: 날짜 입력 필드
+    
+    //메서드 목록
     @ViewBuilder
     private func dateInputField(date: Binding<Date>, placeholder: String, isDisabled: Bool) -> some View {
         HStack {
             Text(isDisabled ? placeholder : DateStringFormatter.displayDotDate(from: date.wrappedValue))
-                        .caption2R()
-                        .foregroundColor(isDisabled ? Color.gray.opacity(0.4) : Color("textbg1"))
-                    Spacer()
+                .caption2R()
+                .foregroundColor(isDisabled ? Color.gray.opacity(0.4) : Color("textbg1"))
+            Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
@@ -107,8 +113,6 @@ struct CatInfoInputView: View {
         }
     }
 
-
-   
     @ViewBuilder
     private func inputSection(title: String, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: 10) {
