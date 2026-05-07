@@ -199,6 +199,7 @@ private extension BloodSugarInputView {
             }
         }
         .padding(.top, 16)
+        .padding(.horizontal, 16)
         .padding(.bottom, 40)
         .background(.primary0)
     }

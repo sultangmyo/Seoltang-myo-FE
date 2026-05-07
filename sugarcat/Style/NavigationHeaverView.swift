@@ -19,9 +19,6 @@ struct NavigationHeaderView: View {
                 .BodyEmphasized() //폰트 모디파이어 사용.
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 11)
-            
-            Divider()
         }
-        .background(Color.white)
     }
 }

@@ -18,6 +18,7 @@ struct HomeView: View {
         VStack(spacing: 0) {
             // 네비게이션
             NavigationHeaderView(title: viewModel.titleText)
+            Divider()
             Spacer()
             //그래프
             
