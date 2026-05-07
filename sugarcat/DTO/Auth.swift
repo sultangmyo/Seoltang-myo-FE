@@ -17,7 +17,6 @@ struct AppleLoginRequestDTO: Codable {
 struct AppleLoginResponseDTO: Codable {
     let accessToken: String
     let refreshToken: String
-    let isNewUser: Bool
 }
 
 // MARK: -kakao 소셜로그인
@@ -31,7 +30,6 @@ struct KakaoLoginRequestDTO: Codable {
 struct KakaoLoginResponseDTO: Codable {
     let accessToken: String
     let refreshToken: String
-    let isNewUser: Bool
 }
 
 // MARK: - JWT Refresh
@@ -40,4 +38,16 @@ struct KakaoLoginResponseDTO: Codable {
 struct RefreshTokenResponseDTO: Codable {
     let accessToken: String
     let userId: String
+}
+
+// MARK: -온보딩 완료
+
+// 1.4.1 온보딩 완료 여부 검사
+struct OnboardingCheckResponseDTO: Codable {
+    let onboardingCompleted: Bool
+}
+// 1.4.2 온보딩 완료 여부 저장
+struct OnboardingSaveResponseDTO: Codable {
+    let onboardingCompleted: Bool
+    let message: String
 }
