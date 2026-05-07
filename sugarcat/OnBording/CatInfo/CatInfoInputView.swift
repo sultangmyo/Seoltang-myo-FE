@@ -84,28 +84,25 @@ struct CatInfoInputView: View {
     // MARK: 날짜 입력 필드
     @ViewBuilder
     private func dateInputField(date: Binding<Date>, placeholder: String, isDisabled: Bool) -> some View {
-        ZStack {
-            HStack {
-                Text(isDisabled ? placeholder : formatDate(date.wrappedValue))
-                    .caption2R()
-                    .foregroundColor(isDisabled ? Color.gray.opacity(0.4) : Color("textbg1"))
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .background(isDisabled ? Color("gray2").opacity(0.3) : Color.white)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color("gray2"), lineWidth: 1)
-            )
-
-            //데이트피커
+        HStack {
+            Text(isDisabled ? placeholder : formatDate(date.wrappedValue))
+                .caption2R()
+                .foregroundColor(isDisabled ? Color.gray.opacity(0.4) : Color("textbg1"))
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(isDisabled ? Color("gray2").opacity(0.3) : Color.white)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color("gray2"), lineWidth: 1)
+        )
+        // 이 overlay 부분이 추가/수정되었습니다.
+        .overlay {
             if !isDisabled {
                 DatePicker("", selection: date, in: ...Date(), displayedComponents: .date)
                     .labelsHidden()
                     .datePickerStyle(.compact)
-                    .clipped()
-                    .contentShape(Rectangle())
                     .opacity(0.011)
             }
         }
