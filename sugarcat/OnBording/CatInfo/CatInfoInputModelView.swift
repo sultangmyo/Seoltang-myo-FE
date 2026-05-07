@@ -8,7 +8,7 @@
 //
 //  CatInfoInputViewModel.swift
 //  sugarcat
-//
+//고양이 정보 입력 모델뷰 
 
 import Foundation
 import Combine

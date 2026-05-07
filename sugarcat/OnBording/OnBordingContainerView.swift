@@ -31,7 +31,7 @@ struct OnBoardingContainerView: View {
                     case .catSetup:
                         CatSetupView(path: $path)
                     case .catProfile:
-                        CatInfoInputView()
+                        CatInfoInputView(path: $path)
                     case .catInvite:
                         CatInviteView()
                     }
