@@ -85,10 +85,10 @@ struct CatInfoInputView: View {
     @ViewBuilder
     private func dateInputField(date: Binding<Date>, placeholder: String, isDisabled: Bool) -> some View {
         HStack {
-            Text(isDisabled ? placeholder : formatDate(date.wrappedValue))
-                .caption2R()
-                .foregroundColor(isDisabled ? Color.gray.opacity(0.4) : Color("textbg1"))
-            Spacer()
+            Text(isDisabled ? placeholder : DateStringFormatter.displayDotDate(from: date.wrappedValue))
+                        .caption2R()
+                        .foregroundColor(isDisabled ? Color.gray.opacity(0.4) : Color("textbg1"))
+                    Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
@@ -107,12 +107,6 @@ struct CatInfoInputView: View {
         }
     }
 
-    // 날짜 포맷 함수
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        return formatter.string(from: date)
-    }
 
    
     @ViewBuilder
