@@ -9,8 +9,11 @@ import SwiftUI
 import AuthenticationServices
 
 struct LoginView: View {
+    @StateObject private var viewModel = LoginViewModel()
     // 부모 뷰에서 온보딩 다음 단계로 넘기기 위한 액션
     var nextAction: () -> Void
+    // 메인으로 바로 보내는 액션
+    var finishAction: () ->Void
     
     var body: some View {
         ZStack {
