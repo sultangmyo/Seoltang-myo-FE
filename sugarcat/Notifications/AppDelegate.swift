@@ -77,6 +77,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         print("✅ APNs deviceToken:")
         print(token)
     }
+    
+    // APNs 등록 실패 시 호출되는 함수
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+
+        print("❌ APNs 등록 실패")
+        print(error.localizedDescription)
+    }
 
 }
 
