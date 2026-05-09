@@ -14,6 +14,8 @@ import UserNotifications
 // APNs 관련함수: didRegisterForRemoteNotificationsWithDeviceToken,didFailToRegisterForRemoteNotificationsWithError
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
+// MARK: - 알림 탭 처리 및 foreground 알림 표시 영역
+    
     //didFinishLaunching: foreground알림과 앱 탭 처리를 위해 앱이 처음 시작할 때 함수를 호출하게 합니다."
     func application(
         _ application: UIApplication,
@@ -50,6 +52,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         print(userInfo)
 
         completionHandler()
+    }
+
+// MARK: - APNs deviceToken 받는 영역
+    // APNs 등록 요청 함수
+    // 알림 권한 허용 후 호출하면 APNs deviceToken을 받을 수 있음
+    func registerForRemoteNotifications() {
+        DispatchQueue.main.async {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
     }
 
 }
