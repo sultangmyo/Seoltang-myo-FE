@@ -2,6 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>kakaoLogin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakao36c5625f91b1e18acd05b5d9abe41cbc</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaotalk-5.9.7</string>
+	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
 </dict>
