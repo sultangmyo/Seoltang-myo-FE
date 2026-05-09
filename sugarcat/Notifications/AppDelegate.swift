@@ -62,6 +62,21 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
             UIApplication.shared.registerForRemoteNotifications()
         }
     }
+    
+    // APNs 등록 성공 시 deviceToken 받아지고, 해당 토큰을 문자열로 변경하는 함수(백엔드로 보내기 위해 필요)
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+
+        // Data 타입 token → 문자열 변환
+        let token = deviceToken.map {
+            String(format: "%02.2hhx", $0)
+        }.joined()
+
+        print("✅ APNs deviceToken:")
+        print(token)
+    }
 
 }
 
