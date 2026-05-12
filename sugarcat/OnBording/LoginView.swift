@@ -94,19 +94,23 @@ struct LoginView: View {
     // MARK: - 로그인 핸들러
     
     private func handleAppleLogin(_ result: Result<ASAuthorization, Error>) {
-        switch result {
-            //로그인 성공시
-        case .success(let auth):
-            print("Apple Login Success: \(auth)")
-            // TODO: 백엔드에 애플 토큰 보내기
-            // 성공 시 nextAction()호출
-            nextAction()
-            
-            // 로그인실패시
-        case .failure(let error):
-            print("Apple Login Error: \(error.localizedDescription)")
+            switch result {
+            case .success(let auth):
+                // AppleIDCredential에서 identityToken 추출
+                if let appleIDCredential = auth.credential as? ASAuthorizationAppleIDCredential,
+                   let identityTokenData = appleIDCredential.identityToken,
+                   let identityTokenString = String(data: identityTokenData, encoding: .utf8) {
+                    
+                    Task {
+                        // ViewModel을 통해 서버 로그인 및 온보딩 상태 확인
+                        let isOnboardingCompleted = await viewModel.handleAppleLogin(identityToken: identityTokenString)
+                        processLoginNavigation(isOnboardingCompleted)
+                    }
+                }
+            case .failure(let error):
+                print("Apple Login Error: \(error.localizedDescription)")
+            }
         }
-    }
     
     private func handleKakaoLogin() {
         // 카카오톡 앱이 있으면 앱으로, 없으면 웹 브라우저로 로그인
