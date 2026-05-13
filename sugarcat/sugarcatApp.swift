@@ -13,6 +13,7 @@ import Network
 @main
 struct sugarcatApp: App {
     
+
     //앱이 실행될때 카카오 SDK 세팅
     init() {
         KakaoSDK.initSDK(appKey: "b15f47e370edea963f1e81be22a5dd96")
@@ -22,6 +23,11 @@ struct sugarcatApp: App {
            let url = URL(string: "http://172.19.30.146:8080")!
            URLSession.shared.dataTask(with: url) { _, _, _ in }.resume()
        }
+
+    //app delegate 로직 추가
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    var appDelegate
+
         
     var body: some Scene {
         WindowGroup {
