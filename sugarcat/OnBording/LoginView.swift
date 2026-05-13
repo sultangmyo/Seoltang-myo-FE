@@ -7,10 +7,15 @@
 
 import SwiftUI
 import AuthenticationServices
+import KakaoSDKUser
+import KakaoSDKAuth
 
 struct LoginView: View {
+    @StateObject private var viewModel = LoginViewModel()
     // 부모 뷰에서 온보딩 다음 단계로 넘기기 위한 액션
     var nextAction: () -> Void
+    // 메인으로 바로 보내는 액션
+    var finishAction: () ->Void
     
     var body: some View {
         ZStack {
@@ -31,9 +36,9 @@ struct LoginView: View {
                         .cornerRadius(10)
                     
                     Image("appicontx")
-                            .resizable()
-                            .frame(width: 92.42, height: 33)
-                            .cornerRadius(10)
+                        .resizable()
+                        .frame(width: 92.42, height: 33)
+                        .cornerRadius(10)
                     
                     
                 }
@@ -77,35 +82,78 @@ struct LoginView: View {
                 .padding(.bottom, 100) // 하단 여백
             }
         }
+        //오류 메세지
+        .alert("로그인 실패", isPresented: $viewModel.showError) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage ?? "네트워크 오류가 발생했습니다.")
+        }
     }
     
     
     // MARK: - 로그인 핸들러
     
     private func handleAppleLogin(_ result: Result<ASAuthorization, Error>) {
-        switch result {
-        //로그인 성공시
-        case .success(let auth):
-            print("Apple Login Success: \(auth)")
-            // TODO: 백엔드에 애플 토큰 보내기
-            // 성공 시 nextAction()호출
-            nextAction()
-            
-        // 로그인실패시
-        case .failure(let error):
-            print("Apple Login Error: \(error.localizedDescription)")
+            switch result {
+            case .success(let auth):
+                // AppleIDCredential에서 identityToken 추출
+                if let appleIDCredential = auth.credential as? ASAuthorizationAppleIDCredential,
+                   let identityTokenData = appleIDCredential.identityToken,
+                   let identityTokenString = String(data: identityTokenData, encoding: .utf8) {
+                    
+                    Task {
+                        // ViewModel을 통해 서버 로그인 및 온보딩 상태 확인
+                        let isOnboardingCompleted = await viewModel.handleAppleLogin(identityToken: identityTokenString)
+                        processLoginNavigation(isOnboardingCompleted)
+                    }
+                }
+            case .failure(let error):
+                print("Apple Login Error: \(error.localizedDescription)")
+            }
+        }
+    
+    private func handleKakaoLogin() {
+        // 카카오톡 앱이 있으면 앱으로, 없으면 웹 브라우저로 로그인
+        if (UserApi.isKakaoTalkLoginAvailable()) {
+            UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
+                handleKakaoResponse(oauthToken: oauthToken, error: error)
+            }
+        } else {
+            UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
+                handleKakaoResponse(oauthToken: oauthToken, error: error)
+            }
         }
     }
     
-    private func handleKakaoLogin() {
-        print("Kakao Login Clicked")
-        // TODO: Kakao SDK 호출 로직 작성
-        // 성공 시 nextAction() 호출
-        nextAction()
+    // 카카오 응답 결과 처리
+    private func handleKakaoResponse(oauthToken: OAuthToken?, error: Error?) {
+        if let error = error {
+            print("Kakao Login Error: \(error.localizedDescription)")
+            return
+        }
+        
+        if let token = oauthToken?.accessToken {
+            Task {
+                // ViewModel을 통해 서버에 카카오 토큰 전달
+                let isOnboardingCompleted = await viewModel.handleKakaoLogin(accessToken: token)
+                processLoginNavigation(isOnboardingCompleted)
+            }
+        }
     }
-}
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView(nextAction: {})
+        
+        private func processLoginNavigation(_ isOnboardingCompleted: Bool?) {
+            guard let completed = isOnboardingCompleted else { return } // 에러 시 처리 안함
+            
+            if completed {
+                finishAction() // 이미 온보딩 했으면 메인으로
+            } else {
+                nextAction()   // 처음이면 온보딩으로
+            }
+        }
     }
-}
+
+//struct LoginView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginView(nextAction: {})
+//    }
+//}
