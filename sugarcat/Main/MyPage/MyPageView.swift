@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+enum MyPageRoute: Hashable {
+    case printSave //인쇄 및 저장
+    case notificationSetting // 알림 설정
+    case insulinNFsetting1 // 알림설정 -> 인슐린
+    case bsNFsetting1 // 알림설정 -> 혈당
+    case mealNFsetting1 // 알림설정 -> 식사
+}
+
 struct MyPageView: View {
     //네비게이션
     @State private var path = NavigationPath()
@@ -30,7 +38,21 @@ struct MyPageView: View {
                     CustomDividerView()
                     
                     //divider 하단 영역 뷰 구현
-                    DividerBottomSection()
+                    DividerBottomSection(path: $path)
+                }
+            }
+            .navigationDestination(for: MyPageRoute.self) { route in
+                switch route {
+                case .printSave:
+                    PrintSaveView1(path: $path)
+                case .notificationSetting:
+                    MyPageNotificationSettingView(path: $path)
+                case .insulinNFsetting1:
+                    InsulinNFsettingView1()
+                case .bsNFsetting1:
+                    BSNFsettingView1()
+                case .mealNFsetting1:
+                    MealNFsettingView1()
                 }
             }
         }
@@ -39,8 +61,6 @@ struct MyPageView: View {
 
 #Preview {
     NavigationStack {
-
         MyPageView()
-
     }
 }
