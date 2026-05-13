@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -11,7 +13,7 @@
 			<string>kakaoLogin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao36c5625f91b1e18acd05b5d9abe41cbc</string>
+				<string>kakaob15f47e370edea963f1e81be22a5dd96</string>
 			</array>
 		</dict>
 	</array>
@@ -21,6 +23,11 @@
 		<string>kakaolink</string>
 		<string>kakaotalk-5.9.7</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
 </dict>

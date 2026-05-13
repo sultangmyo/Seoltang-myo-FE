@@ -10,7 +10,7 @@ import Foundation
 
 class AuthService {
     static let shared = AuthService()
-    private let baseURL = "https://your-api-url.com/api/v1" // 서버 주소 수정 필요 ( 백엔드한테 받기)
+    private let baseURL = "http://172.19.30.146:8080/api/v1" // 서버 주소 수정 필요 ( 백엔드한테 받기)
     
     private init() {} // 외부에서 인스턴스 생성 방지
     
@@ -45,6 +45,8 @@ class AuthService {
                 throw URLError(.badURL)
             }
             
+            print("📡 요청 URL: \(url)") 
+            
             // 토큰 확인
             let requestDTO = KakaoLoginRequestDTO(accessToken: token)
             var request = URLRequest(url: url)
@@ -61,12 +63,22 @@ class AuthService {
                 throw URLError(.badServerResponse)
             }
             
+            if let httpResponse = response as? HTTPURLResponse {
+                    print("📡 Status Code: \(httpResponse.statusCode)")
+                }
+                print("📦 Response Data: \(String(data: data, encoding: .utf8) ?? "nil")")
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+            
             // KakaoLoginResponseDTO로 변환
             return try JSONDecoder().decode(KakaoLoginResponseDTO.self, from: data)
         }
     // 온보딩 완료 여부 체크
     func checkOnboardingStatus() async throws -> OnboardingCheckResponseDTO {
-        guard let url = URL(string: "\(baseURL)/onboarding/check") else {
+        guard let url = URL(string: "\(baseURL)/auth/onboarding") else {
             throw URLError(.badURL)
         }
         
@@ -75,10 +87,14 @@ class AuthService {
         
         // 토큰을 헤더에 넣음
         if let accessToken = TokenManager.shared.getAccessToken() {
+            print("🔑 저장된 토큰: \(accessToken)")
             request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }else{
+            print("❌ 토큰 없음!")
         }
         
         let (data, _) = try await URLSession.shared.data(for: request)
+        print("📦 온보딩 응답: \(String(data: data, encoding: .utf8) ?? "nil")")
         return try JSONDecoder().decode(OnboardingCheckResponseDTO.self, from: data)
     }
 }

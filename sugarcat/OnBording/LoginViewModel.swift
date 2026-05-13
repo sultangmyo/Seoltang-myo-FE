@@ -71,13 +71,16 @@ class LoginViewModel: ObservableObject {
             let response = try await AuthService.shared.loginWithKakao(token: accessToken)
             
             // K. 응답 받은 토큰 저장
+            
             TokenManager.shared.saveTokens(access: response.accessToken, refresh: response.refreshToken)
+           
             
             // L. 온보딩 여부 확인
             let statusResponse = try await AuthService.shared.checkOnboardingStatus()
             return statusResponse.onboardingCompleted
             
         } catch {
+            print("❌ 카카오 로그인 에러: \(error)")
             self.errorMessage = "카카오 로그인 중 오류가 발생했습니다."
             self.showError = true
             return nil

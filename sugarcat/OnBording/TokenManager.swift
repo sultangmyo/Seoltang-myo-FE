@@ -17,7 +17,9 @@ class TokenManager {
     func saveTokens(access: String, refresh: String) {
         UserDefaults.standard.set(access, forKey: accessTokenKey)
         UserDefaults.standard.set(refresh, forKey: refreshTokenKey)
+        UserDefaults.standard.synchronize()
     }
+    
 
     // Access Token 꺼내기
     func getAccessToken() -> String? {
