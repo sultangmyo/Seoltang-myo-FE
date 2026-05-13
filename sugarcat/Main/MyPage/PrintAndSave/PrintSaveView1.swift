@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PrintSaveView1: View {
     
+    @Binding var path: NavigationPath
+    
     var body: some View {
         VStack {
             NavigationIncludeBackView(title: "인쇄 및 저장")
@@ -20,5 +22,11 @@ struct PrintSaveView1: View {
 }
 
 #Preview {
-    PrintSaveView1()
+    struct PrintSaveView1_PreviewContainer: View {
+        @State private var path = NavigationPath()
+        var body: some View {
+            PrintSaveView1(path: $path)
+        }
+    }
+    return PrintSaveView1_PreviewContainer()
 }

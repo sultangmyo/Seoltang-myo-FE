@@ -11,6 +11,8 @@ import SwiftUI
 //divider 하단 영역 뷰 구현
 struct DividerBottomSection: View {
     
+    @Binding var path: NavigationPath
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // 내보내기 텍스트
@@ -21,9 +23,9 @@ struct DividerBottomSection: View {
             
             
             //인쇄 및 저장 버튼 (네비게이션 링크로 구현 했습니다.)
-            NavigationLink {
-                PrintSaveView1()
-            } label: {
+            Button {
+                path.append(MyPageRoute.printSave)
+            } label : {
                 MyPageMenuRowView(
                     title: "인쇄 및 저장",
                     isButton: false,
@@ -32,8 +34,8 @@ struct DividerBottomSection: View {
             }
             .padding(.leading,16)
             .padding(.bottom, 13)
-                    
-
+            
+            
             Divider()
                 .padding(.bottom, 27)
             
@@ -44,8 +46,8 @@ struct DividerBottomSection: View {
                 .padding(.bottom, 7)
             
             VStack(alignment: .leading, spacing: 0) {
-                NavigationLink {
-                    MyPageNotificationSettingView()
+                Button {
+                    path.append(MyPageRoute.notificationSetting)
                 } label: {
                     MyPageMenuRowView(
                         title: "알림설정",
@@ -90,7 +92,7 @@ struct DividerBottomSection: View {
                         .caption2R()
                         .foregroundColor(.gray1)
                 }
-
+                
             }
             .padding(.leading, 16)
             
