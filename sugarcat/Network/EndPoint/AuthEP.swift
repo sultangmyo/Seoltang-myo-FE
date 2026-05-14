@@ -41,20 +41,12 @@ extension AuthEndpoint {
     
     var method: HTTPMethod {
         switch self {
-        case .onBoardingCompleted:
+        case .onBoardingCompleted, .apnsDeviceToken, .jwtRefresh, .logout:
             return .post
             
         case .onBoardingCheck:
             return .get
             
-        case .apnsDeviceToken:
-            return .post
-            
-        case .jwtRefresh:
-            return .post
-            
-        case .logout:
-            return .post
         }
     }
 }

@@ -52,26 +52,15 @@ extension CatEndpoint {
        case .catInfoCreate:
            return .post
            
-       case .catInfoCheck:
+       case .catInfoCheck, .catInviteCheck, .catInviteVerification, .catPDFCheck:
            return .get
            
-       case .catInfoRewrite:
+       case .catInfoRewrite, .catInviteCreate:
            return .patch
            
        case .catDelete:
            return .delete
            
-       case .catInviteCreate:
-           return .patch
-           
-       case .catInviteCheck:
-           return .get
-           
-       case .catInviteVerification:
-           return .get
-           
-       case .catPDFCheck:
-           return .get
        }
    }
 }

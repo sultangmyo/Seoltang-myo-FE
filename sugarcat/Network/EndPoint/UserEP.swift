@@ -51,7 +51,7 @@ extension UserEndpoint {
        case .userNicknameEdit,.userNotificationAllEdit, .userNotificationEdit:
            return .patch
            
-       case .userDelete
+       case .userDelete:
            return .delete
            
        
