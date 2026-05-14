@@ -8,23 +8,24 @@
 import SwiftUI
 
 enum HealthStep: Int, CaseIterable {
-    case insulinCount = 1
-    case insulinTime = 2
+    case mealCount = 1
+    case mealTime = 2
     case bloodSugarCount = 3
     case bloodSugarTime = 4
-    case mealCount = 5
-    case mealTime = 6
+    case insulinCount = 5
+    case insulinTime = 6
+   
     
     // 현재 스텝이 시간 설정 단계인지 확인하는 헬퍼 프로퍼티
     var isTimeStep: Bool {
-        return self == .insulinTime || self == .bloodSugarTime || self == .mealTime
+        return self == .mealTime || self == .bloodSugarTime || self == .insulinTime
     }
 }
 
 struct HealthSetupContainerView: View {
     @Binding var path: NavigationPath // 메인 온보딩 네비게이션용
     
-    @State private var currentStep: HealthStep = .insulinCount
+    @State private var currentStep: HealthStep = .mealCount
     
     // 0회 없이 최소 1회부터 시작하므로 기본값은 1로 설정
     @State private var insulinCount: Int = 1
@@ -37,7 +38,7 @@ struct HealthSetupContainerView: View {
     @State private var mealTimes: [Date] = []
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 10) {
             // 1. 상단 프로그래스바
             HStack(spacing: 6) {
                 ForEach(HealthStep.allCases, id: \.self) { step in
@@ -47,56 +48,60 @@ struct HealthSetupContainerView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.top, 10)
+            .padding(.top, 8)
             
-            Spacer()
+          
             
-            // 2. 화면 분기 
+            // 2. 화면 분기
             switch currentStep {
-            // --- 인슐린 단계 ---
-            case .insulinCount:
-//                CommonCountSelectionView(
-//                    title: "하루에 몇 회\n인슐린을 투여하시나요?",
-//                    countOptions: [1, 2, 3, 4],
-//                    selectedCount: $insulinCount
-//                )
-                
-            case .insulinTime:
-//                CommonTimePickerView(
-//                    title: "인슐린 투여 시간을\n설정해 주세요",
-//                    count: insulinCount,
-//                    selectedTimes: $insulinTimes
- //               )
-                
-            // --- 혈당 단계 ---
-            case .bloodSugarCount:
-//                CommonCountSelectionView(
-//                    title: "하루에 몇 회\n혈당을 측정하시나요?",
-//                    countOptions: [1, 2, 3, 4],
-//                    selectedCount: $bloodSugarCount
-//                )
-                
-            case .bloodSugarTime:
-//                CommonTimePickerView(
-//                    title: "혈당 측정 시간을\n설정해 주세요",
-//                    count: bloodSugarCount,
-//                    selectedTimes: $bloodSugarTimes
- //               )
                 
             // --- 식사 단계 ---
             case .mealCount:
-//                CommonCountSelectionView(
-//                    title: "하루에 몇 회\n식사를 급여하시나요?",
-//                    countOptions: [1, 2, 3, 4],
-//                    selectedCount: $mealCount
-//                )
+                CommonCountSelectionView(
+                    title: "하루에 몇 회\n식사를 급여하시나요?",
+                    countOptions: [1, 2, 3, 4],
+                    selectedCount: $mealCount
+                )
                 
             case .mealTime:
-//                CommonTimePickerView(
-//                    title: "정기 식사 시간을\n알려주세요",
-//                    count: mealCount,
-//                    selectedTimes: $mealTimes
-//                )
+                CommonTimePickerView(
+                    title: "정기 식사 시간을\n알려주세요",
+                    count: mealCount,
+                    selectedTimes: $mealTimes
+                )
+                
+                
+            // --- 혈당 단계 ---
+            case .bloodSugarCount:
+                CommonCountSelectionView(
+                    title: "하루에 몇 회\n혈당을 재시나요?",
+                    countOptions: [1, 2, 3, 4, 5, 6, 7, 8],
+                    selectedCount: $bloodSugarCount
+                )
+                
+            case .bloodSugarTime:
+                CommonTimePickerView(
+                    title: "혈당을 재는 시간을\n알려주세요 ",
+                    count: bloodSugarCount,
+                    selectedTimes: $bloodSugarTimes
+                )
+           
+            // --- 인슐린 단계 ---
+            case .insulinCount:
+                CommonCountSelectionView(
+                    title: "하루에 몇 회\n인슐린을 투여하나요?",
+                    countOptions: [1, 2, 3],
+                    selectedCount: $insulinCount
+                )
+                
+            case .insulinTime:
+                CommonTimePickerView(
+                    title: "인슐린 투여 시간을\n알려주세요",
+                    count: insulinCount,
+                    selectedTimes: $insulinTimes
+                )
+                
+        
             }
             
             Spacer()
