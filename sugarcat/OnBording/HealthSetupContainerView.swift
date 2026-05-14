@@ -27,7 +27,6 @@ struct HealthSetupContainerView: View {
     
     @State private var currentStep: HealthStep = .mealCount
     
-    // 0회 없이 최소 1회부터 시작하므로 기본값은 1로 설정
     @State private var insulinCount: Int = 1
     @State private var insulinTimes: [Date] = []
     
@@ -36,6 +35,9 @@ struct HealthSetupContainerView: View {
     
     @State private var mealCount: Int = 1
     @State private var mealTimes: [Date] = []
+    
+    
+    
     
     var body: some View {
         VStack(spacing: 10) {
@@ -58,14 +60,14 @@ struct HealthSetupContainerView: View {
             // --- 식사 단계 ---
             case .mealCount:
                 CommonCountSelectionView(
-                    title: "하루에 몇 회\n식사를 급여하시나요?",
+                    title: mealCountTitle,
                     countOptions: [1, 2, 3, 4],
                     selectedCount: $mealCount
                 )
                 
             case .mealTime:
                 CommonTimePickerView(
-                    title: "정기 식사 시간을\n알려주세요",
+                    title: mealTimeTitle,
                     count: mealCount,
                     selectedTimes: $mealTimes
                 )
@@ -74,14 +76,14 @@ struct HealthSetupContainerView: View {
             // --- 혈당 단계 ---
             case .bloodSugarCount:
                 CommonCountSelectionView(
-                    title: "하루에 몇 회\n혈당을 재시나요?",
+                    title: bloodSugarCountTitle,
                     countOptions: [1, 2, 3, 4, 5, 6, 7, 8],
                     selectedCount: $bloodSugarCount
                 )
                 
             case .bloodSugarTime:
                 CommonTimePickerView(
-                    title: "혈당을 재는 시간을\n알려주세요 ",
+                    title: bloodSugarTimeTitle,
                     count: bloodSugarCount,
                     selectedTimes: $bloodSugarTimes
                 )
@@ -89,14 +91,14 @@ struct HealthSetupContainerView: View {
             // --- 인슐린 단계 ---
             case .insulinCount:
                 CommonCountSelectionView(
-                    title: "하루에 몇 회\n인슐린을 투여하나요?",
+                    title: insulinCountTitle,
                     countOptions: [1, 2, 3],
                     selectedCount: $insulinCount
                 )
                 
             case .insulinTime:
                 CommonTimePickerView(
-                    title: "인슐린 투여 시간을\n알려주세요",
+                    title: insulintimeTitle,
                     count: insulinCount,
                     selectedTimes: $insulinTimes
                 )
@@ -158,6 +160,8 @@ struct HealthSetupContainerView: View {
         }
     }
     
+    
+    
     // 다음 단계 이동 (순차적 이동)
     private func moveToNextStep() {
         if let next = HealthStep(rawValue: currentStep.rawValue + 1) {
@@ -190,6 +194,55 @@ struct HealthSetupContainerView: View {
     private func checkCurrentStepValid() -> Bool {
         return true
     }
+    
+    
+    // 타이틀
+    private var mealCountTitle: AttributedString {
+            var string = AttributedString("하루에 몇 회\n식사를 급여하시나요?")
+            if let range = string.range(of: "식사") {
+                string[range].foregroundColor = Color("primary0")
+            }
+            return string
+        }
+    
+    private var mealTimeTitle: AttributedString {
+            var string = AttributedString("정기 식사 시간을\n알려주세요")
+            if let range = string.range(of: "정기 식사 시간") {
+                string[range].foregroundColor = Color("primary0")
+            }
+            return string
+        }
+    
+    private var bloodSugarCountTitle: AttributedString {
+            var string = AttributedString("하루에 몇 회\n혈당을 재시나요?")
+            if let range = string.range(of: "혈당") {
+                string[range].foregroundColor = Color("primary0")
+            }
+            return string
+        }
+    
+    private var bloodSugarTimeTitle: AttributedString {
+            var string = AttributedString("혈당을 재는 시간을\n알려주세요")
+            if let range = string.range(of: "혈당을 재는 시간") {
+                string[range].foregroundColor = Color("primary0")
+            }
+            return string
+        }
+    private var insulinCountTitle: AttributedString {
+            var string = AttributedString("하루에 몇 회\n인슐린을 투여하나요?")
+            if let range = string.range(of: "인슐린") {
+                string[range].foregroundColor = Color("primary0")
+            }
+            return string
+        }
+    private var insulintimeTitle: AttributedString {
+            var string = AttributedString("인슐린 투여 시간을\n알려주세요")
+            if let range = string.range(of: "인슐린 투여 시간") {
+                string[range].foregroundColor = Color("primary0")
+            }
+            return string
+        }
+    
 }
 #Preview {
     NavigationStack {
