@@ -14,7 +14,8 @@ enum UserEndpoint {
    case userNicknameCheck
    case userNicknameEdit
    case userNotificationAllEdit
-   case userNotificationEdit
+    //type 말고 isEnabled 
+    case userNotificationEdit(type :Bool)
    case userNotificationCheck
     case userDelete
    
@@ -37,8 +38,8 @@ extension UserEndpoint {
            return "/api/v1/users/me/notification"
           
        // 7.2 사용자 알림 개별 조회
-       case .userNotificationEdit:
-           return "/api/v1/users/me/notification/{type}"
+       case .userNotificationEdit(let type):
+           return "/api/v1/users/me/notification/\(type)"
       
        }
    }

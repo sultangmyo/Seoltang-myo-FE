@@ -17,8 +17,8 @@ enum CatEndpoint {
    case catDelete
    case catInviteCreate
     case catInviteCheck
-    case catInviteVerification
-    case catPDFCheck
+    case catInviteVerification(inviteCode: String)
+    case catPDFCheck(startDate: String, endDate: String)
    
 }
 
@@ -39,11 +39,11 @@ extension CatEndpoint {
            return "/api/v1/cats/me/invite-code"
           
        // 2.4 초대코드 유효성 검증
-       case .catInviteVerification:
-           return "/api/v1/cats/invite?code={inviteCode}"
+       case .catInviteVerification(let inviteCode):
+           return "/api/v1/cats/invite?code=\(inviteCode)"
        // 7.4 PDF 데이터 조회
-       case .catPDFCheck:
-           return "/api/v1/cats/me/export?startDate={startDate}&endDate={endDate}"
+       case .catPDFCheck (let startDate, let endDate):
+           return "/api/v1/cats/me/export?startDate=\(startDate)&endDate=\(endDate)"
        }
    }
    
