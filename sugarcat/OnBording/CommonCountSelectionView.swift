@@ -17,7 +17,7 @@ struct CommonCountSelectionView: View {
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
-    ScrollView(.vertical, showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: false) {
         VStack(alignment: .leading, spacing: 30) {
             
             // 타이틀 텍스트

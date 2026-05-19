@@ -68,6 +68,7 @@ struct HealthSetupContainerView: View {
             case .mealTime:
                 CommonTimePickerView(
                     title: mealTimeTitle,
+                    category: "식사",
                     count: mealCount,
                     selectedTimes: $mealTimes
                 )
@@ -84,6 +85,7 @@ struct HealthSetupContainerView: View {
             case .bloodSugarTime:
                 CommonTimePickerView(
                     title: bloodSugarTimeTitle,
+                    category: "혈당",
                     count: bloodSugarCount,
                     selectedTimes: $bloodSugarTimes
                 )
@@ -99,6 +101,7 @@ struct HealthSetupContainerView: View {
             case .insulinTime:
                 CommonTimePickerView(
                     title: insulintimeTitle,
+                    category: "인슐린",
                     count: insulinCount,
                     selectedTimes: $insulinTimes
                 )
@@ -109,15 +112,15 @@ struct HealthSetupContainerView: View {
             Spacer()
             
             // 3. 하단 공통 버튼 영역
-            HStack(spacing: 12) {
+            HStack(spacing: 6) {
                 // 시간 설정 단계일 때만 [이전] 버튼을 왼쪽에 노출
                 if currentStep.isTimeStep {
                     Button(action: {
                         moveToPreviousStep()
                     }) {
                         Text("이전")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundColor(Color("gray3"))
+                            .buttontitle1()
+                            .foregroundColor(Color("gray1"))
                             .frame(maxWidth: .infinity)
                             .frame(height: 68)
                             .background(Color(.systemBackground))
@@ -126,7 +129,7 @@ struct HealthSetupContainerView: View {
                                     .stroke(Color("gray1"), lineWidth: 1)
                             )
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(width:110)
                 }
                 
                 
@@ -141,7 +144,7 @@ struct HealthSetupContainerView: View {
                 ))
                 .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 10)
             .padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
@@ -153,9 +156,9 @@ struct HealthSetupContainerView: View {
         switch currentStep {
         case .insulinCount, .bloodSugarCount, .mealCount:
             return "다음"
-        case .insulinTime, .bloodSugarTime:
+        case .mealTime, .bloodSugarTime:
             return "건너뛰기"
-        case .mealTime:
+        case .insulinTime:
             return "완료"
         }
     }
