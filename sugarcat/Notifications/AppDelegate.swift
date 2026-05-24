@@ -24,6 +24,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     ) -> Bool {
 
         UNUserNotificationCenter.current().delegate = self
+        
+        // 이미 알림 권한이 허용된 사용자라면 앱 실행 시 deviceToken을 다시 받아 서버에 upsert하도록 함
+        refreshDeviceTokenIfAuthorized()
 
         return true
     }
@@ -39,7 +42,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         completionHandler([.banner, .sound, .badge])
     }
     
-    //알립 탭 처리함수 추가(지금은 print만 구현, 추후에 알림을 누르면 입력화면으로 넘어가게 구현합니다.)
+    //알립 탭 처리함수(알림 탭 시 payload 파싱 후 route 전달)
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
@@ -47,10 +50,33 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         @escaping () -> Void
     ) {
 
-        let userInfo = response.notification.request.content.userInfo
+        // APNs payload 꺼내기
+        let userInfo = response.notification
+            .request
+            .content
+            .userInfo
 
-        print(userInfo)
+        // payload 모델로 변환
 
+        if let payload = PushNotificationPayload(userInfo: userInfo) {
+
+            // 디버깅용 로그
+            print("알림 타입:", payload.notificationType)
+            print("날짜:", payload.targetDate ?? "없음")
+            print("sequence:", payload.sequence ?? -1)
+
+            // payload를 앱 내부 이동 경로로 변환
+            let route = payload.route
+            // 디버깅용 로그
+            print("알림 이동 경로:", route)
+
+            // SwiftUI 화면 쪽으로 route 전달
+            Task { @MainActor in
+                PushNotificationRouter.shared.handle(route)
+            }
+        }
+
+        //알림처리 완료.
         completionHandler()
     }
 
@@ -76,6 +102,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
 
         print("✅ APNs deviceToken:")
         print(token)
+        
+        // 서버에 deviceToken 등록/갱신 요청
+        Task {
+            await NotificationDeviceTokenService.registerDeviceToken(token)
+        }
     }
     
     // APNs 등록 실패 시 호출되는 함수
@@ -87,6 +118,26 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         print("❌ APNs 등록 실패")
         print(error.localizedDescription)
     }
-
+    
+    // 앱 실행 시 알림 권한 상태를 확인하고,
+    // 이미 알림 권한이 허용된 사용자라면 APNs deviceToken을 다시 요청하는 함수
+    func refreshDeviceTokenIfAuthorized() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            
+            // 알림 권한이 허용된 상태일 때만 token 재요청
+            guard settings.authorizationStatus == .authorized ||
+                  settings.authorizationStatus == .provisional ||
+                  settings.authorizationStatus == .ephemeral
+            else {
+                return
+            }
+            
+            // APNs deviceToken 재요청
+            // 성공하면 didRegisterForRemoteNotificationsWithDeviceToken이 다시 호출됨
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
+        }
+    }
 }
 

@@ -11,6 +11,9 @@ struct BloodSugarView: View {
     //네비게이션
     @State private var path = NavigationPath()
     
+    // 알림 route 감지용 Router
+        @StateObject private var pushRouter = PushNotificationRouter.shared
+    
     @StateObject private var viewModel = BloodSugarViewModel(
         bloodSugarService: MockBloodSugarService()
     )
@@ -39,6 +42,12 @@ struct BloodSugarView: View {
             .task {
                 await viewModel.loadRecords()
             }
+            
+            .onReceive(pushRouter.$pendingRoute) { route in
+                guard route != nil else { return }
+                handlePushRouteIfNeeded()
+            }
+            
             .navigationDestination(for: BloodSugarRecordItem.self) { item in
                 BloodSugarInputView(
                     item: item,
@@ -51,6 +60,24 @@ struct BloodSugarView: View {
 }
 
 private extension BloodSugarView {
+    
+    // 알림 route가 혈당 입력이면 해당 sequence의 item을 찾아 입력뷰로 이동하는 함수
+    func handlePushRouteIfNeeded() {
+        guard case let .bloodSugarInput(_, sequence) = pushRouter.pendingRoute else {
+            return
+        }
+
+        guard let sequence else {
+            return
+        }
+
+        guard let item = viewModel.items.first(where: { $0.sequence == sequence }) else {
+            return
+        }
+
+        path.append(item)
+        pushRouter.clear()
+    }
     
     var datePickerSection: some View {
         DatePicker(
