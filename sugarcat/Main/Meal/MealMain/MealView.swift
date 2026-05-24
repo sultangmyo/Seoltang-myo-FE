@@ -11,6 +11,9 @@ struct MealView: View {
     
     @State private var path = NavigationPath()
     
+    // 알림 route 감지용 Router
+        @StateObject private var pushRouter = PushNotificationRouter.shared
+    
     @StateObject private var viewModel = MealViewModel(
         mealService: MockMealService()
     )
@@ -39,6 +42,12 @@ struct MealView: View {
             .task {
                 await viewModel.loadRecords()
             }
+            
+            .onReceive(pushRouter.$pendingRoute) { route in
+                guard route != nil else { return }
+                handlePushRouteIfNeeded()
+            }
+            
             .navigationDestination(for: MealRecordItem.self) { item in
                 MealInputView(
                     item: item,
@@ -51,6 +60,24 @@ struct MealView: View {
 }
 
 private extension MealView {
+    
+    // 알림 route가 식사 입력이면 해당 sequence의 item을 찾아 입력뷰로 이동하는 함수
+    func handlePushRouteIfNeeded() {
+        guard case let .mealInput(_, sequence) = pushRouter.pendingRoute else {
+            return
+        }
+
+        guard let sequence else {
+            return
+        }
+
+        guard let item = viewModel.items.first(where: { $0.sequence == sequence }) else {
+            return
+        }
+
+        path.append(item)
+        pushRouter.clear()
+    }
     
     var datePickerSection: some View {
         DatePicker(
