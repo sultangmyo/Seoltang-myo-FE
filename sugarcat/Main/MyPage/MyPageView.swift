@@ -29,8 +29,9 @@ struct MyPageView: View {
                 }
                 ScrollView {
                     // MARK: - divider 상단 영역
-                    //여기서 구현 하시면 됩니다
+                    
                     VStack (spacing: 0){
+                        MyPageTopProfileSection()
                         
                     }
                     
