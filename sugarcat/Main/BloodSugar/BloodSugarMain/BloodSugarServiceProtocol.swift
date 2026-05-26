@@ -49,7 +49,7 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
     )
     
     // 날짜별 혈당 기록 저장소
-    private var mockRecordsByDate: [String: [BloodSugarRecordDTO]] = [:]
+    private static var mockRecordsByDate: [String: [BloodSugarRecordDTO]] = [:]
     
     
     // MARK: - Fetch Setting
@@ -62,7 +62,7 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
     // MARK: - Fetch Records
     
     func fetchBloodSugarRecords(date: String) async throws -> BloodSugarFetchResponseDTO {
-        let records = mockRecordsByDate[date] ?? []
+        let records = Self.mockRecordsByDate[date] ?? []
         return BloodSugarFetchResponseDTO(records: records)
     }
     
@@ -81,14 +81,14 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
             sugarStatus: status
         )
         
-        var records = mockRecordsByDate[request.recordedDate] ?? []
+        var records = Self.mockRecordsByDate[request.recordedDate] ?? []
         
         // 같은 sequence가 이미 있으면 생성 대신 교체
         records.removeAll { $0.sequence == request.sequence }
         records.append(newRecord)
         records.sort { $0.sequence < $1.sequence }
         
-        mockRecordsByDate[request.recordedDate] = records
+        Self.mockRecordsByDate[request.recordedDate] = records
         
         return MessageResponseDTO(message: "혈당 기록이 저장되었습니다.")
     }
@@ -108,13 +108,13 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
             sugarStatus: status
         )
         
-        var records = mockRecordsByDate[request.recordedDate] ?? []
+        var records = Self.mockRecordsByDate[request.recordedDate] ?? []
         
         records.removeAll { $0.sequence == request.sequence }
         records.append(updatedRecord)
         records.sort { $0.sequence < $1.sequence }
         
-        mockRecordsByDate[request.recordedDate] = records
+        Self.mockRecordsByDate[request.recordedDate] = records
         
         return MessageResponseDTO(message: "혈당 기록이 수정되었습니다.")
     }
@@ -124,10 +124,10 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
     
     func deleteBloodSugarRecord(sequence: Int, date: String) async throws -> MessageResponseDTO {
         
-        var records = mockRecordsByDate[date] ?? []
+        var records = Self.mockRecordsByDate[date] ?? []
         records.removeAll { $0.sequence == sequence }
         
-        mockRecordsByDate[date] = records
+        Self.mockRecordsByDate[date] = records
         
         return MessageResponseDTO(message: "혈당 기록이 삭제되었습니다.")
     }
