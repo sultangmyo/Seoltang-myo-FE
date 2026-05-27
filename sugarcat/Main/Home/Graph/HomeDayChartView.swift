@@ -164,6 +164,7 @@ private extension HomeDayChartView {
                 Image(systemName: "arrow.up.right")
                     .font(.system(size: 18, weight: .bold))
             }
+            .fixedSize()
                         
             Text(DateStringFormatter.displayTime(from: point.recordTime))
                 .font(.system(size: 12, weight: .medium))
