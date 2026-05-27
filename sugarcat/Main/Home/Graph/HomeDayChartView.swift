@@ -56,7 +56,7 @@ private extension HomeDayChartView {
                     x: .value("Time", point.hour),
                     y: .value("Sugar", point.chartValue)
                 )
-                .foregroundStyle(point.isOverLimit ? Color.pointo : .clear)
+                .foregroundStyle(point.isOverLimit ? Color.pointo : .primary0)
             }
             
             // 고정 x축 ycbr baseline
