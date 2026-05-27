@@ -13,11 +13,14 @@ enum MyPageRoute: Hashable {
     case insulinNFsetting1 // 알림설정 -> 인슐린
     case bsNFsetting1 // 알림설정 -> 혈당
     case mealNFsetting1 // 알림설정 -> 식사
+    case editCatInfo // 고양이 정보 수정
+    case editNickname // 닉네임 변경 페이지
 }
 
 struct MyPageView: View {
     //네비게이션
     @State private var path = NavigationPath()
+    @StateObject private var viewModel = MyPageTopProfileSectionViewModel()
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -54,6 +57,11 @@ struct MyPageView: View {
                     BSNFsettingView1()
                 case .mealNFsetting1:
                     MealNFsettingView1()
+                case .editCatInfo:
+                    EditCatInfoView(viewModel: viewModel, path: $path)
+                case .editNickname:
+                    EditNicknameView(viewModel: viewModel, path: $path)
+                    
                 }
             }
         }

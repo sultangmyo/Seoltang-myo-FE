@@ -1,6 +1,6 @@
 import Foundation
 
-class MyPageViewModel: ObservableObject {
+class MyPageTopProfileSectionViewModel: ObservableObject {
     // 뷰에서 관찰할 상태 변수들
     @Published var catName: String = ""
     @Published var catAgeInfo: String = ""
