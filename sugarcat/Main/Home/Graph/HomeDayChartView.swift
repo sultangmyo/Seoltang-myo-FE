@@ -151,7 +151,7 @@ private extension HomeDayChartView {
                     )
             }
         }
-        .frame(height: 300)
+        .frame(height: 250)
     }
     
     // MARK: - 툴팁 UI
