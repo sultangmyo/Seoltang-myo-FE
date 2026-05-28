@@ -46,8 +46,13 @@ struct UpdateUserRequestDTO: Codable {
 
 
 // MARK: - 사용자 알림 전체 수정 생성
-struct UpdateNotificationRequest: Codable {
+struct UpdateAllNotificationRequest: Codable {
     let notificationEnabled: Bool
+}
+
+// MARK: - 사용자 알림 개별 수정
+struct UpdateNotificationRequest: Codable {
+    let inEnabled: Bool
 }
 // response dto
 // MessageResponseDTO를 재활용 합니다

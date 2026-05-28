@@ -39,7 +39,7 @@ extension UserEndpoint {
           
        // 7.2 사용자 알림 개별 조회
        case .userNotificationEdit(let type):
-           return "/api/v1/users/me/notification/\(type)"
+           return "/api/v1/users/me/notification?type=\(type)"
       
        }
    }
