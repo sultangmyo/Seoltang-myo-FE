@@ -21,7 +21,7 @@ struct CatInfo: Codable {
     let birthDate: String?
     let diagnosedDate: String
     let mealCount: Int
-    let bloodsugarCount: Int
+    let bloodSugarCount: Int
     let insulinCount: Int
 }
 
