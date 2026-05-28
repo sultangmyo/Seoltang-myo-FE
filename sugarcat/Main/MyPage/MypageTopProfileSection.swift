@@ -2,45 +2,50 @@
 //  MypageTopProfileSection.swift
 //  sugarcat
 //
-//  Created by 野菜サンド on 5/25/26.
+//  Created by 조수현 on 5/16/26.
 //
 
 import SwiftUI
 
 // MARK: - 마이페이지 상단 프로필 섹션 전체
 struct MyPageTopProfileSection: View {
+    
+    @Binding var path: NavigationPath
+    @ObservedObject var viewModel: MyPageTopProfileSectionViewModel
+    
     var body: some View {
         VStack(spacing: 24) {
             
             // 1. 고양이 정보
             VStack(alignment: .leading, spacing: 0) {
                 HStack(alignment: .top) {
-                    // 고양이 기본 프로필
                     Circle()
                         .stroke(Color("gray3"), lineWidth: 1)
                         .frame(width: 56, height: 56)
                         .overlay(
-                            Image(systemName: "cat") 
+                            Image(systemName: "cat")
                                 .foregroundColor(.gray)
                         )
                         .padding(.trailing, 14)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("나비")
+                        // 고양이 이름
+                        Text(viewModel.catName.isEmpty ? "고양이 이름 없음" : viewModel.catName)
                             .body1M()
                             .foregroundColor(Color("textbg1"))
                         
-                        Text("12살\n2014.05.22")
+                        // 나이 , 당뇨 진단 일자
+                        Text("\(viewModel.catAgeInfo)\n\(viewModel.catDiagnosedDate)")
                             .caption2R()
                             .foregroundColor(Color("gray1"))
-                            .lineSpacing(2)
+                            .lineSpacing(4)
                     }
                     
                     Spacer()
                     
-                    // 정보 수정 버튼
                     Button(action: {
-                        // 정보 수정 액션
+                        // 고양이 정보 수정 페이지 이동
+                        path.append(MyPageRoute.editCatInfo)
                     }) {
                         Text("정보 수정")
                             .caption3R()
@@ -53,12 +58,12 @@ struct MyPageTopProfileSection: View {
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color("gray3"),lineWidth: 1)
+                    .stroke(Color("gray3"), lineWidth: 1)
             )
             
             // 2. 본인 프로필 카드
             VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .center) {
+                HStack(alignment: .top) {
                     Circle()
                         .stroke(Color("gray3"), lineWidth: 1)
                         .frame(width: 56, height: 56)
@@ -69,7 +74,7 @@ struct MyPageTopProfileSection: View {
                         .padding(.trailing, 14)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("고대모")
+                        Text(viewModel.myNickname.isEmpty ? "미등록 유저" : viewModel.myNickname)
                             .body1M()
                             .foregroundColor(Color("textbg1"))
                         
@@ -81,11 +86,13 @@ struct MyPageTopProfileSection: View {
                     Spacer()
                     
                     Button(action: {
-                        // 닉네임 변경 액션
+                        // 닉네임 변경 페이지로 이동 액션
+                        path.append(MyPageRoute.editNickname)
                     }) {
                         Text("닉네임 변경")
                             .caption3R()
                             .foregroundColor(Color("gray1"))
+                            .padding(.top, 2)
                     }
                 }
                 .padding(20)
@@ -107,7 +114,7 @@ struct MyPageTopProfileSection: View {
                     Spacer()
                     
                     Button(action: {
-                        // 집사 초대하기 네비게이션 혹은 링크 액션
+                        print("집사 초대하기 버튼 탭")
                     }) {
                         HStack(spacing: 4) {
                             Text("집사 초대하기")
@@ -118,22 +125,30 @@ struct MyPageTopProfileSection: View {
                     }
                 }
                 
-                // 집사 원형 아이콘 가로 스크롤/배열
-                HStack(spacing: 16) {
-                    MateProfileCell(name: "엄마")
-                    MateProfileCell(name: "아빠")
-                    // 추가 동료 집사가 있다면 늘어남
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        if !viewModel.mates.isEmpty {
+                            ForEach(viewModel.mates, id: \.self) { mateNickname in
+                                FamilyProfileCell(name: mateNickname)
+                            }
+                        } else {
+                            Text("등록된 동료 집사가 없습니다.")
+                                .caption2R()
+                                .foregroundColor(.gray)
+                                .padding(.vertical, 8)
+                        }
+                    }
                 }
             }
             .padding(.top, 8)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 24) // 위아래 적당한 패딩감 부여
+        .padding(.vertical, 24)
     }
 }
 
 // 동료 집사 원형 셀 컴포넌트
-struct MateProfileCell: View {
+struct FamilyProfileCell: View {
     let name: String
     
     var body: some View {

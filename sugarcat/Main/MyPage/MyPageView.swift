@@ -32,10 +32,15 @@ struct MyPageView: View {
                 }
                 ScrollView {
                     // MARK: - divider 상단 영역
-                    
-                    VStack (spacing: 0){
-                        MyPageTopProfileSection()
-                        
+                    VStack(spacing: 0) {
+                        if viewModel.isLoading {
+                            // 로딩뷰
+                            ProgressView()
+                                .padding(.vertical, 40)
+                        } else {
+                            
+                            MyPageTopProfileSection(path: $path, viewModel: viewModel)
+                        }
                     }
                     
                     //커스텀 divider 적용
