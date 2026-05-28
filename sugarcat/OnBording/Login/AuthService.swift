@@ -10,7 +10,7 @@ import Foundation
 
 class AuthService {
     static let shared = AuthService()
-    private let baseURL = "http://172.19.30.146:8080/api/v1" // 서버 주소 수정 필요 ( 백엔드한테 받기)
+    private let baseURL = "http://172.19.28.40:8080/api/v1" // 서버 주소 수정 필요 ( 백엔드한테 받기)
     
     private init() {} // 외부에서 인스턴스 생성 방지
     
