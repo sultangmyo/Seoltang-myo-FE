@@ -12,6 +12,8 @@ class MyPageTopProfileSectionViewModel: ObservableObject {
     @Published var catName: String = ""
     @Published var catAgeInfo: String = ""
     @Published var catDiagnosedDate: String = ""
+    @Published var rawDiagnosedDate: String = "" //원 본 보관용
+    @Published var rawBirthDate: String = ""
     
     @Published var myNickname: String = ""
     @Published var mates: [String] = []
@@ -58,7 +60,7 @@ class MyPageTopProfileSectionViewModel: ObservableObject {
             
             do {
                 let requestDTO = UpdateUserRequestDTO(nickname: newNickname)
-                                
+                
                 try await APIClient.requestWithoutResponse(
                     path: UserEndpoint.userNicknameEdit.path,
                     method: UserEndpoint.userNicknameEdit.method,
@@ -84,6 +86,8 @@ class MyPageTopProfileSectionViewModel: ObservableObject {
     // 고양이 데이터 전처리 로직
     private func processCatData(dto: CatInfoResponseDTO) {
         self.catName = dto.name
+        self.rawDiagnosedDate = dto.diagnosedDate
+        self.rawBirthDate = dto.birthDate ?? ""
         
         // 생일 데이터 분석 및 나이 계산
         if let birthStr = dto.birthDate, !birthStr.isEmpty {
@@ -111,7 +115,7 @@ class MyPageTopProfileSectionViewModel: ObservableObject {
         
         let calendar = Calendar.current
         let now = Date()
-     
+        
         let components = calendar.dateComponents([.year, .month], from: birthDate, to: now)
         
         if let year = components.year, let month = components.month {

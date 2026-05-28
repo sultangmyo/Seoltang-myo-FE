@@ -63,7 +63,7 @@ struct MyPageView: View {
                 case .mealNFsetting1:
                     MealNFsettingView1()
                 case .editCatInfo:
-                    EditCatInfoView(viewModel: viewModel, path: $path)
+                    EditCatInfoView(parentViewModel: viewModel, path: $path)
                 case .editNickname:
                     EditNicknameView(viewModel: viewModel, path: $path)
                     
