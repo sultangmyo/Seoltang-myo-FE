@@ -11,7 +11,7 @@ class MyPageTopProfileSectionViewModel: ObservableObject {
     // 뷰에서 관찰할 상태 변수들
     @Published var catName: String = ""
     @Published var catAgeInfo: String = ""
-    @Published var catDiagnosedDate: String = "" // 당뇨 진단일
+    @Published var catDiagnosedDate: String = ""
     
     @Published var myNickname: String = ""
     @Published var mates: [String] = []
@@ -54,25 +54,29 @@ class MyPageTopProfileSectionViewModel: ObservableObject {
     /// 2. 사용자 닉네임을 백엔드에 보내서 수정하는 함수
     func updateNickname(newNickname: String, completion: @escaping (Bool) -> Void) {
         Task {
+            await MainActor.run { self.isLoading = true }
+            
             do {
-                /* 실제 연결 시 사용 (Body를 지원하는 APIClient 함수가 있다고 가정)
                 let requestDTO = UpdateUserRequestDTO(nickname: newNickname)
-                try await APIClient.requestWithBody(
+                                
+                try await APIClient.requestWithoutResponse(
                     path: UserEndpoint.userNicknameEdit.path,
                     method: UserEndpoint.userNicknameEdit.method,
                     body: requestDTO
                 )
-                */
                 
-                try await Task.sleep(nanoseconds: 200_000_000) // 0.2초 대기
-                
+                // 200 떨어지면 화면에 뿌림
                 await MainActor.run {
                     self.myNickname = newNickname
+                    self.isLoading = false
                     completion(true)
                 }
             } catch {
                 print("❌ 닉네임 수정 실패: \(error.localizedDescription)")
-                await MainActor.run { completion(false) }
+                await MainActor.run {
+                    self.isLoading = false
+                    completion(false)
+                }
             }
         }
     }

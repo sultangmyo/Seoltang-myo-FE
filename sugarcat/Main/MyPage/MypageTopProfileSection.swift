@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// MARK: - 마이페이지 상단 프로필 섹션 전체
+// MARK: - 마이페이지 상단 프로필 섹션
 struct MyPageTopProfileSection: View {
     
     @Binding var path: NavigationPath
