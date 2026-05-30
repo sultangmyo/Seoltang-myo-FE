@@ -22,7 +22,6 @@ extension MealEndpoint {
     
     var path: String {
         switch self {
-        //해당 값은 제가 임의로 수정했습니다. 실제로 명세서에는 sequence ==1 로 적혀 있습니다.
         case .saveMealRecord(let date, let sequence):
             return "/api/v1/meals/me?date=\(date)&sequence=\(sequence)"
             
