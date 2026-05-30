@@ -9,34 +9,22 @@ import Foundation
 
 protocol BloodSugarServiceProtocol {
     
-    // MARK: - Fetch Setting
+    // MARK: Fetch Setting
     // 이 값을 기반으로 버튼 개수를 생성함
     func fetchBloodSugarSetting() async throws -> CatCareBloodSugarFetchResponseDTO
     
-    
-    // MARK: - Fetch Records
-    // 특정 날짜 기준 혈당 기록 조회
-
+    // MARK: Fetch Records
     func fetchBloodSugarRecords(date: String) async throws -> BloodSugarFetchResponseDTO
     
+    // MARK: Create
+    func createBloodSugarRecord(_ request: BloodSugarCreateRequestDTO) async throws -> BloodSugarCreateResponseDTO
+
+    // MARK: Update
+    func updateBloodSugarRecord(_ request: BloodSugarUpdateRequestDTO) async throws
     
-    // MARK: - Create
-    // 혈당 기록 생성 (처음 입력)
-    func createBloodSugarRecord(_ request: BloodSugarCreateRequestDTO) async throws -> MessageResponseDTO
-    
-    
-    // MARK: - Update
-    // 혈당 기록 수정 (이미 있는 기록 수정)
-    func updateBloodSugarRecord(_ request: BloodSugarUpdateRequestDTO) async throws -> MessageResponseDTO
-    
-    
-    // MARK: - Delete
-    // 혈당 기록 삭제
-    // sequence + date 기준으로 삭제한다고 가정
-    func deleteBloodSugarRecord(sequence: Int, date: String) async throws -> MessageResponseDTO
+    // MARK: Delete
+    func deleteBloodSugarRecord(sequence: Int, date: String) async throws
 }
-
-
 
 // MARK: - mock service: 백엔드 연동후 삭제합니다.
 
@@ -69,7 +57,7 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
     
     // MARK: - Create
     
-    func createBloodSugarRecord(_ request: BloodSugarCreateRequestDTO) async throws -> MessageResponseDTO {
+    func createBloodSugarRecord(_ request: BloodSugarCreateRequestDTO) async throws -> BloodSugarCreateResponseDTO {
         
         let status = makeSugarStatus(from: request.sugarValue)
         
@@ -90,13 +78,16 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
         
         Self.mockRecordsByDate[request.recordedDate] = records
         
-        return MessageResponseDTO(message: "혈당 기록이 저장되었습니다.")
+        return BloodSugarCreateResponseDTO(
+            id: UUID().uuidString,
+            sugarStatus: status
+        )
     }
     
     
     // MARK: - Update
     
-    func updateBloodSugarRecord(_ request: BloodSugarUpdateRequestDTO) async throws -> MessageResponseDTO {
+    func updateBloodSugarRecord(_ request: BloodSugarUpdateRequestDTO) async throws {
         
         let status = makeSugarStatus(from: request.sugarValue)
         
@@ -115,21 +106,17 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
         records.sort { $0.sequence < $1.sequence }
         
         Self.mockRecordsByDate[request.recordedDate] = records
-        
-        return MessageResponseDTO(message: "혈당 기록이 수정되었습니다.")
     }
     
     
     // MARK: - Delete
     
-    func deleteBloodSugarRecord(sequence: Int, date: String) async throws -> MessageResponseDTO {
+    func deleteBloodSugarRecord(sequence: Int, date: String) async throws {
         
         var records = Self.mockRecordsByDate[date] ?? []
         records.removeAll { $0.sequence == sequence }
         
         Self.mockRecordsByDate[date] = records
-        
-        return MessageResponseDTO(message: "혈당 기록이 삭제되었습니다.")
     }
     
     
@@ -145,5 +132,85 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
         } else {
             return .high
         }
+    }
+}
+
+// MARK: - Real BloodSugar Service
+// 실제 서버 API를 호출해서 혈당 데이터를 처리하는 서비스
+final class RealBloodSugarService: BloodSugarServiceProtocol {
+    
+    // MARK: - Fetch Setting
+    
+    // 혈당 체크 설정 조회
+    func fetchBloodSugarSetting() async throws -> CatCareBloodSugarFetchResponseDTO {
+        try await APIClient.request(
+            path: CatCareEndpoint.bloodsugarRecordsCheck.path,
+            method: CatCareEndpoint.bloodsugarRecordsCheck.method
+        )
+    }
+    
+    // MARK: - Fetch Records
+    
+    // 특정 날짜 기준 혈당 기록 조회
+    func fetchBloodSugarRecords(
+        date: String
+    ) async throws -> BloodSugarFetchResponseDTO {
+        try await APIClient.request(
+            path: BloodSugarEndpoint.fetchBloodSugarRecords(
+                date: date
+            ).path,
+            method: BloodSugarEndpoint.fetchBloodSugarRecords(
+                date: date
+            ).method
+        )
+    }
+    
+    // MARK: - Create
+    
+    // 혈당 기록 생성
+    // POST는 201 응답으로 id, sugarStatus를 반환함
+    func createBloodSugarRecord(
+        _ request: BloodSugarCreateRequestDTO
+    ) async throws -> BloodSugarCreateResponseDTO {
+        try await APIClient.requestWithBody(
+            path: BloodSugarEndpoint.saveBloodSugarRecord.path,
+            method: BloodSugarEndpoint.saveBloodSugarRecord.method,
+            body: request
+        )
+    }
+    
+    // MARK: - Update
+    
+    // 혈당 기록 수정
+    // PATCH는 204 No Content라 반환값 없음
+    func updateBloodSugarRecord(
+        _ request: BloodSugarUpdateRequestDTO
+    ) async throws {
+        try await APIClient.requestWithoutResponse(
+            path: BloodSugarEndpoint.updateBloodSugarRecord.path,
+            method: BloodSugarEndpoint.updateBloodSugarRecord.method,
+            body: request
+        )
+    }
+    
+    // MARK: - Delete
+    
+    // 혈당 기록 삭제
+    // DELETE는 query parameter로 sequence/date를 보내고,
+    // 204 No Content라 반환값 없음
+    func deleteBloodSugarRecord(
+        sequence: Int,
+        date: String
+    ) async throws {
+        try await APIClient.requestWithoutResponse(
+            path: BloodSugarEndpoint.deleteBloodSugarRecord(
+                sequence: sequence,
+                date: date
+            ).path,
+            method: BloodSugarEndpoint.deleteBloodSugarRecord(
+                sequence: sequence,
+                date: date
+            ).method
+        )
     }
 }
