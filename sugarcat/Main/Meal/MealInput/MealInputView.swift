@@ -22,11 +22,31 @@ struct MealInputView: View {
     @Environment(\.dismiss) private var dismiss
     
     // 사용자가 선택한 시간 (기본값: 현재 시간)
-    @State private var selectedTime: Date = Date()
+    @State private var selectedTime: Date
     
     // 사용자가 선택한 식사 상태 (다 먹음 / 덜 먹음)
     @State private var selectedStatus: MealStatus?
     
+    init(
+            item: MealRecordItem,
+            selectedDate: Date,
+            viewModel: MealViewModel
+        ) {
+            self.item = item
+            self.selectedDate = selectedDate
+            self.viewModel = viewModel
+
+            // 기존 식사 기록 시간이 있으면 DatePicker 초기값으로 사용
+            // 기록이 없으면 현재 시간 사용
+            _selectedTime = State(
+                initialValue: DateParser.parseTime(item.recordTime ?? "") ?? Date()
+            )
+            // 기존 식사 기록 상태가 있으면 버튼 선택 상태로 사용
+            // 기록이 없으면 아무 버튼도 선택하지 않음
+            _selectedStatus = State(
+                initialValue: item.mealStatus
+            )
+        }
     
     var body: some View {
         VStack(spacing: 0) {

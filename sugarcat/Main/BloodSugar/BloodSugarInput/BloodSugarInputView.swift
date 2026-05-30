@@ -16,7 +16,7 @@ struct BloodSugarInputView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var sugarText: String
-    @State private var selectedTime: Date = Date()
+    @State private var selectedTime: Date
     
     init(
         item: BloodSugarRecordItem,
