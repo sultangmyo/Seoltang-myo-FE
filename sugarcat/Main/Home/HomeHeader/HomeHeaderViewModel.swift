@@ -15,10 +15,10 @@ final class HomeHeaderViewModel: ObservableObject {
     @Published var titleText: String = "로딩 중..."
     
     // 서비스 의존성
-    private let catService: CatServiceProtocol
+    private let homeHeaderService: HomeHeaderServiceProtocol
     
-    init(catService: CatServiceProtocol) {
-        self.catService = catService
+    init(homeHeaderService: HomeHeaderServiceProtocol) {
+        self.homeHeaderService = homeHeaderService
     }
     
     // 데이터 로딩 함수
@@ -26,7 +26,7 @@ final class HomeHeaderViewModel: ObservableObject {
         
         do {
             // 2. 고양이 정보 요청
-            let catInfo = try await catService.fetchCatInfo()
+            let catInfo = try await homeHeaderService.fetchCatInfo()
             
             // 3. String → Date 변환
             guard let diagnosedDate = DateParser.parse(catInfo.diagnosedDate) else {
