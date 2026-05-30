@@ -27,6 +27,12 @@ struct BloodSugarInputView: View {
         self.selectedDate = selectedDate
         self.viewModel = viewModel
         _sugarText = State(initialValue: item.sugarValue.map { String($0) } ?? "")
+        // 기록 시간이 없으면 현재 시간 사용
+        _selectedTime = State(
+            initialValue: DateParser.parseTime(
+                item.recordTime ?? ""
+            ) ?? Date()
+        )
     }
     
     var body: some View {
