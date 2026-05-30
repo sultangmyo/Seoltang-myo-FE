@@ -17,7 +17,7 @@ enum BloodSugarEndpoint {
     // 혈당 기록 수정
     case updateBloodSugarRecord
     // 혈당 기록 삭제
-    case deleteBloodSugarRecord
+    case deleteBloodSugarRecord(sequence: Int, date: String)
 }
 
 extension BloodSugarEndpoint {
@@ -33,8 +33,8 @@ extension BloodSugarEndpoint {
         case .updateBloodSugarRecord:
             return "/api/v1/blood-sugar-records/me"
             
-        case .deleteBloodSugarRecord:
-            return "/api/v1/blood-sugar-records/me"
+        case .deleteBloodSugarRecord(let sequence, let date):
+            return "/api/v1/blood-sugar-records/me?sequence=\(sequence)&date=\(date)"
         }
     }
     
