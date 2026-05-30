@@ -22,6 +22,12 @@ struct BloodSugarCreateRequestDTO: Codable {
     let sugarValue: Int        // 혈당 수치
 }
 
+// Response 201
+struct BloodSugarCreateResponseDTO: Codable {
+    let id: String                 // 생성된 혈당 ID(UUID)
+    let sugarStatus: SugarStatus   // LOW / NORMAL / HIGH
+}
+
 // MARK: - FETCH (GET 요청)
 struct BloodSugarFetchResponseDTO: Codable {
     let records: [BloodSugarRecordDTO] // 혈당 기록 배열
@@ -45,15 +51,7 @@ struct BloodSugarUpdateRequestDTO: Codable {
     let sugarValue: Int        // 혈당 수치
 }
 
-// responseDTO
-// MessageResponseDTO를 재활용 합니다
-
 // MARK: - DELETE (DELETE 요청)
-// responseDTO
-// MessageResponseDTO를 재활용 합니다
 
-// MARK: - WEEK REPORT (GET 요청)
-struct BloodSugarWeekReportResponseDTO: Codable {
-    let sugarHighCount: Int    // 혈당 높음 횟수
-    let sugarLowCount: Int     // 혈당 낮음 횟수
-}
+// DELETE는 query parameter로 sequence/date를 보내고,
+// Response 204 no content라 별도 DTO 없음
