@@ -10,14 +10,14 @@ import Foundation
 
 // MARK: - Insulin
 
-enum Endpoint {
+enum InsulinEndpoint {
     // 4.3 인슐린 투여 기록 저장
     case saveInsulinRecord
     // 4.3 날짜별 인슐린 투여 기록 조회
     case fetchInsulinRecords(date: String)
 }
 
-extension Endpoint {
+extension InsulinEndpoint {
     var path: String {
         switch self {
         // 인슐린 투여 기록 저장
