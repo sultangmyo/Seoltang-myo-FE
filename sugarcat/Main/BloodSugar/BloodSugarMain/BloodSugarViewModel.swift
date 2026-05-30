@@ -131,7 +131,7 @@ final class BloodSugarViewModel: ObservableObject {
         )
         
         do {
-            _ = try await bloodSugarService.updateBloodSugarRecord(request)
+            try await bloodSugarService.updateBloodSugarRecord(request)
             await loadRecords()
         } catch {
             errorMessage = "혈당 기록 수정에 실패했어요."
@@ -145,7 +145,7 @@ final class BloodSugarViewModel: ObservableObject {
         let dateString = DateStringFormatter.dateString(from: selectedDate)
         
         do {
-            _ = try await bloodSugarService.deleteBloodSugarRecord(
+            try await bloodSugarService.deleteBloodSugarRecord(
                 sequence: sequence,
                 date: dateString
             )
