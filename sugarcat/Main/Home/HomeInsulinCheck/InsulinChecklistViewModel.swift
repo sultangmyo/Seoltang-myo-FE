@@ -52,7 +52,10 @@ final class InsulinChecklistViewModel: ObservableObject {
             
             // 오늘 인슐린 기록 조회
             // sequence별 체크 여부, 체크한 사람의 닉네임이 내려옴
-            let response = try await insulinService.fetchTodayInsulinRecords()
+            let today = DateStringFormatter.todayString()
+            let response = try await insulinService.fetchTodayInsulinRecords(
+                date: today
+            )
             
             // 설정(count) + 기록(records)을 합쳐서 화면용 모델 생성
             items = makeChecklistItems(
