@@ -159,6 +159,13 @@ private extension BloodSugarInputView {
                     await viewModel.deleteRecord(sequence: item.sequence)
                 }
                 
+                // 혈당 기록이 생성/수정/삭제되었음을 앱 내부에 알림
+                // HomeGraphViewModel이 이 notification을 감지해서 그래프를 다시 불러옴
+                NotificationCenter.default.post(
+                    name: .bloodSugarRecordsDidUpdate,
+                    object: nil
+                )
+                
                 dismiss()
             }
         }

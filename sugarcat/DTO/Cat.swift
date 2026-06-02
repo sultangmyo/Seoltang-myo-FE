@@ -21,7 +21,7 @@ struct CatInfo: Codable {
     let birthDate: String?
     let diagnosedDate: String
     let mealCount: Int
-    let bloodsugarCount: Int
+    let bloodSugarCount: Int
     let insulinCount: Int
 }
 
@@ -85,4 +85,31 @@ struct ErrorResponseDTO: Codable {
 }
 
 // MARK: - 7.4 pdf 데이터 조회
-// 추후에 api 명세서가 완성되면 코드를 작성할 예정입니다.
+struct CatPDFResponseDTO: Codable {
+    let rows: [CatRecordRow]?
+}
+
+struct CatRecordRow: Codable {
+    let recordDate: String?
+    let bloodSugars: [BloodSugarRecord]?
+    let meals: [MealRecord]?
+    let insulin: InsulinRecord?
+}
+
+// 혈당 기록 세부 데이터
+struct BloodSugarRecord: Codable {
+    let recordTime: String?
+    let sugarValue: Int?
+    let sugarStatus: String?
+}
+
+// 식사 기록 세부 데이터
+struct MealRecord: Codable {
+    let recordTime: String?
+    let mealStatus: String?
+}
+
+// 인슐린 기록 세부 데이터
+struct InsulinRecord: Codable {
+    let missedIndexes: [Int]?
+}
