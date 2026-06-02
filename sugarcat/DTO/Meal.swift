@@ -19,10 +19,6 @@ struct MealCreateRequestDTO: Codable {
     let sequence: Int // 몇번째 식사인지 시퀀스
     let recordTime: String //
     let mealStatus: MealStatus //식사 상태 (full / partial)
-
-    enum CodingKeys: String, CodingKey {
-        case date, sequence, recordTime, mealStatus
-    }
 }
 
 // responseDTO
@@ -48,10 +44,6 @@ struct MealUpdateRequestDTO: Codable {
     let sequence: Int
     let recordTime: String
     let mealStatus: MealStatus // String 대신 Enum 사용
-
-    enum CodingKeys: String, CodingKey {
-        case date, sequence, recordTime, mealStatus
-    }
 }
 
 // responseDTO

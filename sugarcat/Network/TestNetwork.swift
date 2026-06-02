@@ -26,14 +26,12 @@ enum APIClient {
     // 공통 Decoder
     private static var decoder: JSONDecoder {
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }
     
     // 공통 Encoder
     private static var encoder: JSONEncoder {
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
     }
     
