@@ -23,7 +23,7 @@ enum DateParser {
     // "HH:mm:ss" → Date
     static func parseTime(_ timeString: String) -> Date? {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
+        formatter.dateFormat = "HH:mm"
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return formatter.date(from: timeString)

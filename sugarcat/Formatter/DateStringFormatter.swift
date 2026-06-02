@@ -41,7 +41,7 @@ enum DateStringFormatter {
     // MARK: - Date → "HH:mm:ss" 시간이 저장되어 백엔드로 보내질 때 사용
     static func timeString(from date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
+        formatter.dateFormat = "HH:mm"
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         
