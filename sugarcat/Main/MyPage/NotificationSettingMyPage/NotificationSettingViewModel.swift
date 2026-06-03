@@ -57,7 +57,7 @@ class NotificationSettingViewModel: ObservableObject {
             
             for i in 0..<min(sortedSchedules.count, existingTimes.count) {
                 if let timeStr = sortedSchedules[i].time {
-                    self.existingTimes[i] = DateStringFormatter.date(from: timeStr)
+                    self.existingTimes[i] = DateParser.parseTime(timeStr) ?? Date()
                 }
             }
         } catch {
