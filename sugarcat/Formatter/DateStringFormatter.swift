@@ -77,5 +77,15 @@ enum DateStringFormatter {
         return outputFormatter.string(from: date)
     }
     
+    // MARK: - Date → "h:mm a" (12시간제: 1:30 PM 형식) 온보딩 및 알림 재설정 뷰에서 사용
+    static func displayTime12Hour(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        
+        return formatter.string(from: date)
+    }
+    
   
 }
