@@ -76,4 +76,14 @@ enum DateStringFormatter {
         
         return outputFormatter.string(from: date)
     }
+    
+    
+    // MARK: - "HH:mm" String → Date 변환 (알림 서버 데이터 파싱용)
+    static func date(from timeString: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        return formatter.date(from: timeString) ?? Date()
+    }
 }
