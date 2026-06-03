@@ -64,11 +64,4 @@ struct NotificationSettingsResponse: Decodable {
     let bloodSugarNotificationEnabled: Bool
     let mealNotificationEnabled: Bool
     let weeklyReportNotificationEnabled: Bool
-//디코더 없어서 작성했습니다.
-    enum CodingKeys: String, CodingKey {
-        case insulinNotificationEnabled = "insulin_notification_enabled"
-        case bloodSugarNotificationEnabled = "blood_sugar_notification_enabled"
-        case mealNotificationEnabled = "meal_notification_enabled"
-        case weeklyReportNotificationEnabled = "weekly_report_notification_enabled"
-    }
 }
