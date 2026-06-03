@@ -148,7 +148,7 @@ final class InsulinChecklistViewModel: ObservableObject {
                 sequence: sequence,
                 title: "\(sequence)번째 인슐린",
                 isInjected: matchedRecord?.isInjected ?? false,
-                injectedByNickname: matchedRecord?.nickName
+                injectedByNickname: matchedRecord?.nickname
             )
         }
     }

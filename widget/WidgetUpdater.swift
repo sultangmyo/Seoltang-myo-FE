@@ -76,8 +76,8 @@ enum MockWidgetUpdater {
         
         let insulinRecords = InsulinFetchResponseDTO(
             records: [
-                InsulinRecordDTO(sequence: 1, isInjected: true, nickName: "희재"),
-                InsulinRecordDTO(sequence: 2, isInjected: true, nickName: "희재")
+                InsulinRecordDTO(sequence: 1, isInjected: true, nickname: "희재"),
+                InsulinRecordDTO(sequence: 2, isInjected: true, nickname: "희재")
             ]
         )
         

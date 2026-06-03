@@ -85,7 +85,7 @@ final class MockInsulinService: InsulinServiceProtocol {
         let newRecord = InsulinRecordDTO(
             sequence: request.sequence,
             isInjected: request.isInjected,
-            nickName: "희재"
+            nickname: "희재"
         )
         
         // mock 저장소에 새 기록 추가

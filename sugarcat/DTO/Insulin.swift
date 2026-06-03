@@ -25,5 +25,5 @@ struct InsulinFetchResponseDTO: Codable {
 struct InsulinRecordDTO: Codable {
     let sequence: Int        // 투여 순서
     let isInjected: Bool     // 투여 여부
-    let nickName: String     // 투여한 집사 닉네임
+    let nickname: String     // 투여한 집사 닉네임
 }
