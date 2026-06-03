@@ -34,7 +34,7 @@ struct BloodSugarFetchResponseDTO: Codable {
 }
 
 struct BloodSugarRecordDTO: Codable {
-    let nickName: String         // 기록한 사람 닉네임
+    let nickname: String         // 기록한 사람 닉네임
     let recordTime: String       // 혈당 저장 시간
     let sequence: Int            // 혈당 저장 순서
     let sugarValue: Int          // 혈당 수치

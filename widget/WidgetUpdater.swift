@@ -85,7 +85,7 @@ enum MockWidgetUpdater {
         let bloodSugarRecords = BloodSugarFetchResponseDTO(
             records: [
                 BloodSugarRecordDTO(
-                    nickName: "희재",
+                    nickname: "희재",
                     recordTime: "08:03:22",
                     sequence: 1,
                     sugarValue: 180,
@@ -93,7 +93,7 @@ enum MockWidgetUpdater {
                 ),
                 
                 BloodSugarRecordDTO(
-                    nickName: "희재",
+                    nickname: "희재",
                     recordTime: "23:03:22",
                     sequence: 2,
                     sugarValue: 100,
