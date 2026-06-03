@@ -126,14 +126,8 @@ final class RealMealService: MealServiceProtocol {
         _ request: MealCreateRequestDTO
     ) async throws -> MessageResponseDTO {
         try await APIClient.requestWithBody(
-            path: MealEndpoint.saveMealRecord(
-                date: request.date,
-                sequence: request.sequence
-            ).path,
-            method: MealEndpoint.saveMealRecord(
-                date: request.date,
-                sequence: request.sequence
-            ).method,
+            path: MealEndpoint.saveMealRecord.path,
+            method: MealEndpoint.saveMealRecord.method,
             body: request
         )
     }

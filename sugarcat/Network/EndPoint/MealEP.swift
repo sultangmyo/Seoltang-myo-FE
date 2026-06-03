@@ -11,7 +11,7 @@ import Foundation
 
 enum MealEndpoint {
     // 6.3 식사 기록 저장
-    case saveMealRecord(date: String, sequence: Int)
+    case saveMealRecord
     // 6.1 날짜별 식사 기록 조회
     case fetchMealRecords(date: String)
     // 6.4 식사 기록 수정
@@ -22,8 +22,8 @@ extension MealEndpoint {
     
     var path: String {
         switch self {
-        case .saveMealRecord(let date, let sequence):
-            return "/api/v1/meals/me?date=\(date)&sequence=\(sequence)"
+        case .saveMealRecord:
+            return "/api/v1/meals/me"
             
         case .fetchMealRecords(let date):
             return "/api/v1/meals/me?date=\(date)"
