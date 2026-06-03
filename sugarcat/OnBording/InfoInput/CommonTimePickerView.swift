@@ -30,7 +30,7 @@ struct CommonTimePickerView: View {
                 ForEach(0..<count, id: \.self) { index in
                     HStack {
                         Text("\(index + 1)번째 \(category)")
-                            .font(.system(size: 18, weight: .medium))
+                            .body1M()
                             .foregroundColor(Color("textbg1"))
                         
                         Spacer()
@@ -62,18 +62,17 @@ struct CommonTimePickerView: View {
                             
                             Group {
                                 if selectedTimes.indices.contains(index), let targetDate = selectedTimes[index] {
-                                  
-                                    Text(formattedTimeString(from: targetDate))
-                                        .font(.system(size: 16, weight: .medium))
+                                    Text(DateStringFormatter.displayTime12Hour(from: targetDate))
+                                        .body2R()
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 8)
-                                        .background(Color("primary0").opacity(0.6))
+                                        .background(Color("prisub1").opacity(0.6))
                                         .cornerRadius(20)
                                 } else {
                                    
                                     Text("시간 입력")
-                                        .font(.system(size: 16, weight: .medium))
+                                        .body2R()
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 8)
@@ -100,13 +99,7 @@ struct CommonTimePickerView: View {
         }
     }
     
-    // "12:30 AM" 형태의 북미권 시간 표기법 양식 변환기
-    private func formattedTimeString(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US")
-        formatter.dateFormat = "h:mm a"
-        return formatter.string(from: date)
-    }
+
 }
 
 #Preview {
@@ -114,6 +107,6 @@ struct CommonTimePickerView: View {
         title: "정기 식사 시간을\n알려주세요",
         category: "식사",
         count: 3,
-        selectedTimes: .constant([nil, nil, nil])
+        selectedTimes: .constant([nil, Date(), nil])
     )
 }
