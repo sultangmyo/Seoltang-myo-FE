@@ -33,7 +33,7 @@ struct HomeView: View {
                     .padding(.bottom, 16)
                 
                 //인슐린 투여기록
-                InsulinChecklistSectionView(insulinService: RealInsulinService())
+                InsulinChecklistSectionView(insulinService: MockInsulinService())
                 Spacer()
             }
         }
