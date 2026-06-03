@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class MyPageTopProfileSectionViewModel: ObservableObject {
     // 뷰에서 관찰할 상태 변수들

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class EditCatInfoViewModel: ObservableObject {
     // 뷰와 바인딩할 입력 상태 변수들

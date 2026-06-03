@@ -44,6 +44,16 @@ struct sugarcatApp: App {
                 .onAppear(){
                     requestLocalNetworkPermission()
                 }
+//            매인 화면 테스트 코드 입니다.
+//            MainTabView()
+//                .onOpenURL { url in
+//                    if (AuthApi.isKakaoTalkLoginUrl(url)) {
+//                        _ = AuthController.handleOpenUrl(url: url)
+//                    }
+//                }
+//                .onAppear(){
+//                    requestLocalNetworkPermission()
+//                }
         }
     }
 }

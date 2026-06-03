@@ -62,7 +62,7 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
         let status = makeSugarStatus(from: request.sugarValue)
         
         let newRecord = BloodSugarRecordDTO(
-            nickName: "희재",
+            nickname: "희재",
             recordTime: request.recordedTime,
             sequence: request.sequence,
             sugarValue: request.sugarValue,
@@ -92,7 +92,7 @@ final class MockBloodSugarService: BloodSugarServiceProtocol {
         let status = makeSugarStatus(from: request.sugarValue)
         
         let updatedRecord = BloodSugarRecordDTO(
-            nickName: "희재",
+            nickname: "희재",
             recordTime: request.recordedTime,
             sequence: request.sequence,
             sugarValue: request.sugarValue,

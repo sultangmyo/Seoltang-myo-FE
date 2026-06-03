@@ -11,7 +11,7 @@ import Foundation
 enum BaseURL {
     
     // 로컬 테스트용
-    static let local = "http://localhost:8080"
+    static let local = "http://172.19.59.103:8080"
     
     // 실제 서버 붙을 때 교체
     static let production = ""
@@ -49,6 +49,14 @@ enum APIClient {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         
+        //추가
+        if let accessToken = TokenManager.shared.getAccessToken() {
+            request.setValue(
+                "Bearer \(accessToken)",
+                forHTTPHeaderField: "Authorization"
+            )
+        }
+        
         let (data, response) = try await URLSession.shared.data(
             for: request
         )
@@ -56,6 +64,10 @@ enum APIClient {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
+        
+        // MARK: 디버깅 로그
+        print("🌐 URL:", urlString)
+        print("📡 Status Code:", httpResponse.statusCode)
         
         guard 200...299 ~= httpResponse.statusCode else {
             throw URLError(.badServerResponse)
@@ -86,6 +98,14 @@ enum APIClient {
         )
         request.httpBody = try encoder.encode(body)
         
+        //추가
+        if let accessToken = TokenManager.shared.getAccessToken() {
+            request.setValue(
+                "Bearer \(accessToken)",
+                forHTTPHeaderField: "Authorization"
+            )
+        }
+        
         let (data, response) = try await URLSession.shared.data(
             for: request
         )
@@ -93,6 +113,10 @@ enum APIClient {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
+        
+        // MARK: 디버깅 로그
+        print("🌐 URL:", urlString)
+        print("📡 Status Code:", httpResponse.statusCode)
         
         guard 200...299 ~= httpResponse.statusCode else {
             throw URLError(.badServerResponse)
@@ -123,11 +147,23 @@ enum APIClient {
         )
         request.httpBody = try encoder.encode(body)
         
+        //추가
+        if let accessToken = TokenManager.shared.getAccessToken() {
+            request.setValue(
+                "Bearer \(accessToken)",
+                forHTTPHeaderField: "Authorization"
+            )
+        }
+        
         let (_, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
+        
+        // MARK: 디버깅 로그
+        print("🌐 URL:", urlString)
+        print("📡 Status Code:", httpResponse.statusCode)
         
         guard 200...299 ~= httpResponse.statusCode else {
             throw URLError(.badServerResponse)
@@ -150,11 +186,23 @@ enum APIClient {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         
+        //추가
+        if let accessToken = TokenManager.shared.getAccessToken() {
+            request.setValue(
+                "Bearer \(accessToken)",
+                forHTTPHeaderField: "Authorization"
+            )
+        }
+        
         let (_, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
+        
+        // MARK: 디버깅 로그
+        print("🌐 URL:", urlString)
+        print("📡 Status Code:", httpResponse.statusCode)
         
         guard 200...299 ~= httpResponse.statusCode else {
             throw URLError(.badServerResponse)
