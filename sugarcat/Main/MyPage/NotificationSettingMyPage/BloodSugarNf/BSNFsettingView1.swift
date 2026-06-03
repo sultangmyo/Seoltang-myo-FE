@@ -44,7 +44,7 @@ struct BSNFsettingView1: View {
                     CommonCountSelectionView(
                         title: step1Title,
                         countOptions: [1, 2, 3, 4, 5, 6, 7, 8],
-                        selectedCount: $viewModel.existingCount 
+                        selectedCount: $viewModel.existingCount
                     )
 
                     Spacer()
@@ -63,12 +63,25 @@ struct BSNFsettingView1: View {
 
                     Spacer()
 
+                    // 🌟 1. 유저가 선택한 횟수(Count) 만큼 잘 채워 넣었는지 안전하게 체크해주는 변수
+                    let dynamicSelection = viewModel.existingTimes.prefix(viewModel.existingCount)
+                    let isAllFilled = dynamicSelection.allSatisfy { $0 != nil }
+
+                    // 🌟 2. 상태에 맞춰 "완료" 혹은 "건너뛰기" 분기 처리 로직
                     Button(action: {
                         Task {
-                            await viewModel.saveDataToBackend { dismiss() }
+                            if isAllFilled {
+                                // 다 채웠으면 백엔드 서버에 patch 요청 후 닫기
+                                await viewModel.saveDataToBackend { dismiss() }
+                            } else {
+                                // 하나라도 안 채우고 '건너뛰기'를 눌렀다면 통신 없이 화면만 깔끔하게 닫기
+                                // (백엔드에 null을 바로 쏘기로 로직이 완성되어있다면 이대로 dismiss()만 해도 무방합니다)
+                                dismiss()
+                            }
                         }
                     }) {
-                        Text("완료")
+                        // 🌟 시안 필터링에 맞춰 버튼 글씨 동적 변경
+                        Text(isAllFilled ? "완료" : "건너뛰기")
                     }
                     .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: viewModel.isSaving))
                     .padding(.bottom, 10)
@@ -81,6 +94,7 @@ struct BSNFsettingView1: View {
         }
     }
 }
+
 #Preview {
     NavigationStack {
         BSNFsettingView1()

@@ -12,7 +12,7 @@ import SwiftUI
 class NotificationSettingViewModel: ObservableObject {
     
     @Published var existingCount: Int = 3
-    @Published var existingTimes: [Date] = Array(repeating: Date(), count: 8)
+    @Published var existingTimes: [Date?] = Array(repeating: nil, count: 8)
     @Published var isLoading: Bool = true
     @Published var isSaving: Bool = false
     
@@ -73,8 +73,16 @@ class NotificationSettingViewModel: ObservableObject {
         let selectedDates = existingTimes.prefix(existingCount)
         var scheduleList: [Schedule] = []
         
-        for (index, date) in selectedDates.enumerated() {
-            let timeStr = DateStringFormatter.timeString(from: date)
+        for (index, optionalDate) in selectedDates.enumerated() {
+            let timeStr: String?
+            
+        
+            if let realDate = optionalDate {
+                timeStr = DateStringFormatter.timeString(from: realDate)
+            } else {
+                timeStr = nil 
+            }
+            
             let schedule = Schedule(sequence: index + 1, time: timeStr)
             scheduleList.append(schedule)
         }
@@ -82,7 +90,6 @@ class NotificationSettingViewModel: ObservableObject {
         let requestBody = ScheduleGroup(schedules: scheduleList)
         
         do {
-            
             let _: MessageResponseDTO = try await APIClient.requestWithBody(
                 path: "/api/v1/users/me/notification?type=\(category.rawValue)",
                 method: .patch,
