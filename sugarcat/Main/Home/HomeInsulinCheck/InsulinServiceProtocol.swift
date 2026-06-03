@@ -8,24 +8,15 @@
 import Foundation
 
 // MARK: - 실제 서비스 프로토콜
-// 인슐린 관련 네트워크 기능의 "약속"을 정의하는 프로토콜
-// ViewModel은 이 프로토콜만 알면 되고,
-// 실제로 Mock 서비스인지, 실제 서버 서비스인지는 몰라도 됨
 protocol InsulinServiceProtocol {
     
     // 온보딩에서 저장한 인슐린 설정 정보를 조회하는 함수
-    // 예: 하루에 1번/2번/3번 투여하는지, 각 회차 시간이 어떻게 되는지
-    // 반환값은 CareSettingDTO이며, 여기서 count를 이용해 체크리스트 개수를 결정함
     func fetchInsulinSetting() async throws -> CatCareInsulinFetchResponseDTO
     
     // "오늘 날짜 기준" 인슐린 투여 기록을 조회하는 함수
-    // 화면에 각 회차가 이미 체크되었는지, 누가 체크했는지를 보여주기 위해 필요함
-    // 반환값은 records 배열이며, 각 record는 sequence / isInjected / nickName 정보를 가짐
-    func fetchTodayInsulinRecords() async throws -> InsulinFetchResponseDTO
+    func fetchTodayInsulinRecords(date: String) async throws -> InsulinFetchResponseDTO
     
     // 사용자가 체크 확인 alert에서 "네"를 눌렀을 때 해당 회차의 인슐린 투여 기록을 서버에 저장하는 함수
-    // request 안에는 투여 여부(true), 몇 번째 회차인지(sequence), 기록 날짜(recordDate)가 담김
-    // 성공 시 서버는 보통 MessageResponseDTO 같은 공통 응답을 반환함
     func createInsulinRecord(_ request: InsulinCreateRequestDTO) async throws -> MessageResponseDTO
 }
 
@@ -69,7 +60,7 @@ final class MockInsulinService: InsulinServiceProtocol {
     // 오늘 날짜의 인슐린 기록 조회
     // 현재는 mockRecords 배열 전체를 그대로 반환
     // 실제 서버에서는 오늘 날짜 기준으로 필터링된 결과가 내려온다고 가정
-    func fetchTodayInsulinRecords() async throws -> InsulinFetchResponseDTO {
+    func fetchTodayInsulinRecords(date: String) async throws -> InsulinFetchResponseDTO {
         // 실제 네트워크 호출처럼 보이도록 약간의 지연을 줄 수도 있음
         // try await Task.sleep(nanoseconds: 300_000_000)
         
@@ -105,5 +96,45 @@ final class MockInsulinService: InsulinServiceProtocol {
         
         // 실제 서버의 성공 응답을 흉내냄
         return MessageResponseDTO(message: "인슐린 투여 기록이 저장되었습니다.")
+    }
+}
+
+// MARK: - Real Insulin Service
+// 실제 서버 API를 호출해서 인슐린 데이터를 처리하는 서비스
+final class RealInsulinService: InsulinServiceProtocol {
+    
+    // MARK: - Fetch Setting
+    
+    // 온보딩에서 설정한 인슐린 투여 횟수/시간 조회
+    func fetchInsulinSetting() async throws -> CatCareInsulinFetchResponseDTO {
+        try await APIClient.request(
+            path: CatCareEndpoint.insulinRecordCheck.path,
+            method: CatCareEndpoint.insulinRecordCheck.method
+        )
+    }
+    
+    // MARK: - Fetch Records
+    
+    // 선택한 날짜 기준 인슐린 투여 기록 조회
+    func fetchTodayInsulinRecords(
+        date: String
+    ) async throws -> InsulinFetchResponseDTO {
+        try await APIClient.request(
+            path: InsulinEndpoint.fetchInsulinRecords(date: date).path,
+            method: InsulinEndpoint.fetchInsulinRecords(date: date).method
+        )
+    }
+    
+    // MARK: - Create Record
+    
+    // 인슐린 투여 기록 저장
+    func createInsulinRecord(
+        _ request: InsulinCreateRequestDTO
+    ) async throws -> MessageResponseDTO {
+        try await APIClient.requestWithBody(
+            path: InsulinEndpoint.saveInsulinRecord.path,
+            method: InsulinEndpoint.saveInsulinRecord.method,
+            body: request
+        )
     }
 }

@@ -178,10 +178,10 @@ enum RealWidgetUpdater {
             // 오늘 인슐린 기록 조회
             let insulinRecords: InsulinFetchResponseDTO =
             try await request(
-                path: Endpoint.fetchInsulinRecords(
+                path: InsulinEndpoint.fetchInsulinRecords(
                     date: today
                 ).path,
-                method: Endpoint.fetchInsulinRecords(
+                method: InsulinEndpoint.fetchInsulinRecords(
                     date: today
                 ).method
             )

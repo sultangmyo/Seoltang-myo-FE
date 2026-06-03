@@ -86,3 +86,63 @@ final class MockMealService: MealServiceProtocol {
         return MessageResponseDTO(message: "식사 기록이 수정되었습니다.")
     }
 }
+
+
+// MARK: - Real Meal Service
+// 실제 서버 API를 호출해서 식사 데이터를 처리하는 서비스
+final class RealMealService: MealServiceProtocol {
+    
+    // MARK: - Fetch Setting
+    
+    // 온보딩에서 설정한 하루 식사 횟수 조회
+    func fetchMealSetting() async throws -> CatCareMealFetchResponseDTO {
+        try await APIClient.request(
+            path: CatCareEndpoint.mealRecordCheck.path,
+            method: CatCareEndpoint.mealRecordCheck.method
+        )
+    }
+    
+    // MARK: - Fetch Records
+    
+    // 선택한 날짜 기준 식사 기록 조회
+    func fetchMealRecords(
+        date: String
+    ) async throws -> MealFetchResponseDTO {
+        try await APIClient.request(
+            path: MealEndpoint.fetchMealRecords(
+                date: date
+            ).path,
+            method: MealEndpoint.fetchMealRecords(
+                date: date
+            ).method
+        )
+    }
+    
+    // MARK: - Create
+    
+    // 식사 기록 생성
+    // POST /api/v1/meals/me?date={date}&sequence={sequence}
+    func createMealRecord(
+        _ request: MealCreateRequestDTO
+    ) async throws -> MessageResponseDTO {
+        try await APIClient.requestWithBody(
+            path: MealEndpoint.saveMealRecord.path,
+            method: MealEndpoint.saveMealRecord.method,
+            body: request
+        )
+    }
+    
+    // MARK: - Update
+    
+    // 식사 기록 수정
+    // PATCH /api/v1/meals/me
+    func updateMealRecord(
+        _ request: MealUpdateRequestDTO
+    ) async throws -> MessageResponseDTO {
+        try await APIClient.requestWithBody(
+            path: MealEndpoint.updateMealRecord.path,
+            method: MealEndpoint.updateMealRecord.method,
+            body: request
+        )
+    }
+}
