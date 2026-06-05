@@ -66,12 +66,10 @@ struct CatInfoInputView: View {
             
             Spacer()
             Button("다음") {
-                Task {
-                    let success = await viewModel.submit()
-                    if success {
-                        path.append(OnboardingPage.catProfile)
-                    }
-                }
+                    viewModel.saveCatInfoToStore()
+                    
+                    // 3. 다음 단계(식사 설정 시작 단계)로 이동합니다.
+                    path.append(OnboardingPage.nextStep)
             }
             .buttonStyle(OnboardingButtonStyle(
                 isValid: viewModel.isValid,
