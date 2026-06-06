@@ -40,7 +40,6 @@ struct CommonTimePickerView: View {
                             
                            
                             DatePicker(
-                                "",
                                 selection: Binding(
                                     get: {
                                      
@@ -53,7 +52,9 @@ struct CommonTimePickerView: View {
                                     }
                                 ),
                                 displayedComponents: .hourAndMinute
-                            )
+                            ){
+                                Text("")
+                            }
                             .labelsHidden()
                             .environment(\.locale, Locale(identifier: "en_US"))
                             .opacity(0.011)
