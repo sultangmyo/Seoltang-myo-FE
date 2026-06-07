@@ -18,6 +18,9 @@ enum MainTab {
 
 struct MainTabView: View {
     
+    //로그아웃 클로저 변수
+    let logoutAction: () -> Void
+    
     // 알림 route를 감지하기 위한 Router
     @StateObject private var pushRouter =
     PushNotificationRouter.shared
@@ -48,7 +51,7 @@ struct MainTabView: View {
                 }
                 .tag(MainTab.meal)
             
-            MyPageView()
+            MyPageView(logoutAction: logoutAction)
                 .tabItem {
                     Image(systemName: "person")
                     Text("마이")
@@ -90,6 +93,6 @@ struct MainTabView: View {
     }
 }
 
-#Preview {
-    MainTabView()
-}
+//#Preview {
+//    MainTabView()
+//}
