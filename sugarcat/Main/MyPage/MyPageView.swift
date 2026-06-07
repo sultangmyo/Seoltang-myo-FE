@@ -18,6 +18,9 @@ enum MyPageRoute: Hashable {
 }
 
 struct MyPageView: View {
+    //로그아웃 클로저 변수
+    let logoutAction: () -> Void
+    
     //네비게이션
     @State private var path = NavigationPath()
     @StateObject private var viewModel = MyPageTopProfileSectionViewModel()
@@ -47,7 +50,8 @@ struct MyPageView: View {
                     CustomDividerView()
                     
                     //divider 하단 영역 뷰 구현
-                    DividerBottomSection(path: $path)
+                    DividerBottomSection(path: $path, logoutAction: logoutAction)
+                        .padding(.bottom, 90)
                 }
             }
             .navigationDestination(for: MyPageRoute.self) { route in
@@ -73,8 +77,8 @@ struct MyPageView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        MyPageView()
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        MyPageView(logoutAction: () -> Void)
+//    }
+//}
