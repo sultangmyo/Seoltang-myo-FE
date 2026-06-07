@@ -13,6 +13,14 @@ struct DividerBottomSection: View {
     
     @Binding var path: NavigationPath
     
+    //로그아웃 클로저 변수
+    let logoutAction: () -> Void
+    
+    @State private var showLogoutAlert = false
+    @State private var showWithdrawAlert = false
+
+    private let logoutdeleteService = MockLogoutDeleteService()
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // 내보내기 텍스트
@@ -63,7 +71,9 @@ struct DividerBottomSection: View {
                     isButton: true,
                     action: {
                         // 여기에 로그아웃 버튼 로직 구현하시면 됩니다.
-                        print("로그아웃") // 추후에 없애고 여기에 action 구현하세요.
+                        action: do {
+                            showLogoutAlert = true
+                        }
                     }
                 )
                 
@@ -74,7 +84,9 @@ struct DividerBottomSection: View {
                     isButton: true,
                     action: {
                         // 여기에 탈퇴 버튼 로직 구현하시면 됩니다.
-                        print("탈퇴") //추후에 없애고 여기에 action 구현하세요.
+                        action: do {
+                            showWithdrawAlert = true
+                        }
                     }
                 )
                 
@@ -99,5 +111,37 @@ struct DividerBottomSection: View {
         }
         .padding(.horizontal, 16)
         .padding(.top, 22)
+        .alert("로그아웃 하시겠습니까?", isPresented: $showLogoutAlert) {
+            Button("아니요", role: .cancel) { }
+            
+            Button("네") {
+                Task {
+                    do {
+                        try await logoutdeleteService.logout()
+                        TokenManager.shared.clearTokens()
+                        logoutAction()
+                    } catch {
+                        print("로그아웃 실패:", error)
+                    }
+                }
+            }
+        }
+        .alert("탈퇴 하시겠습니까?", isPresented: $showWithdrawAlert) {
+            Button("아니요", role: .cancel) { }
+            
+            Button("네", role: .destructive) {
+                Task {
+                    do {
+                        _ = try await logoutdeleteService.withdraw()
+                        TokenManager.shared.clearTokens()
+                        logoutAction()
+                    } catch {
+                        print("탈퇴 실패:", error)
+                    }
+                }
+            }
+        } message: {
+            Text("탈퇴시 사용자의 정보는 즉시 삭제됩니다.")
+        }
     }
 }
