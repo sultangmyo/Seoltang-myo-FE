@@ -7,31 +7,25 @@
 //
 
 import Foundation
-import Combine
+import SwiftUI
 
 @MainActor
 class HealthSetupViewModel: ObservableObject {
     @Published var isLoading: Bool = false
-    
     private var store: OnboardingDataStore
     
     init(store: OnboardingDataStore) {
         self.store = store
     }
     
-    /// 모든 온보딩 데이터를 취합하여 서버로 전송
-    func submitAllData(catInfo: CatInfo) async -> Bool {
+    
+    func submitAllData(path: Binding<NavigationPath>) async {
         isLoading = true
         
-        let requestBody = CreateCatRequestDTO(
-            cat: catInfo,
-            meal: scheduleGroup(from: store.mealTimes, count: store.mealCount),
-            bloodSugar: scheduleGroup(from: store.bloodSugarTimes, count: store.bloodSugarCount),
-            insulin: scheduleGroup(from: store.insulinTimes, count: store.insulinCount)
-        )
+       
+        let requestBody = store.buildRequestDTO()
         
         do {
-            
             let response: MessageResponseDTO = try await APIClient.requestWithBody(
                 path: "/api/v1/cats/create",
                 method: .post,
@@ -40,15 +34,14 @@ class HealthSetupViewModel: ObservableObject {
             
             print("✅ 성공 메시지: \(response.message)")
             isLoading = false
-            return true
+            
+            path.wrappedValue.append(OnboardingPage.catInvite)
+            
         } catch {
             print("❌ API 전송 실패: \(error)")
             isLoading = false
-            return false
         }
     }
-    
-    
 }
 
 // MARK: - Private Helpers

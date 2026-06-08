@@ -10,6 +10,8 @@ import Foundation
 
 class OnboardingDataStore: ObservableObject {
     
+    @Published var isLoading: Bool = false
+    
     // MARK: - 고양이 기본 정보
     @Published var name: String = ""
     @Published var birthDate: Date = Date()

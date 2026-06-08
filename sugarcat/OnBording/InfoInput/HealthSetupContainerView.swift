@@ -14,7 +14,7 @@ enum HealthStep: Int, CaseIterable {
     case bloodSugarTime = 4
     case insulinCount = 5
     case insulinTime = 6
-   
+    
     
     var isTimeStep: Bool {
         return self == .mealTime || self == .bloodSugarTime || self == .insulinTime
@@ -24,8 +24,13 @@ enum HealthStep: Int, CaseIterable {
 struct HealthSetupContainerView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: OnboardingDataStore
-    
+    @StateObject private var viewModel: HealthSetupViewModel
     @State private var currentStep: HealthStep = .mealCount
+    
+    init(path: Binding<NavigationPath>, store: OnboardingDataStore) {
+        self._path = path
+        self._viewModel = StateObject(wrappedValue: HealthSetupViewModel(store: store))
+    }
     
     var body: some View {
         VStack(spacing: 10) {
@@ -69,20 +74,27 @@ struct HealthSetupContainerView: View {
                     }.frame(width: 110)
                 }
                 
-                Button(action: moveToNextStep) {
+                Button(action: {
+                    if currentStep.rawValue < HealthStep.allCases.count {
+                        withAnimation { currentStep = HealthStep(rawValue: currentStep.rawValue + 1)! }
+                    } else {
+                        let pathBinding = self.$path
+                        
+                        Task {
+                            // 2. 캡처한 바인딩을 전달합니다
+                            await viewModel.submitAllData(path: pathBinding) }
+                    }
+                }) {
                     Text(getMainButtonTitle())
                 }
-                .buttonStyle(OnboardingButtonStyle(
-                    isValid: true,
-                    isLoading: Bool(store.isLoading) 
-                ))
+                .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: viewModel.isLoading))
                 .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 10).padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
     }
-
+    
     // 단계 이동 및 최종 저장 로직
     private func moveToNextStep() {
         if let next = HealthStep(rawValue: currentStep.rawValue + 1) {
@@ -93,27 +105,27 @@ struct HealthSetupContainerView: View {
     }
     // 버튼 단계 메서드
     private func getMainButtonTitle() -> String {
-            switch currentStep {
-            case .mealCount, .bloodSugarCount, .insulinCount:
-                return "다음"
-            case .mealTime:
-                return "다음"
-            case .bloodSugarTime:
-                return "다음"
-            case .insulinTime:
-                return "완료"
-            }
+        switch currentStep {
+        case .mealCount, .bloodSugarCount, .insulinCount:
+            return "다음"
+        case .mealTime:
+            return "다음"
+        case .bloodSugarTime:
+            return "다음"
+        case .insulinTime:
+            return "완료"
         }
-
+    }
+    
     //최종 제출 메서드
     private func submitAllData() {
         Task {
             await MainActor.run { store.isLoading = true }
             let requestDTO = store.buildRequestDTO() // store에서 모든 정보 조합
             do {
-                // 실제 API 호출 (예: CatService.shared.createCat(requestDTO))
+               
                 print("서버 전송할 DTO: \(requestDTO)")
-                // try await APIService.shared.submitOnboarding(requestDTO)
+               
                 
                 await MainActor.run {
                     store.isLoading = false
@@ -178,8 +190,3 @@ struct HealthSetupContainerView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        HealthSetupContainerView(path: .constant(NavigationPath()))
-    }
-}
