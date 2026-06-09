@@ -13,13 +13,16 @@ import SwiftUI
 class InviteManageViewModel: ObservableObject {
     @Published var inviteCode: String = ""
     @Published var isLoading: Bool = false
-
+    
     // 초대코드 조회
     func getInviteCode() async {
+        
+        let endpoint = CatEndpoint.catInviteCheck
+        
         do {
             let response: GetInviteCodeResponseDTO = try await APIClient.request(
-                path: "/api/v1/cats/me/invite-code/",
-                method: .get
+                path: endpoint.path,
+                method: endpoint.method
             )
             self.inviteCode = response.inviteCode
         } catch {
@@ -27,13 +30,15 @@ class InviteManageViewModel: ObservableObject {
         }
     }
     
-    // 초대코드 새로고침
+    // 초대코드 새로고침(생성)
     func generateNewInviteCode() async {
         isLoading = true
+        let endpoint = CatEndpoint.catInviteCreate
+        
         do {
             let response: GenerateInviteCodeResponseDTO = try await APIClient.request(
-                path: "/api/v1/cats/me/invite-code/",
-                method: .patch
+                path: endpoint.path,
+                method: endpoint.method
             )
             self.inviteCode = response.inviteCode
         } catch {
