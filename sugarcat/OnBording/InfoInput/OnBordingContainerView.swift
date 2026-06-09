@@ -20,13 +20,14 @@ enum OnboardingPage: Hashable {
 struct OnBoardingContainerView: View {
     @State private var path = NavigationPath()
     
-   
+    @StateObject private var store = OnboardingDataStore()
+    
     var nextAction: () -> Void
     var finishAction: () -> Void
-
+    
     var body: some View {
         NavigationStack(path: $path) {
-           
+            
             LoginView(nextAction: {
                 path.append(OnboardingPage.nickname)
             }, finishAction: {
@@ -41,13 +42,15 @@ struct OnBoardingContainerView: View {
                 case .catSetup:
                     CatSetupView(path: $path)
                 case .catProfile:
-                    CatInfoInputView(path: $path)
+                    CatInfoInputView(path: $path,store: store)
                 case .catInvite:
                     CatInviteView()
                 case .healthSetup:
                     HealthSetupContainerView(path: $path)
+                    .environmentObject(store)
                 }
             }
         }
+        .environmentObject(store)
     }
 }
