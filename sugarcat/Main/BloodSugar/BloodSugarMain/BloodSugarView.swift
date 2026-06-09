@@ -21,39 +21,41 @@ struct BloodSugarView: View {
     var body: some View {
         NavigationStack(path: $path) {
             //네비게이션 헤더
-            VStack{
-                NavigationHeaderView(title: "혈당 기록")
-            }
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("오늘의 혈당을 \n기록해주세요")
-                        .mainTitleB()
-                        .foregroundColor(.textbg1)
-                    
-                    datePickerSection
-                    
-                    recordButtonList
+            VStack(spacing: 0 ){
+                VStack(spacing: 0){
+                    NavigationHeaderView(title: "혈당 기록")
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
-            }
-            .background(Color.white)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("오늘의 혈당을 \n기록해주세요")
+                            .mainTitleB()
+                            .foregroundColor(.textbg1)
+                        
+                        datePickerSection
+                        
+                        recordButtonList
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 10)
+                }
+                .background(Color.white)
 
-            .task {
-                await viewModel.loadRecords()
-            }
-            
-            .onReceive(pushRouter.$pendingRoute) { route in
-                guard route != nil else { return }
-                handlePushRouteIfNeeded()
-            }
-            
-            .navigationDestination(for: BloodSugarRecordItem.self) { item in
-                BloodSugarInputView(
-                    item: item,
-                    selectedDate: viewModel.selectedDate,
-                    viewModel: viewModel
-                )
+                .task {
+                    await viewModel.loadRecords()
+                }
+                
+                .onReceive(pushRouter.$pendingRoute) { route in
+                    guard route != nil else { return }
+                    handlePushRouteIfNeeded()
+                }
+                
+                .navigationDestination(for: BloodSugarRecordItem.self) { item in
+                    BloodSugarInputView(
+                        item: item,
+                        selectedDate: viewModel.selectedDate,
+                        viewModel: viewModel
+                    )
+                }
             }
         }
     }
