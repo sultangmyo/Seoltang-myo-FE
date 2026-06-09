@@ -14,7 +14,7 @@ enum HealthStep: Int, CaseIterable {
     case bloodSugarTime = 4
     case insulinCount = 5
     case insulinTime = 6
-   
+    
     
     var isTimeStep: Bool {
         return self == .mealTime || self == .bloodSugarTime || self == .insulinTime
@@ -23,22 +23,18 @@ enum HealthStep: Int, CaseIterable {
 
 struct HealthSetupContainerView: View {
     @Binding var path: NavigationPath
-    
+    @EnvironmentObject var store: OnboardingDataStore
+    @StateObject private var viewModel: HealthSetupViewModel
     @State private var currentStep: HealthStep = .mealCount
     
-    @State private var insulinCount: Int = 1
-    
-    @State private var insulinTimes: [Date?] = []
-    
-    @State private var bloodSugarCount: Int = 1
-    @State private var bloodSugarTimes: [Date?] = []
-    
-    @State private var mealCount: Int = 1
-    @State private var mealTimes: [Date?] = []
+    init(path: Binding<NavigationPath>, store: OnboardingDataStore) {
+        self._path = path
+        self._viewModel = StateObject(wrappedValue: HealthSetupViewModel(store: store))
+    }
     
     var body: some View {
         VStack(spacing: 10) {
-            // 1. 상단 프로그래스바
+            // 프로그래스바
             HStack(spacing: 6) {
                 ForEach(HealthStep.allCases, id: \.self) { step in
                     Capsule()
@@ -49,129 +45,96 @@ struct HealthSetupContainerView: View {
             .padding(.horizontal)
             .padding(.top, 8)
             
-            // 2. 화면 분기
+            // 단계별 화면 분기
             switch currentStep {
-                
-            // --- 식사 단계 ---
             case .mealCount:
-                CommonCountSelectionView(
-                    title: mealCountTitle,
-                    countOptions: [1, 2, 3, 4],
-                    selectedCount: $mealCount
-                )
-                
+                CommonCountSelectionView(title: mealCountTitle, countOptions: [1, 2, 3, 4], selectedCount: $store.mealCount)
             case .mealTime:
-                CommonTimePickerView(
-                    title: mealTimeTitle,
-                    category: "식사",
-                    count: mealCount,
-                    selectedTimes: $mealTimes
-                )
-                
-            // --- 혈당 단계 ---
+                CommonTimePickerView(title: mealTimeTitle, category: "식사", count: store.mealCount, selectedTimes: $store.mealTimes)
             case .bloodSugarCount:
-                CommonCountSelectionView(
-                    title: bloodSugarCountTitle,
-                    countOptions: [1, 2, 3, 4, 5, 6, 7, 8],
-                    selectedCount: $bloodSugarCount
-                )
-                
+                CommonCountSelectionView(title: bloodSugarCountTitle, countOptions: Array(1...8), selectedCount: $store.bloodSugarCount)
             case .bloodSugarTime:
-                CommonTimePickerView(
-                    title: bloodSugarTimeTitle,
-                    category: "혈당",
-                    count: bloodSugarCount,
-                    selectedTimes: $bloodSugarTimes
-                )
-           
-            // --- 인슐린 단계 ---
+                CommonTimePickerView(title: bloodSugarTimeTitle, category: "혈당", count: store.bloodSugarCount, selectedTimes: $store.bloodSugarTimes)
             case .insulinCount:
-                CommonCountSelectionView(
-                    title: insulinCountTitle,
-                    countOptions: [1, 2, 3],
-                    selectedCount: $insulinCount
-                )
-                
+                CommonCountSelectionView(title: insulinCountTitle, countOptions: [1, 2, 3], selectedCount: $store.insulinCount)
             case .insulinTime:
-                CommonTimePickerView(
-                    title: insulintimeTitle,
-                    category: "인슐린",
-                    count: insulinCount,
-                    selectedTimes: $insulinTimes
-                )
+                CommonTimePickerView(title: insulintimeTitle, category: "인슐린", count: store.insulinCount, selectedTimes: $store.insulinTimes)
             }
             
             Spacer()
             
-            // 3. 하단 공통 버튼 영역
+            // 하단 버튼 영역
             HStack(spacing: 6) {
-              
                 if currentStep.isTimeStep {
-                    Button(action: {
-                        moveToPreviousStep()
-                    }) {
-                        Text("이전")
-                            .buttontitle1()
-                            .foregroundColor(Color("gray1"))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 68)
+                    Button(action: moveToPreviousStep) {
+                        Text("이전").buttontitle1().foregroundColor(Color("gray1"))
+                            .frame(maxWidth: .infinity).frame(height: 68)
                             .background(Color(.systemBackground))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color("gray1"), lineWidth: 1)
-                            )
-                    }
-                    .frame(width: 110)
+                            .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color("gray1"), lineWidth: 1))
+                    }.frame(width: 110)
                 }
                 
                 Button(action: {
-                    moveToNextStep()
+                    if currentStep.rawValue < HealthStep.allCases.count {
+                        withAnimation { currentStep = HealthStep(rawValue: currentStep.rawValue + 1)! }
+                    } else {
+                        let pathBinding = self.$path
+                        
+                        Task {
+                            // 2. 캡처한 바인딩을 전달합니다
+                            await viewModel.submitAllData(path: pathBinding) }
+                    }
                 }) {
-                    
                     Text(getMainButtonTitle())
                 }
-                .buttonStyle(OnboardingButtonStyle(
-                    isValid: checkCurrentStepValid(),
-                    isLoading: false
-                ))
+                .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: viewModel.isLoading))
                 .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, 10)
-            .padding(.bottom, 10)
+            .padding(.horizontal, 10).padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
     }
     
-   
+    // 단계 이동 및 최종 저장 로직
+    private func moveToNextStep() {
+        if let next = HealthStep(rawValue: currentStep.rawValue + 1) {
+            withAnimation { currentStep = next }
+        } else {
+            submitAllData()
+        }
+    }
+    // 버튼 단계 메서드
     private func getMainButtonTitle() -> String {
         switch currentStep {
         case .mealCount, .bloodSugarCount, .insulinCount:
             return "다음"
-            
         case .mealTime:
-            
-            let isAllFilled = mealTimes.prefix(mealCount).allSatisfy { $0 != nil }
-            return isAllFilled ? "다음" : "건너뛰기"
-            
+            return "다음"
         case .bloodSugarTime:
-            let isAllFilled = bloodSugarTimes.prefix(bloodSugarCount).allSatisfy { $0 != nil }
-            return isAllFilled ? "다음" : "건너뛰기"
-            
+            return "다음"
         case .insulinTime:
-            let isAllFilled = insulinTimes.prefix(insulinCount).allSatisfy { $0 != nil }
-            return isAllFilled ? "완료" : "건너뛰기"
+            return "완료"
         }
     }
     
-    // 다음 단계 이동
-    private func moveToNextStep() {
-        if let next = HealthStep(rawValue: currentStep.rawValue + 1) {
-            withAnimation {
-                currentStep = next
+    //최종 제출 메서드
+    private func submitAllData() {
+        Task {
+            await MainActor.run { store.isLoading = true }
+            let requestDTO = store.buildRequestDTO() // store에서 모든 정보 조합
+            do {
+               
+                print("서버 전송할 DTO: \(requestDTO)")
+               
+                
+                await MainActor.run {
+                    store.isLoading = false
+                    path.append(OnboardingPage.catInvite)
+                }
+            } catch {
+                store.isLoading = false
+                print("전송 실패: \(error)")
             }
-        } else {
-            saveHealthData()
-            path.append(OnboardingPage.catInvite)
         }
     }
     
@@ -182,14 +145,6 @@ struct HealthSetupContainerView: View {
                 currentStep = previous
             }
         }
-    }
-    
-    // 데이터 저장 로직
-    private func saveHealthData() {
-       
-        print("식사 횟수: \(mealCount), 시간: \(mealTimes.prefix(mealCount))")
-        print("혈당 횟수: \(bloodSugarCount), 시간: \(bloodSugarTimes.prefix(bloodSugarCount))")
-        print("인슐린 횟수: \(insulinCount), 시간: \(insulinTimes.prefix(insulinCount))")
     }
     
     // 단계별 유효성 검사 함수
@@ -235,8 +190,3 @@ struct HealthSetupContainerView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        HealthSetupContainerView(path: .constant(NavigationPath()))
-    }
-}
