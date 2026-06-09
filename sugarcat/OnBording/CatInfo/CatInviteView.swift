@@ -7,7 +7,7 @@
 //고양이 초대 코드 입력 뷰
 import SwiftUI
 
-struct InviteView: View {
+struct CatInviteView: View {
     @StateObject private var viewModel = InviteViewModel()
     @Binding var path: NavigationPath
     
@@ -49,6 +49,6 @@ struct InviteView: View {
 #Preview {
     NavigationStack {
     //일단 더미 넘김
-        InviteView(path: .constant(NavigationPath()))
+        CatInviteView(path: .constant(NavigationPath()))
     }
 }

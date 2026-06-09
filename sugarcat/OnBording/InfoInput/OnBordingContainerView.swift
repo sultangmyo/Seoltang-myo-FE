@@ -15,6 +15,7 @@ enum OnboardingPage: Hashable {
     case catProfile
     case catInvite
     case healthSetup
+    case mainHome
 }
 
 struct OnBoardingContainerView: View {
@@ -43,9 +44,11 @@ struct OnBoardingContainerView: View {
                 case .catProfile:
                     CatInfoInputView(path: $path)
                 case .catInvite:
-                    CatInviteView()
+                    CatInviteView(path: $path)
                 case .healthSetup:
                     HealthSetupContainerView(path: $path)
+                case .mainHome:
+                            HomeView(path: $path)
                 }
             }
         }
