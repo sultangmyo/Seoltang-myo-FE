@@ -258,14 +258,13 @@ private extension RealWidgetUpdater {
             forHTTPHeaderField: "Content-Type"
         )
         
-        // TODO:
-        // 추후 토큰 매니저 연결 예정
-        /*
-         request.setValue(
-             "Bearer \(token)",
-             forHTTPHeaderField: "Authorization"
-         )
-         */
+        // 토큰 매니저 연결
+        if let accessToken = TokenManager.shared.getAccessToken() {
+            request.setValue(
+                "Bearer \(accessToken)",
+                forHTTPHeaderField: "Authorization"
+            )
+        }
         
         // 실제 네트워크 요청
         let (data, response) = try await URLSession.shared.data(
