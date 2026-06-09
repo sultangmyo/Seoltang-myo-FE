@@ -27,7 +27,7 @@ class HealthSetupViewModel: ObservableObject {
         
         do {
             let response: MessageResponseDTO = try await APIClient.requestWithBody(
-                path: "/api/v1/cats/create",
+                path: "/api/v1/cats",
                 method: .post,
                 body: requestBody
             )
