@@ -61,7 +61,7 @@ enum DateStringFormatter {
     // MARK: - "HH:mm:ss" → "h:mm a" 혈당뷰와 식사입력뷰 버튼에 보여주는 용으로 사용.
     static func displayTime(from timeString: String) -> String {
         let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "HH:mm:ss"
+        inputFormatter.dateFormat = "HH:mm"
         inputFormatter.locale = Locale(identifier: "ko_KR")
         inputFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         

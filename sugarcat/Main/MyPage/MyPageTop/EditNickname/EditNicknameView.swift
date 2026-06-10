@@ -25,7 +25,7 @@ struct EditNicknameView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // 1. 네비게이션 헤더 바 (최상단)
-            NavigationHeaderView(title: "닉네임 수정")
+            NavigationIncludeBackView(title: "닉네임 수정")
             
             // 2. 타이틀 영역 (상단에 고정 배치)
             VStack(alignment: .leading, spacing: 4) {
@@ -89,6 +89,7 @@ struct EditNicknameView: View {
         .background(Color.white)
         .ignoresSafeArea(edges: .bottom)
         .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .tabBar) // 탭바 없애기
         .onTapGesture { isFocused = false }
         .onAppear {
             // 기존 마이페이지에 저장되어 있던 내 닉네임을 초기값으로 세팅

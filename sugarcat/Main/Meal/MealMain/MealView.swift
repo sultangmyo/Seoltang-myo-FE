@@ -20,40 +20,42 @@ struct MealView: View {
     
     var body: some View {
         NavigationStack(path: $path) {
-            //네비게이션 헤더
-            VStack{
-                NavigationHeaderView(title: "식사 기록")
-            }
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("오늘의 식사를 \n알려주세요")
-                        .mainTitleB()
-                        .foregroundColor(.textbg1)
-                    datePickerSection
-
-                    recordButtonList
-
+            VStack(spacing:0){
+                //네비게이션 헤더
+                VStack(spacing:0){
+                    NavigationHeaderView(title: "식사 기록")
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
-            }
-            .background(Color.white)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("오늘의 식사를 \n알려주세요")
+                            .mainTitleB()
+                            .foregroundColor(.textbg1)
+                        datePickerSection
 
-            .task {
-                await viewModel.loadRecords()
-            }
-            
-            .onReceive(pushRouter.$pendingRoute) { route in
-                guard route != nil else { return }
-                handlePushRouteIfNeeded()
-            }
-            
-            .navigationDestination(for: MealRecordItem.self) { item in
-                MealInputView(
-                    item: item,
-                    selectedDate: viewModel.selectedDate,
-                    viewModel: viewModel
-                )
+                        recordButtonList
+
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 10)
+                }
+                .background(Color.white)
+
+                .task {
+                    await viewModel.loadRecords()
+                }
+                
+                .onReceive(pushRouter.$pendingRoute) { route in
+                    guard route != nil else { return }
+                    handlePushRouteIfNeeded()
+                }
+                
+                .navigationDestination(for: MealRecordItem.self) { item in
+                    MealInputView(
+                        item: item,
+                        selectedDate: viewModel.selectedDate,
+                        viewModel: viewModel
+                    )
+                }
             }
         }
     }

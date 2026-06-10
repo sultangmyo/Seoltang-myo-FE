@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 class HealthSetupViewModel: ObservableObject {

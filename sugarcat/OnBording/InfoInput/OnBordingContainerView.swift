@@ -43,11 +43,11 @@ struct OnBoardingContainerView: View {
                 case .catSetup:
                     CatSetupView(path: $path)
                 case .catProfile:
-                    CatInfoInputView(path: $path,store: store)
+                    CatInfoInputView(path: $path, store: store)
                 case .catInvite:
                     CatInviteView(path: $path)
                 case .healthSetup:
-                    HealthSetupContainerView(path: $path)
+                    HealthSetupContainerView(path: $path, store: store)
                 case .mainHome:
                             HomeView()
                 }
