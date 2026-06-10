@@ -43,7 +43,7 @@ struct CatSetupView: View {
                 subtitle: "동료 집사가 이미 등록했다면? >",
                 icon: "person.2"
             ){
-               // path.append(OnboardingPage.catInvite)   // 초대 합류
+               path.append(OnboardingPage.catInvite)   // 초대 합류
             }
 
             Spacer()

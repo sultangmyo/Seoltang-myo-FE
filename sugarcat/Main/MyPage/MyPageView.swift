@@ -15,6 +15,7 @@ enum MyPageRoute: Hashable {
     case mealNFsetting1 // 알림설정 -> 식사
     case editCatInfo // 고양이 정보 수정
     case editNickname // 닉네임 변경 페이지
+    case inviteCreate // 초대코드 생성뷰
 }
 
 struct MyPageView: View {
@@ -70,7 +71,8 @@ struct MyPageView: View {
                     EditCatInfoView(parentViewModel: viewModel, path: $path)
                 case .editNickname:
                     EditNicknameView(viewModel: viewModel, path: $path)
-                    
+                case .inviteCreate:
+                        InviteCreateView()
                 }
             }
         }

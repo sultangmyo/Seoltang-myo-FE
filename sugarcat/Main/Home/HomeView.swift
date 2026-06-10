@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     
+ 
     @StateObject private var viewModel = HomeHeaderViewModel(
         // 추후에 교체
         homeHeaderService: MockHomeHeaderprotocol()

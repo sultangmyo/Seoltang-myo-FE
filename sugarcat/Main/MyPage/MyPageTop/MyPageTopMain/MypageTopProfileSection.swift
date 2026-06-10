@@ -114,7 +114,7 @@ struct MyPageTopProfileSection: View {
                     Spacer()
                     
                     Button(action: {
-                        print("집사 초대하기 버튼 탭")
+                        path.append(MyPageRoute.inviteCreate)
                     }) {
                         HStack(spacing: 4) {
                             Text("집사 초대하기")
