@@ -42,12 +42,12 @@ struct OnBoardingContainerView: View {
                 case .catSetup:
                     CatSetupView(path: $path)
                 case .catProfile:
-                    CatInfoInputView(path: $path,store: store)
+                    CatInfoInputView(path: $path, store: store)
                 case .catInvite:
                     CatInviteView()
                 case .healthSetup:
-                    HealthSetupContainerView(path: $path)
-                    .environmentObject(store)
+                    HealthSetupContainerView(path: $path, store: store)
+                        .environmentObject(store)
                 }
             }
         }
