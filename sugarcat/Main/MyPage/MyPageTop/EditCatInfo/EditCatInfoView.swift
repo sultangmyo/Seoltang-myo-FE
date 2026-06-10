@@ -24,8 +24,9 @@ struct EditCatInfoView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            NavigationHeaderView(title: "고양이 정보 수정")
-            
+            VStack(spacing: 0){
+                NavigationIncludeBackView(title: "고양이 정보 수정")
+            }
             VStack(alignment: .leading, spacing: 32) {
                 inputSection(title: "고양이 이름") {
                     inputField(text: $viewModel.catName, placeholder: "여기에 이름을 입력해주세요", isDisabled: false, field: .catName)
@@ -59,9 +60,9 @@ struct EditCatInfoView: View {
             Button("변경 완료") { executeSubmit() }
                 .buttonStyle(OnboardingButtonStyle(isValid: viewModel.isValid, isLoading: viewModel.isLoading))
                 .disabled(!viewModel.isValid || viewModel.isLoading)
-                .padding(.bottom, 40)
         }
         .navigationBarHidden(true)
+        .toolbar(.hidden, for: .tabBar) // 탭바 없애기
         .background(Color.white)
         .onTapGesture { focusedField = nil }
         .ignoresSafeArea(.keyboard, edges: .bottom)
