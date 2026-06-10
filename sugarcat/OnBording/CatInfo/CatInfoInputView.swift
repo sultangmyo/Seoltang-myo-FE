@@ -89,6 +89,7 @@ struct CatInfoInputView: View {
         .background(Color.white)
         .onTapGesture { focusedField = nil }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .navigationBarBackButtonHidden(true)
     }
     
     

@@ -71,6 +71,7 @@ struct NicknameInputView: View {
                     .background(Color.white)
                     .ignoresSafeArea(edges: .bottom)
                     .onTapGesture { isFocused = false }
+                    .navigationBarBackButtonHidden(true)
                 }
     
     

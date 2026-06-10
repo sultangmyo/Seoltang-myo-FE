@@ -81,6 +81,7 @@ struct CatInviteView: View {
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(edges: .bottom)
         .onTapGesture { isFocused = false }
+        .navigationBarBackButtonHidden(true)
         
        
         .alert("알림을 허용하시겠습니까?", isPresented: $viewModel.showAlarmModal) {
