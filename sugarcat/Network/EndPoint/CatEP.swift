@@ -52,10 +52,10 @@ extension CatEndpoint {
        case .catInfoCreate:
            return .post
            
-       case .catInfoCheck, .catInviteCheck, .catInviteVerification, .catPDFCheck:
+       case .catInfoCheck, .catInviteCheck, .catPDFCheck:
            return .get
            
-       case .catInfoRewrite, .catInviteCreate:
+       case .catInfoRewrite, .catInviteCreate, .catInviteVerification:
            return .patch
            
        case .catDelete:
