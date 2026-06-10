@@ -10,20 +10,29 @@ import SwiftUI
 
 struct CatInfoInputView: View {
     @Binding var path: NavigationPath
-    @StateObject private var viewModel = CatInfoInputViewModel()
+    @EnvironmentObject var store: OnboardingDataStore
+    
+    
+    @StateObject private var viewModel: CatInfoInputViewModel
+    
+    init(path: Binding<NavigationPath>, store: OnboardingDataStore) {
+        self._path = path
+        self._viewModel = StateObject(wrappedValue: CatInfoInputViewModel(store: store))
+    }
+    
     @FocusState private var focusedField: Field?
-
+    
     enum Field {
         case catName
     }
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             NavigationHeaderView(title: "기본 정보 입력")
             
             VStack(alignment: .leading, spacing: 32) {
                 
-
+                
                 // 고양이 이름
                 inputSection(title: "고양이 이름") {
                     inputField(
@@ -33,7 +42,7 @@ struct CatInfoInputView: View {
                         field: .catName
                     )
                 }
-
+                
                 // 생년월일
                 inputSection(title: "생년월일") {
                     dateInputField(
@@ -46,7 +55,7 @@ struct CatInfoInputView: View {
                         isChecked: $viewModel.isBirthDateUnknown
                     )
                 }
-
+                
                 // 당뇨 진단 날짜
                 inputSection(title: "당뇨 진단 날짜") {
                     dateInputField(
@@ -62,22 +71,18 @@ struct CatInfoInputView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 24)
-
+            
             
             Spacer()
             Button("다음") {
-                Task {
-                    let success = await viewModel.submit()
-                    if success {
-                        path.append(OnboardingPage.catProfile)
-                    }
-                }
+                viewModel.saveCatInfoToStore()
+                path.append(OnboardingPage.healthSetup)
             }
             .buttonStyle(OnboardingButtonStyle(
                 isValid: viewModel.isValid,
-                isLoading: viewModel.isLoading
+                isLoading: false
             ))
-            .disabled(!viewModel.isValid || viewModel.isLoading)
+            .disabled(!viewModel.isValid)
             .padding(.bottom, 40)
         }
         .navigationBarHidden(true)
@@ -85,7 +90,7 @@ struct CatInfoInputView: View {
         .onTapGesture { focusedField = nil }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
-
+    
     
     //메서드 목록
     @ViewBuilder
@@ -112,7 +117,7 @@ struct CatInfoInputView: View {
             }
         }
     }
-
+    
     @ViewBuilder
     private func inputSection(title: String, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -120,7 +125,7 @@ struct CatInfoInputView: View {
             content()
         }
     }
-
+    
     @ViewBuilder
     private func inputField(text: Binding<String>, placeholder: String, isDisabled: Bool, field: Field) -> some View {
         TextField("", text: text, prompt: Text(placeholder).foregroundColor(Color("gray2")))
@@ -132,7 +137,7 @@ struct CatInfoInputView: View {
             .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color("gray2"), lineWidth: 1))
             .focused($focusedField, equals: field)
     }
-
+    
     @ViewBuilder
     private func checkboxRow(label: String, isChecked: Binding<Bool>) -> some View {
         HStack(spacing: 8) {
@@ -144,9 +149,4 @@ struct CatInfoInputView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        CatInfoInputView(path: .constant(NavigationPath()))
-    }
-}
 
