@@ -8,13 +8,13 @@ import Foundation
 
 // MARK: - 공통 (스케줄 항목, 설정 항목)
 struct CareScheduleDTO: Codable {
-    let sequence: Int    // 회차
+    let sequence: Int  // 회차
     let time: String     // 시간 (ex: 08:00)
 }
 
 struct CareSettingDTO: Codable {
-    let count: Int                      // 횟수
-    let schedules: [CareScheduleDTO]    // 시간 목록 (빈 배열 가능)
+    let count: Int                    // 횟수
+    let schedules: [CareScheduleDTO]  // 시간 목록 (빈 배열 가능)
 }
 
 // MARK: - ONBOARDING CREATE (POST 요청)
