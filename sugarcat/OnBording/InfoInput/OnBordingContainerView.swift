@@ -47,7 +47,7 @@ struct OnBoardingContainerView: View {
                 case .catInvite:
                     CatInviteView(path: $path)
                 case .healthSetup:
-                    HealthSetupContainerView(path: $path, , store: store)
+                    HealthSetupContainerView(path: $path, store: store)
                 case .mainHome:
                             HomeView()
                 }
