@@ -1,3 +1,10 @@
+//
+//  CatInviteView.swift
+//  sugarcat
+//
+//  Created by 野菜サンド on 5/10/26.
+//
+
 import SwiftUI
 
 struct CatInviteView: View {
@@ -7,22 +14,19 @@ struct CatInviteView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-           
+            
             Text("초대코드")
-                    .BodyEmphasized()
-                    .foregroundColor(Color("textbg1"))
-                    .frame(maxWidth: .infinity)
-                    .overlay(alignment: .leading) {
-                       
-                    }
-                    .padding(.top, 10)
-                    .padding(.bottom, 20)
-                
-                    headerView
+                .BodyEmphasized()
+                .foregroundColor(Color("textbg1"))
+                .frame(maxWidth: .infinity)
+                .padding(.top, 10)
+                .padding(.bottom, 20)
+            
+            headerView
             
             Spacer()
             
-        //초대코드 입력 필드
+            // 초대코드 입력 필드
             VStack(alignment: .leading, spacing: 8) {
                 TextField("", text: $viewModel.inviteCode,
                           prompt: Text("여기에 초대코드를 입력해주세요").foregroundColor(.gray.opacity(0.4)))
@@ -33,7 +37,7 @@ struct CatInviteView: View {
                     .background(Color.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(isFocused ? Color("primary0"): Color.gray.opacity(0.3), lineWidth: 1)
+                            .stroke(isFocused ? Color("primary0") : Color.gray.opacity(0.3), lineWidth: 1)
                     )
                     .focused($isFocused)
                     .submitLabel(.done)
@@ -43,7 +47,6 @@ struct CatInviteView: View {
             Spacer()
             
             HStack(spacing: 6) {
-              
                 Button(action: {
                     path.removeLast()
                 }) {
@@ -60,7 +63,6 @@ struct CatInviteView: View {
                 }
                 .frame(width: 110)
                 
-              
                 Button(action: {
                     Task { await viewModel.verifyInviteCode() }
                 }) {
@@ -80,13 +82,20 @@ struct CatInviteView: View {
         .ignoresSafeArea(edges: .bottom)
         .onTapGesture { isFocused = false }
         
-        // 검증 성공 후 알림 설정 모달
+       
         .alert("알림을 허용하시겠습니까?", isPresented: $viewModel.showAlarmModal) {
             Button("허용") {
-                viewModel.handleAlarmSetting(isAllowed: true, path: $path)
+                Task {
+                    
+                    let granted = await NotificationManager.requestPermission()
+                    await viewModel.finalizeOnboarding(isAllowed: granted, path: $path)
+                }
             }
             Button("허용 안 함", role: .cancel) {
-                viewModel.handleAlarmSetting(isAllowed: false, path: $path)
+                Task {
+                    
+                    await viewModel.finalizeOnboarding(isAllowed: false, path: $path)
+                }
             }
         }
     }
@@ -97,7 +106,7 @@ struct CatInviteView: View {
             (Text("초대 코드")
                 .foregroundColor(Color("primary0")) +
              Text("를"))
-                .mainTitleB()
+            .mainTitleB()
             Text("알려주세요")
                 .mainTitleB()
                 .foregroundColor(Color("textbg1"))
