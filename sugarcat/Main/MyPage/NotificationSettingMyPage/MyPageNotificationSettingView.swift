@@ -167,7 +167,7 @@ struct AlarmNavigationRow: View {
     
 }
 
-#Preview {
-    @State var previewPath = NavigationPath()
-    MyPageNotificationSettingView(path: .constant(previewPath))
-}
+//#Preview {
+//    @State var previewPath = NavigationPath()
+//    MyPageNotificationSettingView(path: .constant(previewPath))
+//}
