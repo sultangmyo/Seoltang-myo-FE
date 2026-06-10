@@ -49,7 +49,7 @@ struct OnBoardingContainerView: View {
                 case .healthSetup:
                     HealthSetupContainerView(path: $path, store: store)
                 case .mainHome:
-                            HomeView()
+                    MainTabView(logoutAction: finishAction)
                 }
             }
         }
