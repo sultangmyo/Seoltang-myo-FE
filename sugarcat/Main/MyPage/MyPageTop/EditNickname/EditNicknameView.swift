@@ -123,29 +123,29 @@ struct EditNicknameView: View {
     }
 }
 
-struct EditNicknameView_Previews: PreviewProvider {
-    static var previews: some View {
-        // 프리뷰용 더미 뷰모델 생성 및 초기화
-        let mockViewModel = MyPageTopProfileSectionViewModel()
-        
-        // 초기화 시 화면에 미리 보여줄 기존 닉네임 세팅
-        mockViewModel.myNickname = "기존고양이집사"
-        
-        return Group {
-            // 1. 기본 라이트 모드 프리뷰
-            EditNicknameView(
-                viewModel: mockViewModel,
-                path: .constant(NavigationPath())
-            )
-            .previewDisplayName("Light Mode")
-            
-            // 2. 다크 모드 프리뷰 (필요시 디자인 확인용)
-            EditNicknameView(
-                viewModel: mockViewModel,
-                path: .constant(NavigationPath())
-            )
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
-        }
-    }
-}
+//struct EditNicknameView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        // 프리뷰용 더미 뷰모델 생성 및 초기화
+//        let mockViewModel = MyPageTopProfileSectionViewModel()
+//        
+//        // 초기화 시 화면에 미리 보여줄 기존 닉네임 세팅
+//        mockViewModel.myNickname = "기존고양이집사"
+//        
+//        return Group {
+//            // 1. 기본 라이트 모드 프리뷰
+//            EditNicknameView(
+//                viewModel: mockViewModel,
+//                path: .constant(NavigationPath())
+//            )
+//            .previewDisplayName("Light Mode")
+//            
+//            // 2. 다크 모드 프리뷰 (필요시 디자인 확인용)
+//            EditNicknameView(
+//                viewModel: mockViewModel,
+//                path: .constant(NavigationPath())
+//            )
+//            .preferredColorScheme(.dark)
+//            .previewDisplayName("Dark Mode")
+//        }
+//    }
+//}
