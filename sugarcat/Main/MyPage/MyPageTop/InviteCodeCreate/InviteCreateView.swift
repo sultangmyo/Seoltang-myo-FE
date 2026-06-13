@@ -17,20 +17,7 @@ struct InviteCreateView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
-            
-            Text("집사 초대하기")
-                .BodyEmphasized()
-                .foregroundColor(Color("textbg1"))
-                .frame(maxWidth: .infinity)
-                .overlay(alignment: .leading) {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(Color("textbg1"))
-                        Text("뒤로가기")
-                    }
-                }
-                .padding(.top, 10)
-                .padding(.bottom, 20)
+            NavigationIncludeBackView(title: "집사 초대하기")
             
             
             VStack(alignment: .leading, spacing: 4) {
@@ -102,9 +89,11 @@ struct InviteCreateView: View {
             
         }
         .background(Color.white)
+        .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .onAppear {
             Task { await viewModel.getInviteCode() }
+        
         }
     }
 }

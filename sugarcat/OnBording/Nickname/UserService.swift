@@ -11,7 +11,7 @@ struct UserService {
     
     // MARK: - 닉네임 수정
     static func updateNickname(_ nickname: String) async throws {
-        guard let url = URL(string: "http://172.19.28.40:8080/api/v1/users/me/nickname") else {
+        guard let url = URL(string: "http://172.19.20.219:8080/api/v1/users/me/nickname") else {
             throw URLError(.badURL)
         }
 
@@ -41,7 +41,7 @@ struct UserService {
    
     // MARK: - 고양이 정보 등록
     static func registerCat(requestDTO: CreateCatRequestDTO) async throws {
-        guard let url = URL(string: "http://172.19.28.40:8080/api/v1/cats") else {
+        guard let url = URL(string: "http://172.19.20.219:8080/api/v1/cats") else {
             throw URLError(.badURL)
         }
         

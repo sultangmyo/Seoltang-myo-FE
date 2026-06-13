@@ -47,4 +47,7 @@ class InviteManageViewModel: ObservableObject {
         }
         isLoading = false
     }
+    
+    
+    
 }

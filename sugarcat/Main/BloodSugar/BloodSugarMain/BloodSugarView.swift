@@ -15,7 +15,7 @@ struct BloodSugarView: View {
         @StateObject private var pushRouter = PushNotificationRouter.shared
     
     @StateObject private var viewModel = BloodSugarViewModel(
-        bloodSugarService: MockBloodSugarService()
+        bloodSugarService: RealBloodSugarService()
     )
     
     var body: some View {

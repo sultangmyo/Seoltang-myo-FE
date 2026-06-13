@@ -25,10 +25,14 @@ struct HealthSetupContainerView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: OnboardingDataStore
     @StateObject private var viewModel: HealthSetupViewModel
+    
     @State private var currentStep: HealthStep = .mealCount
+    @State private var showAlarmAlert: Bool = false
+    
     
     init(path: Binding<NavigationPath>, store: OnboardingDataStore) {
         self._path = path
+      
         self._viewModel = StateObject(wrappedValue: HealthSetupViewModel(store: store))
     }
     
@@ -78,11 +82,8 @@ struct HealthSetupContainerView: View {
                     if currentStep.rawValue < HealthStep.allCases.count {
                         withAnimation { currentStep = HealthStep(rawValue: currentStep.rawValue + 1)! }
                     } else {
-                        let pathBinding = self.$path
-                        
-                        Task {
-                            // 2. 캡처한 바인딩을 전달합니다
-                            await viewModel.submitAllData(path: pathBinding) }
+                        // 마지막 단계(insulinTime) 완료 시 얼럿 호출
+                        showAlarmAlert = true
                     }
                 }) {
                     Text(getMainButtonTitle())
@@ -93,59 +94,57 @@ struct HealthSetupContainerView: View {
             .padding(.horizontal, 10).padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
-    }
-    
-    // 단계 이동 및 최종 저장 로직
-    private func moveToNextStep() {
-        if let next = HealthStep(rawValue: currentStep.rawValue + 1) {
-            withAnimation { currentStep = next }
-        } else {
-            submitAllData()
-        }
-    }
-    // 버튼 단계 메서드
-    private func getMainButtonTitle() -> String {
-        switch currentStep {
-        case .mealCount, .bloodSugarCount, .insulinCount:
-            return "다음"
-        case .mealTime:
-            return "다음"
-        case .bloodSugarTime:
-            return "다음"
-        case .insulinTime:
-            return "완료"
+        // 알람 권한 요청 얼럿
+        .alert("알림 설정", isPresented: $showAlarmAlert) {
+            Button("허용하기") {
+                Task {
+                    let granted = await NotificationManager.requestPermission()
+                
+                                finalizeOnboarding(notificationEnabled: granted)
+                }
+            }
+            Button("나중에 하기", role: .cancel) {
+                finalizeOnboarding(notificationEnabled: false)
+            }
+        } message: {
+            Text("인슐린 투여 시간에 맞춰 알람을 받으시겠어요?")
         }
     }
     
-    //최종 제출 메서드
-    private func submitAllData() {
+    private func finalizeOnboarding(notificationEnabled: Bool) {
         Task {
             await MainActor.run { store.isLoading = true }
-            let requestDTO = store.buildRequestDTO() // store에서 모든 정보 조합
-            do {
-               
-                print("서버 전송할 DTO: \(requestDTO)")
-               
-                
-                await MainActor.run {
-                    store.isLoading = false
-                    path.append(OnboardingPage.catInvite)
-                }
-            } catch {
+            
+            // 데이터
+            let dataSuccess = await viewModel.submitAllData()
+            
+            // 온보딩
+            let completeSuccess = await viewModel.completeOnboarding()
+            
+            // 알림
+            let alarmSuccess = await viewModel.updateNotificationSetting(isEnabled: notificationEnabled)
+            
+            await MainActor.run {
                 store.isLoading = false
-                print("전송 실패: \(error)")
+                if dataSuccess && completeSuccess && alarmSuccess {
+                    path = NavigationPath()
+                } else {
+                    print("❌ 온보딩 과정 중 일부 단계가 실패했습니다.")
+                }
             }
         }
     }
     
-    // 이전 단계 이동
     private func moveToPreviousStep() {
         if let previous = HealthStep(rawValue: currentStep.rawValue - 1) {
-            withAnimation {
-                currentStep = previous
-            }
+            withAnimation { currentStep = previous }
         }
     }
+    
+    private func getMainButtonTitle() -> String {
+        return currentStep == .insulinTime ? "완료" : "다음"
+    }
+    
     
     // 단계별 유효성 검사 함수
     private func checkCurrentStepValid() -> Bool {

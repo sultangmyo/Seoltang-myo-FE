@@ -11,7 +11,7 @@ import Foundation
 enum BaseURL {
     
     // 로컬 테스트용
-    static let local = "http://172.19.59.103:8080"
+    static let local = "http://172.19.20.219:8080"
     
     // 실제 서버 붙을 때 교체
     static let production = ""
