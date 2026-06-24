@@ -25,7 +25,8 @@ struct HomeView: View {
             ScrollView{
                 //그래프
                 GraphTabView(
-                    bloodSugarService: RealBloodSugarService()
+                    bloodSugarService: RealBloodSugarService(),
+                    graphService: RealGraphService()
                 )
                 
                 //커스텀 divider 적용
