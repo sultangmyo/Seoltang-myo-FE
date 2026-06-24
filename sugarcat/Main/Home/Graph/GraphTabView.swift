@@ -13,11 +13,13 @@ struct GraphTabView: View {
     @StateObject private var viewModel: HomeGraphViewModel
     
     init(
-        bloodSugarService: BloodSugarServiceProtocol
+        bloodSugarService: BloodSugarServiceProtocol,
+        graphService: GraphServiceProtocol
     ) {
         _viewModel = StateObject(
             wrappedValue: HomeGraphViewModel(
-                bloodSugarService: bloodSugarService
+                bloodSugarService: bloodSugarService,
+                graphService: graphService
             )
         )
     }
@@ -53,6 +55,9 @@ private extension GraphTabView {
             ForEach(GraphRange.allCases) { range in
                 Button {
                     viewModel.selectedRange = range
+                    Task {
+                        await viewModel.loadGraphIfNeeded(for: range)
+                    }
                 } label: {
                     VStack(spacing: 6) {
                             Text(range.title)
@@ -88,9 +93,7 @@ private extension GraphTabView {
             
         // 리팩토링 할 예정입니다.
         case .week:
-            Text("주 그래프 준비 중")
-                .foregroundStyle(.gray)
-                .frame(height: 320)
+            HomeWeekChartView(points: viewModel.weekPoints)
             
         case .month:
             Text("월 그래프 준비 중")
