@@ -96,9 +96,7 @@ private extension GraphTabView {
             HomeWeekChartView(points: viewModel.weekPoints)
             
         case .month:
-            Text("월 그래프 준비 중")
-                .foregroundStyle(.gray)
-                .frame(height: 320)
+            HomeMonthChartView(points: viewModel.monthPoints)
         }
     }
 }
