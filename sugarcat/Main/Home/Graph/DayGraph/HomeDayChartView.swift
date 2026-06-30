@@ -107,7 +107,7 @@ private extension HomeDayChartView {
         }
         //차트 y축 구성
         .chartYAxis {
-            AxisMarks(values: [0, 80, 150]) { value in
+            AxisMarks(values: [0, 80, 150, 250]) { value in
                 // y축 숫자 표시
                 AxisValueLabel {
                     if let intValue = value.as(Int.self) {
