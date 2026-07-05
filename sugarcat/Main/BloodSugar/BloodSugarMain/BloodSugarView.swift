@@ -41,7 +41,9 @@ struct BloodSugarView: View {
                 .background(Color.white)
 
                 .task {
-                    await viewModel.loadRecords()
+                    if viewModel.items.isEmpty {
+                        await viewModel.loadRecords()
+                    }
                 }
                 
                 .onReceive(pushRouter.$pendingRoute) { route in
