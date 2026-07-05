@@ -30,6 +30,9 @@ final class HomeGraphViewModel: ObservableObject {
     // 에러 메시지
     @Published var errorMessage: String?
     
+    // 월 단위 그래프에 표시할 데이터
+    @Published var monthPoints: [MonthlyGraphPoint] = []
+    
     // MARK: - 의존성
     
     // 혈당 기록 조회 서비스
@@ -83,8 +86,9 @@ final class HomeGraphViewModel: ObservableObject {
             }
 
         case .month:
-            // 월간 그래프는 추후 구현 예정
-            break
+            if monthPoints.isEmpty {
+                await loadMonthlyGraph()
+            }
         }
     }
     
@@ -156,5 +160,38 @@ final class HomeGraphViewModel: ObservableObject {
             from: date
         )
         return calendar.date(from: components) ?? date
+    }
+    
+    // 월간 혈당 통계를 조회해서 월간 그래프 데이터로 변환
+    //
+    // 백엔드 기준:
+    // - monthly API의 date query는 "해당 월의 아무 날짜"를 요구함
+    // - 따라서 현재 달을 보고 싶다면 오늘 날짜를 yyyy-MM-dd로 보내면 됨
+    //
+    // 호출 예:
+    // - 오늘이 2026-06-10이면
+    // - GET /api/v1/blood-sugar-statistics/me/monthly?period=monthly&date=2026-06-10
+    func loadMonthlyGraph() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            // 현재 월의 아무 날짜면 되므로 오늘 날짜를 사용
+            let today = DateStringFormatter.dateString(from: Date())
+            
+            // 월간 혈당 통계 API 호출
+            let response = try await graphService.fetchMonthlyGraph(
+                date: today
+            )
+            
+            // MonthlyGraphResponseDTO를 월간 그래프 화면용 모델로 변환
+            monthPoints = MonthlyGraphMapper.map(from: response)
+            
+        } catch {
+            errorMessage = "월간 혈당 그래프 데이터를 불러오지 못했어요."
+            print("혈당 월간 그래프 조회 실패:", error)
+        }
+        
+        isLoading = false
     }
 }

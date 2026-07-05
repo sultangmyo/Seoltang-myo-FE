@@ -147,6 +147,30 @@ final class MockGraphService: GraphServiceProtocol {
                     min: nil,
                     max: nil,
                     count: 0
+                ),
+                MonthlyGraphRecordDTO(
+                    date: "2026-06-10",
+                    day: 10,
+                    avg: 301,
+                    min: 85,
+                    max: 180,
+                    count: 2
+                ),
+                MonthlyGraphRecordDTO(
+                    date: "2026-06-20",
+                    day: 20,
+                    avg: 50,
+                    min: 50,
+                    max: 50,
+                    count: 2
+                ),
+                MonthlyGraphRecordDTO(
+                    date: "2026-06-31",
+                    day: 31,
+                    avg: 100,
+                    min: 50,
+                    max: 50,
+                    count: 2
                 )
             ]
         )
