@@ -113,6 +113,11 @@ final class InsulinChecklistViewModel: ObservableObject {
             // 서버 기준의 nickName을 다시 fetch해서 화면에 반영하는 방식이 안전함
             await loadChecklist()
             
+            //위젯 업데이트 함수
+            Task {
+                await RealWidgetUpdater.refresh()
+            }
+            
         } catch {
             print("인슐린 투여 기록 저장 실패: \(error)")
         }

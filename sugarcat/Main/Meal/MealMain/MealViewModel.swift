@@ -69,6 +69,12 @@ final class MealViewModel: ObservableObject {
         do {
             _ = try await mealService.createMealRecord(request)
             await loadRecords()
+            
+            //위젯 업데이트 함수
+            Task {
+                await RealWidgetUpdater.refresh()
+            }
+            
         } catch {
             errorMessage = "식사 기록 저장에 실패했어요."
             print("식사 기록 저장 실패: \(error)")

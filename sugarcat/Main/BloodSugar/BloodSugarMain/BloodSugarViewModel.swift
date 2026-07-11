@@ -107,7 +107,14 @@ final class BloodSugarViewModel: ObservableObject {
         do {
             _ = try await bloodSugarService.createBloodSugarRecord(request)
             await loadRecords()
+            
+            //위젯 업데이트 함수
+            Task {
+                await RealWidgetUpdater.refresh()
+            }
+            
             return true
+            
         } catch {
             errorMessage = "혈당 기록 저장에 실패했어요."
             print("혈당 기록 저장 실패: \(error)")
