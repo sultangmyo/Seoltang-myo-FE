@@ -15,7 +15,7 @@ struct MealView: View {
         @StateObject private var pushRouter = PushNotificationRouter.shared
     
     @StateObject private var viewModel = MealViewModel(
-        mealService: MockMealService()
+        mealService: RealMealService()
     )
     
     var body: some View {
