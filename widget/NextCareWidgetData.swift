@@ -46,3 +46,26 @@ struct NextCareWidgetData: Codable {
         targetDate: nil
     )
 }
+
+// 앱이 위젯에 저장하는 원본 데이터.
+// 날짜가 바뀌어도 위젯 Provider가 이 데이터로 다시 calculate()를 실행한다.
+struct NextCareWidgetRawData: Codable {
+    let schedules: [CareScheduleItem]
+    let completedToday: [WidgetCareType: Set<Int>]
+    let savedDateString: String
+
+    func completedRecordsForCalculation(
+        now: Date = Date()
+    ) -> [WidgetCareType: Set<Int>] {
+        let todayString = DateStringFormatter.dateString(from: now)
+
+        // 저장 날짜가 오늘이 아니면 어제 완료 기록을 버린다.
+        // 그래야 다음 날 00:00 이후에도 어제 완료한 sequence 때문에
+        // 오늘의 첫 스케줄이 제외되지 않는다.
+        guard savedDateString == todayString else {
+            return [:]
+        }
+
+        return completedToday
+    }
+}
