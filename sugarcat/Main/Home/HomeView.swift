@@ -12,7 +12,12 @@ struct HomeView: View {
  
     @StateObject private var viewModel = HomeHeaderViewModel(
         // 추후에 교체
-        homeHeaderService: MockHomeHeaderprotocol()
+        homeHeaderService: RealHomeHeaderprotocol()
+    )
+    
+    //서비스 종료 공지를 위한 뷰모델
+    @StateObject private var noticeViewModel = NoticeViewModel(
+        noticeService: RealNoticeService()
     )
     
     var body: some View {
@@ -35,13 +40,27 @@ struct HomeView: View {
                     .padding(.bottom, 16)
                 
                 //인슐린 투여기록
-                InsulinChecklistSectionView(insulinService: MockInsulinService())
+                InsulinChecklistSectionView(insulinService: RealInsulinService())
                 Spacer()
             }
         }
         .background(Color.white)
         .task {
             await viewModel.loadHeader()
+        }
+        .task {
+            await noticeViewModel.checkActiveNoticeIfNeeded()
+        }
+        .alert(
+            noticeViewModel.noticeTitle,
+            isPresented: $noticeViewModel.showNoticeAlert
+        ) {
+            Button("확인") {
+                noticeViewModel.confirmNoticeAlert()
+            }
+        } message: {
+            Text(noticeViewModel.noticeMessage)
+
         }
     }
 }

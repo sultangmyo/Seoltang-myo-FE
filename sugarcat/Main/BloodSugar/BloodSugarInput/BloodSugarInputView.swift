@@ -18,6 +18,9 @@ struct BloodSugarInputView: View {
     @State private var sugarText: String
     @State private var selectedTime: Date
     
+    // API 과도 호출 문제 해결
+    @State private var isSaving = false
+    
     init(
         item: BloodSugarRecordItem,
         selectedDate: Date,
@@ -142,27 +145,41 @@ private extension BloodSugarInputView {
     // 입력 완료 버튼
     var completeButton: some View {
         Button("입력 완료") {
+            
+            guard !isSaving else { return } // API 과도 호출 문제
+            
             let trimmed = sugarText.trimmingCharacters(in: .whitespacesAndNewlines)
             let value = Int(trimmed)
             let time = selectedTime
             
+            isSaving = true
+            
             Task {
+                defer {
+                    isSaving = false
+                }
+                var didSucceed = false
+                
                 if let value {
                     if item.hasRecord {
-                        await viewModel.updateRecord(
+                        didSucceed = await viewModel.updateRecord(
                             sequence: item.sequence,
                             sugarValue: value,
                             recordedTime: time
                         )
                     } else {
-                        await viewModel.createRecord(
+                        didSucceed = await viewModel.createRecord(
                             sequence: item.sequence,
                             sugarValue: value,
                             recordedTime: time
                         )
                     }
                 } else if item.hasRecord {
-                    await viewModel.deleteRecord(sequence: item.sequence)
+                    didSucceed = await viewModel.deleteRecord(sequence: item.sequence)
+                }
+                
+                guard didSucceed else {
+                    return
                 }
                 
                 // 혈당 기록이 생성/수정/삭제되었음을 앱 내부에 알림
@@ -178,6 +195,7 @@ private extension BloodSugarInputView {
         .buttontitle2()
         .foregroundColor(.gray0)
         .padding(.bottom, 10)
+        .disabled(isSaving)
     }
     
     //커스텀 키보드
@@ -276,3 +294,4 @@ private extension BloodSugarInputView {
         )
     )
 }
+
