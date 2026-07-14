@@ -29,13 +29,42 @@ struct PrintSaveView1: View {
             Spacer()
             
             Button("PDF 미리보기") {
-                path.append("PDFPreviewView")
+                Task {
+                    do {
+                        // 데이터 조회
+                        let fetchedRecords = try await fetchRecords(start: startDate, end: endDate)
+                        
+                        // 데이터 조회 성공 시 이동 (데이터 전달)
+                        await MainActor.run {
+                            path.append(MyPageRoute.pdfPreview(catName: "나비", records: fetchedRecords))
+                        }
+                    } catch {
+                        print("데이터 조회 실패: \(error)")
+                        
+                    }
+                }
             }
             .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: false))
+            .padding(.horizontal, 20)
             .padding(.bottom, 20)
         }
         .navigationBarBackButtonHidden(true)
         .background(Color.white.ignoresSafeArea())
+    }
+    
+    // MARK: - Logic
+    private func fetchRecords(start: Date, end: Date) async throws -> [CatRecordRow] {
+        let startStr = DateStringFormatter.dateString(from: start)
+        let endStr = DateStringFormatter.dateString(from: end)
+     
+        let endpoint = CatEndpoint.catPDFCheck(startDate: startStr, endDate: endStr)
+        
+        let records: [CatRecordRow] = try await APIClient.request(
+            path: endpoint.path,
+            method: endpoint.method
+        )
+        
+        return records
     }
     
     // MARK: - Subviews
