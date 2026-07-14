@@ -89,7 +89,7 @@ struct CatPDFResponseDTO: Codable {
     let rows: [CatRecordRow]?
 }
 
-struct CatRecordRow: Codable {
+struct CatRecordRow: Hashable,Codable{
     let recordDate: String?
     let bloodSugars: [BloodSugarRecord]?
     let meals: [MealRecord]?
@@ -97,19 +97,19 @@ struct CatRecordRow: Codable {
 }
 
 // 혈당 기록 세부 데이터
-struct BloodSugarRecord: Codable {
+struct BloodSugarRecord: Hashable,Codable {
     let recordTime: String?
     let sugarValue: Int?
     let sugarStatus: String?
 }
 
 // 식사 기록 세부 데이터
-struct MealRecord: Codable {
+struct MealRecord: Hashable,Codable {
     let recordTime: String?
     let mealStatus: String?
 }
 
 // 인슐린 기록 세부 데이터
-struct InsulinRecord: Codable {
+struct InsulinRecord: Hashable,Codable {
     let missedIndexes: [Int]?
 }
