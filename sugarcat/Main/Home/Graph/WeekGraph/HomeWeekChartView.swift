@@ -33,6 +33,11 @@ struct HomeWeekChartView: View {
 
 private extension HomeWeekChartView {
     
+    // 기록이 있는 날 만 point 연결
+    var visiblePoints: [WeeklyGraphPoint] {
+        points.filter { $0.hasRecord }
+    }
+    
     var chartView: some View {
         Chart {
             // 정상 혈당 범위 80~150 배경 표시
@@ -45,7 +50,7 @@ private extension HomeWeekChartView {
             .foregroundStyle(Color.primary0.opacity(0.1))
             
             // 주간 평균 혈당 그래프 라인
-            ForEach(points) { point in
+            ForEach(visiblePoints) { point in
                 LineMark(
                     x: .value("Day", point.dayIndex),
                     y: .value("Average Sugar", point.chartValue)
@@ -184,7 +189,7 @@ private extension HomeWeekChartView {
     
     // 드래그 위치와 가장 가까운 요일 point 찾기
     func nearestPoint(to dayIndex: Double) -> WeeklyGraphPoint? {
-        points.min {
+        visiblePoints.min {
             abs($0.dayIndex - dayIndex) < abs($1.dayIndex - dayIndex)
         }
     }
