@@ -19,7 +19,7 @@ struct DividerBottomSection: View {
     @State private var showLogoutAlert = false
     @State private var showWithdrawAlert = false
 
-    private let logoutdeleteService = MockLogoutDeleteService()
+    private let logoutdeleteService = RealLogoutDeleteService()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

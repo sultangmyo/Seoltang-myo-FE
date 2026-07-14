@@ -88,7 +88,7 @@ final class BloodSugarViewModel: ObservableObject {
         sequence: Int,
         sugarValue: Int,
         recordedTime: Date
-    ) async {
+    ) async -> Bool {
         print("createRecord sequence:", sequence)
         print("createRecord sugarValue:", sugarValue)
         print("createRecord recordedTime:", recordedTime)
@@ -107,9 +107,18 @@ final class BloodSugarViewModel: ObservableObject {
         do {
             _ = try await bloodSugarService.createBloodSugarRecord(request)
             await loadRecords()
+            
+            //위젯 업데이트 함수
+            Task {
+                await RealWidgetUpdater.refresh()
+            }
+            
+            return true
+            
         } catch {
             errorMessage = "혈당 기록 저장에 실패했어요."
             print("혈당 기록 저장 실패: \(error)")
+            return false
         }
     }
     
@@ -119,7 +128,7 @@ final class BloodSugarViewModel: ObservableObject {
         sequence: Int,
         sugarValue: Int,
         recordedTime: Date
-    ) async {
+    ) async -> Bool {
         let dateString = DateStringFormatter.dateString(from: selectedDate)
         let timeString = DateStringFormatter.timeString(from: recordedTime)
         
@@ -133,15 +142,17 @@ final class BloodSugarViewModel: ObservableObject {
         do {
             try await bloodSugarService.updateBloodSugarRecord(request)
             await loadRecords()
+            return true
         } catch {
             errorMessage = "혈당 기록 수정에 실패했어요."
             print("혈당 기록 수정 실패: \(error)")
+            return false
         }
     }
     
     
     // 기존 기록을 삭제
-    func deleteRecord(sequence: Int) async {
+    func deleteRecord(sequence: Int) async -> Bool {
         let dateString = DateStringFormatter.dateString(from: selectedDate)
         
         do {
@@ -150,9 +161,11 @@ final class BloodSugarViewModel: ObservableObject {
                 date: dateString
             )
             await loadRecords()
+            return true
         } catch {
             errorMessage = "혈당 기록 삭제에 실패했어요."
             print("혈당 기록 삭제 실패: \(error)")
+            return false
         }
     }
     

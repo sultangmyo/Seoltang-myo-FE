@@ -88,6 +88,11 @@ class NotificationSettingViewModel: ObservableObject {
             
             print("✅ 서버 응답: \(response.message)")
             
+            //위젯 업데이트 함수
+            Task {
+                await RealWidgetUpdater.refresh()
+            }
+            
             await MainActor.run {
                 onSuccess()
             }

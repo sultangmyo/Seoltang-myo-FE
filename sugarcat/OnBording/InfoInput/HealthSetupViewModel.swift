@@ -53,6 +53,12 @@ class HealthSetupViewModel: ObservableObject {
             )
             
             print("✅ 온보딩 완료: \(response.message)")
+            
+            //위젯 업데이트 함수
+            Task {
+                await RealWidgetUpdater.refresh()
+            }
+            
             return true
         } catch {
             print("❌ 온보딩 완료 실패: \(error)")

@@ -12,7 +12,7 @@ struct HomeView: View {
  
     @StateObject private var viewModel = HomeHeaderViewModel(
         // 추후에 교체
-        homeHeaderService: MockHomeHeaderprotocol()
+        homeHeaderService: RealHomeHeaderprotocol()
     )
     
     var body: some View {
@@ -35,7 +35,7 @@ struct HomeView: View {
                     .padding(.bottom, 16)
                 
                 //인슐린 투여기록
-                InsulinChecklistSectionView(insulinService: MockInsulinService())
+                InsulinChecklistSectionView(insulinService: RealInsulinService())
                 Spacer()
             }
         }
