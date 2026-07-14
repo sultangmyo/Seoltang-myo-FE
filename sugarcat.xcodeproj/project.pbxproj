@@ -71,6 +71,7 @@
 		121704362FBA03740014DD1F /* Exceptions for "sugarcat" folder in "widgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Formatter/DateStringFormatter.swift,
 				Style/Assets.xcassets,
 			);
 			target = 121704052FB9E4400014DD1F /* widgetExtension */;

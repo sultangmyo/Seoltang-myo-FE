@@ -25,12 +25,13 @@ struct Provider: TimelineProvider {
         in context: Context,
         completion: @escaping (SimpleEntry) -> Void
     ) {
-        let entry = SimpleEntry(
-            date: Date(),
-            widgetData: NextCareWidgetStore.load()
-        )
-        
-        completion(entry)
+        //        let entry = SimpleEntry(
+        //            date: Date(),
+        //            widgetData: NextCareWidgetStore.load()
+        //        )
+        //
+        //        completion(entry)
+        completion(makeEntry(date: Date()))
     }
     
     // 실제 위젯 타임라인 데이터
@@ -38,19 +39,43 @@ struct Provider: TimelineProvider {
         in context: Context,
         completion: @escaping (Timeline<SimpleEntry>) -> Void
     ) {
-        let entry = SimpleEntry(
-            date: Date(),
-            widgetData: NextCareWidgetStore.load()
-        )
+        //        let entry = SimpleEntry(
+        //            date: Date(),
+        //            widgetData: NextCareWidgetStore.load()
+        //        )
+        let now = Date()
+        let entry = makeEntry(date: now)
         
         let timeline = Timeline(
             entries: [entry],
-            policy: .after(Date().addingTimeInterval(60 * 15))
+            policy: .after(now.addingTimeInterval(60 * 15))
         )
         
         completion(timeline)
     }
+    
+    // MARK: - Make entry
+    private func makeEntry(date: Date) -> SimpleEntry {
+        guard let rawData = NextCareWidgetStore.load() else {
+            return SimpleEntry(
+                date: date,
+                widgetData: .noSchedule
+            )
+        }
+        
+        let widgetData = NextCareCalculator.calculate(
+            schedules: rawData.schedules,
+            completedToday: rawData.completedRecordsForCalculation(now: date),
+            now: date
+        )
+        
+        return SimpleEntry(
+            date: date,
+            widgetData: widgetData
+        )
+    }
 }
+
 
 // MARK: - Timeline Entry
 // 위젯이 화면을 그릴 때 사용하는 데이터 단위

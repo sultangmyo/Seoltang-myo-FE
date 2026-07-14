@@ -34,13 +34,23 @@ enum WidgetUpdater {
             meal: mealRecords
         )
         
-        let widgetData = NextCareCalculator.calculate(
+//        let widgetData = NextCareCalculator.calculate(
+//            schedules: schedules,
+//            completedToday: completedToday
+//        )
+//        
+//        NextCareWidgetStore.save(widgetData)
+//        
+//        WidgetCenter.shared.reloadTimelines(ofKind: "widget")
+        
+        let rawData = NextCareWidgetRawData(
             schedules: schedules,
-            completedToday: completedToday
+            completedToday: completedToday,
+            savedDateString: DateStringFormatter.dateString(from: Date())
         )
-        
-        NextCareWidgetStore.save(widgetData)
-        
+
+        NextCareWidgetStore.save(rawData)
+
         WidgetCenter.shared.reloadTimelines(ofKind: "widget")
     }
 }

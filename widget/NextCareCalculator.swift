@@ -9,7 +9,7 @@ import Foundation
 
 // 위젯 계산에 사용할 스케줄 항목
 // API DTO를 직접 쓰지 않고, 위젯 계산용 모델로 한 번 변환해서 사용
-struct CareScheduleItem {
+struct CareScheduleItem: Codable {
     let type: WidgetCareType   // 인슐린 / 혈당 / 식사
     let sequence: Int          // 몇 번째 케어인지
     let time: String           // 케어 시간, 예: "08:00"
@@ -24,7 +24,7 @@ enum NextCareCalculator {
         schedules: [CareScheduleItem],
         completedToday: [WidgetCareType: Set<Int>],
         now: Date = Date(),
-        calendar: Calendar = Calendar(identifier: .gregorian)
+        calendar: Calendar = NextCareCalculator.koreanCalendar
     ) -> NextCareWidgetData {
         
         // 등록된 스케줄이 하나도 없으면
@@ -35,17 +35,33 @@ enum NextCareCalculator {
         
         // 오늘 날짜 기준으로 후보 일정 생성
         // 이미 완료한 sequence는 제외
+//        let todayCandidates = makeCandidates(
+//            schedules: schedules,
+//            completedToday: completedToday,
+//            baseDate: now,
+//            calendar: calendar
+//        )
+        // 현재 시간 이후의 일정만 남김
+//        .filter { $0.targetDate >= now }
+        
+        guard let currentMinute = calendar.date(
+            from: calendar.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+                from: now
+            )
+        ) else {
+            return .noSchedule
+        }
+
         let todayCandidates = makeCandidates(
             schedules: schedules,
             completedToday: completedToday,
             baseDate: now,
             calendar: calendar
         )
-        // 현재 시간 이후의 일정만 남김
-        .filter { $0.targetDate >= now }
+        .filter { $0.targetDate > currentMinute }
         
-        // 오늘 남은 일정이 있으면
-        // 가장 가까운 일정 반환
+        // 오늘 남은 일정이 있으면 가장 가까운 일정 반환
         if let nextToday = sorted(todayCandidates).first {
             return nextToday.widgetData
         }
@@ -70,6 +86,13 @@ enum NextCareCalculator {
         // 내일 가장 빠른 일정 반환
         return sorted(tomorrowCandidates).first?.widgetData ?? .noSchedule
     }
+    
+    static var koreanCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "Asia/Seoul") ?? .current
+        return calendar
+    }
+    
 }
 
 // MARK: - Private Helpers
