@@ -19,75 +19,69 @@ class HealthSetupViewModel: ObservableObject {
         self.store = store
     }
     
-    
-    func submitAllData() async -> Bool { 
+    // 1. 고양이 정보 생성
+    func submitAllData() async -> Bool {
         isLoading = true
         let requestBody = store.buildRequestDTO()
+        let endpoint = CatEndpoint.catInfoCreate
         
         do {
             let response: MessageResponseDTO = try await APIClient.requestWithBody(
-                path: "/api/v1/cats",
-                method: .post,
+                path: endpoint.path,
+                method: endpoint.method,
                 body: requestBody
             )
-            print("✅ 성공 메시지: \(response.message)")
+            print("✅ 고양이 정보 생성 완료: \(response.message)")
             isLoading = false
-            return true // 성공 시 true 반환
-        } catch {
-            print("❌ API 전송 실패: \(error)")
-            isLoading = false
-            return false // 실패 시 false 반환
-        }
-    }
-    
-    //온보딩 완료
-    // HealthSetupViewModel.swift 수정
-    func completeOnboarding() async -> Bool {
-        do {
-            let requestBody = ["onboardingCompleted": true]
-            
-            let response: MessageResponseDTO = try await APIClient.requestWithBody(
-                path: AuthEndpoint.onBoardingCompleted.path,
-                method: .post,
-                body: requestBody
-            )
-            
-            print("✅ 온보딩 완료: \(response.message)")
-            
-            //위젯 업데이트 함수
-            Task {
-                await RealWidgetUpdater.refresh()
-            }
-            
             return true
         } catch {
-            print("❌ 온보딩 완료 실패: \(error)")
+            print("❌ 고양이 정보 생성 실패: \(error)")
+            isLoading = false
             return false
         }
     }
     
-   
+    // 2. 온보딩 완료 처리
+    func completeOnboarding() async -> Bool {
+        do {
+            let requestBody = ["onboardingCompleted": true]
+            let endpoint = AuthEndpoint.onBoardingCompleted
+            
+            let response: MessageResponseDTO = try await APIClient.requestWithBody(
+                path: endpoint.path,
+                method: endpoint.method,
+                body: requestBody
+            )
+            
+            print("✅ 온보딩 완료 상태 전송: \(response.message)")
+            await RealWidgetUpdater.refresh()
+            return true
+        } catch {
+            print("❌ 온보딩 완료 처리 실패: \(error)")
+            return false
+        }
+    }
+    
+    // 3. 알림 설정 업데이트
     func updateNotificationSetting(isEnabled: Bool) async -> Bool {
         do {
-           
             let requestBody = UpdateAllNotificationRequest(notificationEnabled: isEnabled)
-                    
-                    
-                    let _: MessageResponseDTO = try await APIClient.requestWithBody(
-                        path: UserEndpoint.userNotificationAllEdit.path,
-                        method: .patch, 
-                        body: requestBody
-                    )
-            print("✅ 알림 설정 업데이트 완료: \(isEnabled)")
+            let endpoint = UserEndpoint.userNotificationAllEdit
+            
+            let _: MessageResponseDTO = try await APIClient.requestWithBody(
+                path: endpoint.path,
+                method: endpoint.method,
+                body: requestBody
+            )
+            print("✅ 알림 설정 전체 업데이트 완료: \(isEnabled)")
             return true
         } catch {
             print("❌ 알림 설정 실패: \(error)")
             return false
         }
     }
-    
-    
 }
+
 
 // MARK: - Private Helpers
 
