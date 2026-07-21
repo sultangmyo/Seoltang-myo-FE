@@ -25,14 +25,15 @@ struct HealthSetupContainerView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var store: OnboardingDataStore
     @StateObject private var viewModel: HealthSetupViewModel
+    let finishAction: () -> Void
     
     @State private var currentStep: HealthStep = .mealCount
     @State private var showAlarmAlert: Bool = false
     
     
-    init(path: Binding<NavigationPath>, store: OnboardingDataStore) {
+    init(path: Binding<NavigationPath>, store: OnboardingDataStore, finishAction: @escaping () -> Void) {
         self._path = path
-      
+        self.finishAction = finishAction
         self._viewModel = StateObject(wrappedValue: HealthSetupViewModel(store: store))
     }
     
@@ -126,10 +127,13 @@ struct HealthSetupContainerView: View {
             
             await MainActor.run {
                 store.isLoading = false
-                if dataSuccess && completeSuccess && alarmSuccess {
-                    path = NavigationPath()
+                if dataSuccess && completeSuccess {
+                    if !alarmSuccess {
+                        print("⚠️ 온보딩은 완료됐지만 알림 설정 저장에 실패했습니다.")
+                    }
+                    finishAction()
                 } else {
-                    print("❌ 온보딩 과정 중 일부 단계가 실패했습니다.")
+                    print("❌ 온보딩 필수 정보 저장에 실패했습니다.")
                 }
             }
         }
@@ -188,4 +192,3 @@ struct HealthSetupContainerView: View {
         return string
     }
 }
-
