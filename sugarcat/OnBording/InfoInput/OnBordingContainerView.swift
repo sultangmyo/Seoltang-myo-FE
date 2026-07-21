@@ -19,12 +19,22 @@ enum OnboardingPage: Hashable {
 }
 
 struct OnBoardingContainerView: View {
-    @State private var path = NavigationPath()
+    @State private var path: NavigationPath
     
     @StateObject private var store = OnboardingDataStore()
     
     var nextAction: () -> Void
     var finishAction: () -> Void
+
+    init(startsWithLogin: Bool = true, nextAction: @escaping () -> Void, finishAction: @escaping () -> Void) {
+        var initialPath = NavigationPath()
+        if !startsWithLogin {
+            initialPath.append(OnboardingPage.nickname)
+        }
+        _path = State(initialValue: initialPath)
+        self.nextAction = nextAction
+        self.finishAction = finishAction
+    }
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -45,9 +55,9 @@ struct OnBoardingContainerView: View {
                 case .catProfile:
                     CatInfoInputView(path: $path, store: store)
                 case .catInvite:
-                    CatInviteView(path: $path)
+                    CatInviteView(path: $path, finishAction: finishAction)
                 case .healthSetup:
-                    HealthSetupContainerView(path: $path, store: store)
+                    HealthSetupContainerView(path: $path, store: store, finishAction: finishAction)
                 case .mainHome:
                     MainTabView(logoutAction: finishAction)
                 }
