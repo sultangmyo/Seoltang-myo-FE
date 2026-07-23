@@ -11,9 +11,14 @@ import KakaoSDKAuth
 
 @main
 struct sugarcatApp: App {
-    
-    //로그인 상태 변수
-    @State private var isLoggedIn = false
+    private enum AppRoute {
+        case launching
+        case login
+        case onboarding
+        case main
+    }
+
+    @State private var appRoute: AppRoute = .launching
     @StateObject private var networkMonitor = NetworkMonitor()
     
     //앱이 실행될때 카카오 SDK 세팅
@@ -62,19 +67,31 @@ struct sugarcatApp: App {
             //새롭게 제안하는 로직 (로그인이 되어있는 상태일 때,
             NetworkGateView(status: networkMonitor.status) {
                 Group {
-                    if isLoggedIn {
+                    switch appRoute {
+                    case .launching:
+                        ProgressView()
+                    case .main:
                         MainTabView(
                             logoutAction: {
-                                isLoggedIn = false
+                                appRoute = .login
                             }
                         )
-                    } else {
+                    case .login:
                         OnBoardingContainerView(
+                            startsWithLogin: true,
                             nextAction: {
-                                print("로그인 성공 -> 온보딩")
+                                appRoute = .onboarding
                             },
                             finishAction: {
-                                isLoggedIn = true
+                                appRoute = .main
+                            }
+                        )
+                    case .onboarding:
+                        OnBoardingContainerView(
+                            startsWithLogin: false,
+                            nextAction: {},
+                            finishAction: {
+                                appRoute = .main
                             }
                         )
                     }
@@ -86,6 +103,15 @@ struct sugarcatApp: App {
                 }
                 .onAppear {
                     requestLocalNetworkPermission()
+                }
+                .task {
+                    guard case .launching = appRoute else { return }
+                    let result = await LoginViewModel().checkAutoLogin()
+                    if result.isLoggedIn {
+                        appRoute = result.isOnboardingCompleted ? .main : .onboarding
+                    } else {
+                        appRoute = .login
+                    }
                 }
             }
         }

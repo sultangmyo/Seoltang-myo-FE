@@ -29,35 +29,36 @@ class InviteViewModel: ObservableObject {
     }
 
     /// 2. 온보딩 완료 처리 및 알림 설정 전송
-    func finalizeOnboarding(isAllowed: Bool, path: Binding<NavigationPath>) async {
+    func finalizeOnboarding(isAllowed: Bool) async -> Bool {
         isLoading = true
-        
+
         do {
-            
             let _: MessageResponseDTO = try await APIClient.requestWithBody(
                 path: AuthEndpoint.onBoardingCompleted.path,
                 method: .post,
                 body: ["onboardingCompleted": true]
             )
-            
-           
+
+            print("✅ 온보딩 완료 전송 성공")
+        } catch {
+            print("❌ 온보딩 완료 전송 실패: \(error)")
+            isLoading = false
+            return false
+        }
+
+        do {
             let notificationBody = UpdateAllNotificationRequest(notificationEnabled: isAllowed)
             let _: MessageResponseDTO = try await APIClient.requestWithBody(
                 path: UserEndpoint.userNotificationAllEdit.path,
                 method: .patch,
                 body: notificationBody
             )
-            
-            
-            print("✅ 온보딩 완료 및 알림 설정 전송 성공")
-            path.wrappedValue = NavigationPath()
-            path.wrappedValue.append(OnboardingPage.mainHome)
-            
+            print("✅ 알림 설정 전송 성공")
         } catch {
-            print("❌ 최종 온보딩 과정 실패: \(error)")
-            
+            print("⚠️ 온보딩은 완료됐지만 알림 설정 전송에 실패했습니다: \(error)")
         }
-        
+
         isLoading = false
+        return true
     }
 }
