@@ -53,18 +53,34 @@ struct PrintSaveView1: View {
     }
     
     // MARK: - Logic
+//    private func fetchRecords(start: Date, end: Date) async throws -> [CatRecordRow] {
+//        let startStr = DateStringFormatter.dateString(from: start)
+//        let endStr = DateStringFormatter.dateString(from: end)
+//     
+//        let endpoint = CatEndpoint.catPDFCheck(startDate: startStr, endDate: endStr)
+//        
+//        let records: [CatRecordRow] = try await APIClient.request(
+//            path: endpoint.path,
+//            method: endpoint.method
+//        )
+//        
+//        return records
+//    }
     private func fetchRecords(start: Date, end: Date) async throws -> [CatRecordRow] {
         let startStr = DateStringFormatter.dateString(from: start)
         let endStr = DateStringFormatter.dateString(from: end)
-     
-        let endpoint = CatEndpoint.catPDFCheck(startDate: startStr, endDate: endStr)
-        
-        let records: [CatRecordRow] = try await APIClient.request(
+
+        let endpoint = CatEndpoint.catPDFCheck(
+            startDate: startStr,
+            endDate: endStr
+        )
+
+        let response: CatPDFResponseDTO = try await APIClient.request(
             path: endpoint.path,
             method: endpoint.method
         )
-        
-        return records
+
+        return response.rows ?? []
     }
     
     // MARK: - Subviews
