@@ -69,7 +69,7 @@ struct GenerateInviteCodeResponseDTO: Codable {
 // MARK: - 7.3 초대코드 조회
 // response dto
 struct GetInviteCodeResponseDTO: Codable {
-    let inviteCode: String
+    let inviteCode: String?
 }
 
 // MARK: - 2.4 초대코드 유효성 검증
