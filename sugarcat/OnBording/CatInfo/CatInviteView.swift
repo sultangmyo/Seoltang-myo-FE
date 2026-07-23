@@ -10,6 +10,7 @@ import SwiftUI
 struct CatInviteView: View {
     @StateObject private var viewModel = InviteViewModel()
     @Binding var path: NavigationPath
+    var finishAction: () -> Void
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -89,13 +90,17 @@ struct CatInviteView: View {
                 Task {
                     
                     let granted = await NotificationManager.requestPermission()
-                    await viewModel.finalizeOnboarding(isAllowed: granted, path: $path)
+                    if await viewModel.finalizeOnboarding(isAllowed: granted) {
+                        finishAction()
+                    }
                 }
             }
             Button("허용 안 함", role: .cancel) {
                 Task {
                     
-                    await viewModel.finalizeOnboarding(isAllowed: false, path: $path)
+                    if await viewModel.finalizeOnboarding(isAllowed: false) {
+                        finishAction()
+                    }
                 }
             }
         }
@@ -121,7 +126,7 @@ struct CatInviteView: View {
 struct CatInviteView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            CatInviteView(path: .constant(NavigationPath()))
+            CatInviteView(path: .constant(NavigationPath()), finishAction: {})
         }
     }
 }

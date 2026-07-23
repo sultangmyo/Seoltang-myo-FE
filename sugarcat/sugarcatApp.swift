@@ -8,13 +8,18 @@
 import SwiftUI
 import KakaoSDKCommon
 import KakaoSDKAuth
-import Network
 
 @main
 struct sugarcatApp: App {
-    
-    //로그인 상태 변수
-    @State private var isLoggedIn = false
+    private enum AppRoute {
+        case launching
+        case login
+        case onboarding
+        case main
+    }
+
+    @State private var appRoute: AppRoute = .launching
+    @StateObject private var networkMonitor = NetworkMonitor()
     
     //앱이 실행될때 카카오 SDK 세팅
     init() {
@@ -60,31 +65,54 @@ struct sugarcatApp: App {
             //        }
             
             //새롭게 제안하는 로직 (로그인이 되어있는 상태일 때,
-            Group {
-                if isLoggedIn {
-                    MainTabView(
-                        logoutAction: {
-                            isLoggedIn = false
-                        }
-                    )
-                } else {
-                    OnBoardingContainerView(
-                        nextAction: {
-                            print("로그인 성공 -> 온보딩")
-                        },
-                        finishAction: {
-                            isLoggedIn = true
-                        }
-                    )
+            NetworkGateView(status: networkMonitor.status) {
+                Group {
+                    switch appRoute {
+                    case .launching:
+                        ProgressView()
+                    case .main:
+                        MainTabView(
+                            logoutAction: {
+                                appRoute = .login
+                            }
+                        )
+                    case .login:
+                        OnBoardingContainerView(
+                            startsWithLogin: true,
+                            nextAction: {
+                                appRoute = .onboarding
+                            },
+                            finishAction: {
+                                appRoute = .main
+                            }
+                        )
+                    case .onboarding:
+                        OnBoardingContainerView(
+                            startsWithLogin: false,
+                            nextAction: {},
+                            finishAction: {
+                                appRoute = .main
+                            }
+                        )
+                    }
                 }
-            }
-            .onOpenURL { url in
-                if AuthApi.isKakaoTalkLoginUrl(url) {
-                    _ = AuthController.handleOpenUrl(url: url)
+                .onOpenURL { url in
+                    if AuthApi.isKakaoTalkLoginUrl(url) {
+                        _ = AuthController.handleOpenUrl(url: url)
+                    }
                 }
-            }
-            .onAppear {
-                requestLocalNetworkPermission()
+                .onAppear {
+                    requestLocalNetworkPermission()
+                }
+                .task {
+                    guard case .launching = appRoute else { return }
+                    let result = await LoginViewModel().checkAutoLogin()
+                    if result.isLoggedIn {
+                        appRoute = result.isOnboardingCompleted ? .main : .onboarding
+                    } else {
+                        appRoute = .login
+                    }
+                }
             }
         }
     }
