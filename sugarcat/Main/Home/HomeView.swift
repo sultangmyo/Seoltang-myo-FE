@@ -12,7 +12,7 @@ struct HomeView: View {
  
     @StateObject private var viewModel = HomeHeaderViewModel(
         // 추후에 교체
-        homeHeaderService: RealHomeHeaderprotocol()
+        homeHeaderService: MockHomeHeaderprotocol()
     )
     
     //서비스 종료 공지를 위한 뷰모델
