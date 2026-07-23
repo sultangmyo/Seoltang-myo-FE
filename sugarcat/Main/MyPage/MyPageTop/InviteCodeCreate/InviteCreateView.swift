@@ -91,9 +91,8 @@ struct InviteCreateView: View {
         .background(Color.white)
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            Task { await viewModel.getInviteCode() }
-        
+        .task {
+            await viewModel.getInviteCode()
         }
     }
 }

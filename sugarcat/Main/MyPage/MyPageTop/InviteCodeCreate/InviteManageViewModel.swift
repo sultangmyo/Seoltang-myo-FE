@@ -17,15 +17,23 @@ class InviteManageViewModel: ObservableObject {
     
     // 초대코드 조회
     func getInviteCode() async {
-        
+        guard inviteCode.isEmpty, !isLoading else { return }
+
+        isLoading = true
+        defer { isLoading = false }
+
         let endpoint = CatEndpoint.catInviteCheck
-        
+
         do {
             let response: GetInviteCodeResponseDTO = try await APIClient.request(
                 path: endpoint.path,
                 method: endpoint.method
             )
-            self.inviteCode = response.inviteCode
+            if response.inviteCode.isEmpty {
+                inviteCode = try await requestNewInviteCode()
+            } else {
+                inviteCode = response.inviteCode
+            }
         } catch {
             print("❌ 초대 코드 조회 실패: \(error)")
         }
@@ -33,21 +41,25 @@ class InviteManageViewModel: ObservableObject {
     
     // 초대코드 새로고침(생성)
     func generateNewInviteCode() async {
+        guard !isLoading else { return }
+
         isLoading = true
-        let endpoint = CatEndpoint.catInviteCreate
-        
+        defer { isLoading = false }
+
         do {
-            let response: GenerateInviteCodeResponseDTO = try await APIClient.request(
-                path: endpoint.path,
-                method: endpoint.method
-            )
-            self.inviteCode = response.inviteCode
+            inviteCode = try await requestNewInviteCode()
         } catch {
             print("❌ 초대 코드 생성 실패: \(error)")
         }
-        isLoading = false
     }
-    
-    
-    
+
+    private func requestNewInviteCode() async throws -> String {
+        let endpoint = CatEndpoint.catInviteCreate
+        let response: GenerateInviteCodeResponseDTO = try await APIClient.request(
+            path: endpoint.path,
+            method: endpoint.method
+        )
+
+        return response.inviteCode
+    }
 }
