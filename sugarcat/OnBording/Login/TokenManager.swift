@@ -6,6 +6,10 @@
 //
 import Foundation
 
+extension Notification.Name {
+    static let authSessionExpired = Notification.Name("authSessionExpired")
+}
+
 class TokenManager {
     static let shared = TokenManager()
     private let accessTokenKey = "accessToken"
@@ -19,7 +23,6 @@ class TokenManager {
         UserDefaults.standard.set(refresh, forKey: refreshTokenKey)
         UserDefaults.standard.synchronize()
     }
-    
 
     // Access Token 꺼내기
     func getAccessToken() -> String? {
@@ -35,5 +38,10 @@ class TokenManager {
     func clearTokens() {
         UserDefaults.standard.removeObject(forKey: accessTokenKey)
         UserDefaults.standard.removeObject(forKey: refreshTokenKey)
+    }
+
+    func expireSession() {
+        clearTokens()
+        NotificationCenter.default.post(name: .authSessionExpired, object: nil)
     }
 }

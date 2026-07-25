@@ -93,9 +93,12 @@ struct CommonTimePickerView: View {
         }
         .padding(.horizontal, 16)
         .onAppear {
-            
-            if selectedTimes.count != count {
-                selectedTimes = Array(repeating: nil, count: count)
+            // 서버에서 불러온 기존 시간은 유지하고, 바인딩 배열이 부족한 경우에만
+            // DatePicker가 갱신할 수 있도록 필요한 크기만큼 확장한다.
+            if selectedTimes.count < count {
+                selectedTimes.append(
+                    contentsOf: Array(repeating: nil, count: count - selectedTimes.count)
+                )
             }
         }
     }

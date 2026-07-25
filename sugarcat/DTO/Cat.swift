@@ -69,7 +69,7 @@ struct GenerateInviteCodeResponseDTO: Codable {
 // MARK: - 7.3 초대코드 조회
 // response dto
 struct GetInviteCodeResponseDTO: Codable {
-    let inviteCode: String
+    let inviteCode: String?
 }
 
 // MARK: - 2.4 초대코드 유효성 검증
@@ -81,6 +81,7 @@ struct ValidateInviteCodeResponseDTO: Codable {
 // reponse 401 - 추후에 error 파일로 리팩토링 될수 있습니다.
 struct ErrorResponseDTO: Codable {
     let status: Int
+    let code: String
     let message: String
 }
 

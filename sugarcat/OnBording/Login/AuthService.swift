@@ -78,23 +78,9 @@ class AuthService {
         }
     // 온보딩 완료 여부 체크
     func checkOnboardingStatus() async throws -> OnboardingCheckResponseDTO {
-        guard let url = URL(string: "\(baseURL)/auth/onboarding") else {
-            throw URLError(.badURL)
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        // 토큰을 헤더에 넣음
-        if let accessToken = TokenManager.shared.getAccessToken() {
-            print("🔑 저장된 토큰: \(accessToken)")
-            request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        }else{
-            print("❌ 토큰 없음!")
-        }
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("📦 온보딩 응답: \(String(data: data, encoding: .utf8) ?? "nil")")
-        return try JSONDecoder().decode(OnboardingCheckResponseDTO.self, from: data)
+        try await APIClient.request(
+            path: AuthEndpoint.onBoardingCheck.path,
+            method: AuthEndpoint.onBoardingCheck.method
+        )
     }
 }

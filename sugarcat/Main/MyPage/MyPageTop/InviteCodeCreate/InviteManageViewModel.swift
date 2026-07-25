@@ -29,10 +29,15 @@ class InviteManageViewModel: ObservableObject {
                 path: endpoint.path,
                 method: endpoint.method
             )
-            if response.inviteCode.isEmpty {
-                inviteCode = try await requestNewInviteCode()
+//            if response.inviteCode.isEmpty {
+//                inviteCode = try await requestNewInviteCode()
+//            } else {
+//                inviteCode = response.inviteCode
+//            }
+            if let code = response.inviteCode, !code.isEmpty {
+                inviteCode = code
             } else {
-                inviteCode = response.inviteCode
+                inviteCode = try await requestNewInviteCode()
             }
         } catch {
             print("❌ 초대 코드 조회 실패: \(error)")

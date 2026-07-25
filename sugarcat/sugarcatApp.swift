@@ -104,6 +104,11 @@ struct sugarcatApp: App {
                 .onAppear {
                     requestLocalNetworkPermission()
                 }
+                .onReceive(
+                    NotificationCenter.default.publisher(for: .authSessionExpired)
+                ) { _ in
+                    appRoute = .login
+                }
                 .task {
                     guard case .launching = appRoute else { return }
                     let result = await LoginViewModel().checkAutoLogin()
