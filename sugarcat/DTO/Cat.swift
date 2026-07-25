@@ -81,6 +81,7 @@ struct ValidateInviteCodeResponseDTO: Codable {
 // reponse 401 - 추후에 error 파일로 리팩토링 될수 있습니다.
 struct ErrorResponseDTO: Codable {
     let status: Int
+    let code: String
     let message: String
 }
 

@@ -247,52 +247,9 @@ private extension RealWidgetUpdater {
         path: String,
         method: HTTPMethod
     ) async throws -> T {
-        
-        // BaseURL + endpoint path 합치기
-        let urlString = BaseURL.current + path
-        
-        // URL 생성 실패 시 에러
-        guard let url = URL(string: urlString) else {
-            throw URLError(.badURL)
-        }
-        
-        // URLRequest 생성
-        var request = URLRequest(url: url)
-        
-        // GET / POST / PATCH ...
-        request.httpMethod = method.rawValue
-        
-        // JSON 통신 헤더
-        request.setValue(
-            "application/json",
-            forHTTPHeaderField: "Content-Type"
-        )
-        
-        // 토큰 매니저 연결
-        if let accessToken = TokenManager.shared.getAccessToken() {
-            request.setValue(
-                "Bearer \(accessToken)",
-                forHTTPHeaderField: "Authorization"
-            )
-        }
-        
-        // 실제 네트워크 요청
-        let (data, response) = try await URLSession.shared.data(
-            for: request
-        )
-        
-        // HTTP 응답 검증
-        guard
-            let httpResponse = response as? HTTPURLResponse,
-            200...299 ~= httpResponse.statusCode
-        else {
-            throw URLError(.badServerResponse)
-        }
-        
-        // JSON → DTO decode
-        return try JSONDecoder().decode(
-            T.self,
-            from: data
+        try await APIClient.request(
+            path: path,
+            method: method
         )
     }
 }

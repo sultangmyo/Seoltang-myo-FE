@@ -37,6 +37,7 @@ struct KakaoLoginResponseDTO: Codable {
 // 1.3 jwt 재발급
 struct RefreshTokenResponseDTO: Codable {
     let accessToken: String
+    let refreshToken: String
     let userId: UUID
 }
 
