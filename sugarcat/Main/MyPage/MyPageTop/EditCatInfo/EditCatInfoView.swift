@@ -83,7 +83,7 @@ struct EditCatInfoView: View {
     private func executeSubmit() {
         viewModel.updateCatInfo { success in
             if success {
-                parentViewModel.fetchMypageData()
+                parentViewModel.refreshData()
                 path.removeLast()
             }
         }
