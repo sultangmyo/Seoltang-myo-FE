@@ -60,6 +60,7 @@ struct EditCatInfoView: View {
             Button("변경 완료") { executeSubmit() }
                 .buttonStyle(OnboardingButtonStyle(isValid: viewModel.isValid, isLoading: viewModel.isLoading))
                 .disabled(!viewModel.isValid || viewModel.isLoading)
+                .padding(.horizontal, 16)
         }
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .tabBar) // 탭바 없애기
