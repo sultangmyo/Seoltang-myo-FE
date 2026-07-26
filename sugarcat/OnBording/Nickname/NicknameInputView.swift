@@ -97,7 +97,7 @@ struct NicknameInputView: View {
                         .mainTitleB()
             Text("입력해주세요").mainTitleB().foregroundColor(Color("textbg1"))
         }
-        .padding(.top, 70)
+        .padding(.top, 54)
         .padding(.horizontal, 16)
     }
 }
