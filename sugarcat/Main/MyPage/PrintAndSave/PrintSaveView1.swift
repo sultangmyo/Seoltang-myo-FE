@@ -36,7 +36,13 @@ struct PrintSaveView1: View {
                         
                         // 데이터 조회 성공 시 이동 (데이터 전달)
                         await MainActor.run {
-                            path.append(MyPageRoute.pdfPreview(catName: "나비", records: fetchedRecords))
+                            path.append(
+                                MyPageRoute.pdfPreview(
+                                    catName: "나비",
+                                    records: fetchedRecords,
+                                    isMonthly: isMonthly
+                                )
+                            )
                         }
                     } catch {
                         print("데이터 조회 실패: \(error)")

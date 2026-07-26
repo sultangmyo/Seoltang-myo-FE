@@ -3,6 +3,7 @@ import SwiftUI
 struct PDFPreviewView: View {
     let catName: String
     let records: [CatRecordRow]
+    let isMonthly: Bool
     @State private var isShareSheetPresented = false
     @State private var generatedPDFURL: URL?
     @Environment(\.dismiss) var dismiss
@@ -11,7 +12,7 @@ struct PDFPreviewView: View {
     private let pdfHorizontalPadding: CGFloat = 16
 
     // PDF 및 화면에서 공통으로 사용할 표 영역
-    private func recordTable(width: CGFloat) -> some View {
+    private func recordTable(records: [CatRecordRow], width: CGFloat) -> some View {
         VStack(spacing: 0) {
             headerRow(width: width)
             ForEach(records, id: \.recordDate) { record in
@@ -31,7 +32,7 @@ struct PDFPreviewView: View {
 
             GeometryReader { geometry in
                 ScrollView {
-                    recordTable(width: geometry.size.width)
+                    recordTable(records: records, width: geometry.size.width)
                 }
             }
             .border(Color.gray)
@@ -41,10 +42,13 @@ struct PDFPreviewView: View {
 
             Button("PDF 출력") {
              //pdf generate 에 전달
+                let tableWidth = pdfPageWidth - (pdfHorizontalPadding * 2)
+                let pages = pdfRecordGroups.map { records in
+                    AnyView(recordTable(records: records, width: tableWidth))
+                }
+
                 if let url = PDFGenerator.generatePDF(
-                    view: recordTable(
-                        width: pdfPageWidth - (pdfHorizontalPadding * 2)
-                    ),
+                    pages: pages,
                     fileName: "\(catName)_기록지"
                 ) {
                     self.generatedPDFURL = url
@@ -74,6 +78,24 @@ struct PDFPreviewView: View {
                 ShareSheet(items: [url])
             }
         }
+    }
+
+    private var pdfRecordGroups: [[CatRecordRow]] {
+        guard isMonthly else {
+            return [records]
+        }
+
+        let groupedRecords = Dictionary(grouping: records) { record in
+            guard let date = record.recordDate, date.count >= 7 else {
+                return "unknown"
+            }
+            return String(date.prefix(7))
+        }
+
+        let monthlyGroups = groupedRecords.keys.sorted().compactMap {
+            groupedRecords[$0]
+        }
+        return monthlyGroups.isEmpty ? [[]] : monthlyGroups
     }
 
     // MARK: - 공통 셀 뷰
@@ -226,7 +248,7 @@ struct PDFPreviewView: View {
     ]
 
     return NavigationStack {
-        PDFPreviewView(catName: "나비", records: dummyRecords)
+        PDFPreviewView(catName: "나비", records: dummyRecords, isMonthly: true)
     }
 }
 

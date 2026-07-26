@@ -16,7 +16,7 @@ enum MyPageRoute: Hashable {
     case editCatInfo // 고양이 정보 수정
     case editNickname // 닉네임 변경 페이지
     case inviteCreate // 초대코드 생성뷰
-    case pdfPreview(catName: String, records: [CatRecordRow]) //pdf 설정 화면 ->pdf 미리보기 화면
+    case pdfPreview(catName: String, records: [CatRecordRow], isMonthly: Bool) //pdf 설정 화면 ->pdf 미리보기 화면
 }
 
 struct MyPageView: View {
@@ -60,8 +60,8 @@ struct MyPageView: View {
                 switch route {
                 case .printSave:
                     PrintSaveView1(path: $path)
-                case .pdfPreview(let catName, let records): // 추가된 부분
-                    PDFPreviewView(catName: catName, records: records)
+                case .pdfPreview(let catName, let records, let isMonthly): // 추가된 부분
+                    PDFPreviewView(catName: catName, records: records, isMonthly: isMonthly)
                 case .notificationSetting:
                     MyPageNotificationSettingView(path: $path)
                 case .insulinNFsetting1:
