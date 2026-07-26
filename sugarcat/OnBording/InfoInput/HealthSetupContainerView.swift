@@ -108,7 +108,7 @@ struct HealthSetupContainerView: View {
                 finalizeOnboarding(notificationEnabled: false)
             }
         } message: {
-            Text("인슐린 투여 시간에 맞춰 알람을 받으시겠어요?")
+            Text("알림을 허용하시겠습니까?")
         }
     }
     
