@@ -99,6 +99,7 @@ struct MyPageNotificationSettingView: View {
             Spacer()
         }
         .navigationBarBackButtonHidden(true) // 자동으로 만들어지는 back navigation 없애고 커스텀 네비게이션을 사용하는 코드
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

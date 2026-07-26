@@ -49,6 +49,7 @@ struct PrintSaveView1: View {
             .padding(.bottom, 20)
         }
         .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .tabBar)
         .background(Color.white.ignoresSafeArea())
     }
     
