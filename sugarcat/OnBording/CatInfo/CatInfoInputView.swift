@@ -82,8 +82,9 @@ struct CatInfoInputView: View {
                 isValid: viewModel.isValid,
                 isLoading: false
             ))
+            .padding(.horizontal, 16)
+            .padding(.bottom, 10)
             .disabled(!viewModel.isValid)
-            .padding(.bottom, 40)
         }
         .navigationBarHidden(true)
         .background(Color.white)

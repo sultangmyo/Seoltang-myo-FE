@@ -26,7 +26,7 @@ struct CatSetupView: View {
                     .mainTitleB()
                     .foregroundColor(Color("textbg1"))
             }
-            .padding(.top, 70)
+            .padding(.top, 54)
             .padding(.horizontal, 16)
 
             // 새로운 고양이 등록하기
@@ -96,6 +96,7 @@ struct OnboardingOptionCard: View {
         }
         .padding(.horizontal, 18)
         .padding(.top, 20)
+        .navigationBarBackButtonHidden(true)
     }
 }
 #Preview {

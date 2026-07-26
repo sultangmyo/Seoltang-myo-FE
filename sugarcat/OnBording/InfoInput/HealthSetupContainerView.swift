@@ -69,7 +69,7 @@ struct HealthSetupContainerView: View {
             Spacer()
             
             // 하단 버튼 영역
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 if currentStep.isTimeStep {
                     Button(action: moveToPreviousStep) {
                         Text("이전").buttontitle1().foregroundColor(Color("gray1"))
@@ -92,7 +92,7 @@ struct HealthSetupContainerView: View {
                 .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: viewModel.isLoading))
                 .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, 10).padding(.bottom, 10)
+            .padding(.horizontal, 16).padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
         // 알람 권한 요청 얼럿
