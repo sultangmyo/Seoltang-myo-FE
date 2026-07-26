@@ -46,7 +46,7 @@ struct PrintSaveView1: View {
             }
             .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: false))
             .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)

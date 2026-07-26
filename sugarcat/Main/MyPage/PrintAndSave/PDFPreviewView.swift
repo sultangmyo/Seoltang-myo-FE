@@ -7,15 +7,18 @@ struct PDFPreviewView: View {
     @State private var generatedPDFURL: URL?
     @Environment(\.dismiss) var dismiss
 
+    private let pdfPageWidth: CGFloat = 595
+    private let pdfHorizontalPadding: CGFloat = 16
+
     // PDF 및 화면에서 공통으로 사용할 표 영역
-    private var recordTable: some View {
+    private func recordTable(width: CGFloat) -> some View {
         VStack(spacing: 0) {
-            headerRow
+            headerRow(width: width)
             ForEach(records, id: \.recordDate) { record in
-                dataRows(for: record)
+                dataRows(for: record, width: width)
             }
         }
-        .padding(20)
+        .frame(width: width)
         .background(Color.white)
     }
 
@@ -23,27 +26,34 @@ struct PDFPreviewView: View {
         VStack(alignment: .leading, spacing: 0) {
             Text("\(catName) 기록일지")
                 .mainTitleB()
-                .padding(.leading, 20)
+                .padding(.horizontal, 16)
                 .padding(.bottom, 20)
 
-            ScrollView {
-                recordTable
+            GeometryReader { geometry in
+                ScrollView {
+                    recordTable(width: geometry.size.width)
+                }
             }
             .border(Color.gray)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
 
             Spacer()
 
             Button("PDF 출력") {
              //pdf generate 에 전달
-                if let url = PDFGenerator.generatePDF(view: recordTable, fileName: "\(catName)_기록지") {
+                if let url = PDFGenerator.generatePDF(
+                    view: recordTable(
+                        width: pdfPageWidth - (pdfHorizontalPadding * 2)
+                    ),
+                    fileName: "\(catName)_기록지"
+                ) {
                     self.generatedPDFURL = url
                     self.isShareSheetPresented = true
                 }
             }
             .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: false))
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -94,68 +104,74 @@ struct PDFPreviewView: View {
     }
 
     // MARK: - 표 구성 요소
-    private var headerRow: some View {
-        HStack(spacing: 0) {
-            TableCell(text: "날짜", width: 70, height: 80, bold: true)
+    private func headerRow(width: CGFloat) -> some View {
+        let dateColumnWidth = width * 70 / 340
+        let categoryColumnWidth = width * 100 / 340
+        let detailColumnWidth = categoryColumnWidth / 2
+
+        return HStack(spacing: 0) {
+            TableCell(text: "날짜", width: dateColumnWidth, height: 80, bold: true)
 
             VStack(spacing: 0) {
                 TableCell(text: "혈당", height: 40, bold: true, expandsWidth: true)
                 HStack(spacing: 0) {
-                    TableCell(text: "시간", width: 50, height: 40)
-                    TableCell(text: "혈당", width: 50, height: 40)
+                    TableCell(text: "시간", width: detailColumnWidth, height: 40)
+                    TableCell(text: "혈당", width: detailColumnWidth, height: 40)
                 }
             }
-            .frame(width: 100)
+            .frame(width: categoryColumnWidth)
 
             VStack(spacing: 0) {
                 TableCell(text: "식사", height: 40, bold: true, expandsWidth: true)
                 HStack(spacing: 0) {
-                    TableCell(text: "시간", width: 50, height: 40)
-                    TableCell(text: "식사", width: 50, height: 40)
+                    TableCell(text: "시간", width: detailColumnWidth, height: 40)
+                    TableCell(text: "식사", width: detailColumnWidth, height: 40)
                 }
             }
-            .frame(width: 100)
+            .frame(width: categoryColumnWidth)
 
-            TableCell(text: "인슐린\n누락", width: 70, height: 80, bold: true)
+            TableCell(text: "인슐린\n누락", width: dateColumnWidth, height: 80, bold: true)
         }
         .background(Color(.systemGray6))
     }
 
-    private func dataRows(for record: CatRecordRow) -> some View {
+    private func dataRows(for record: CatRecordRow, width: CGFloat) -> some View {
         let bs = record.bloodSugars ?? []
         let ms = record.meals ?? []
         let maxCount = max(bs.count, ms.count)
+        let dateColumnWidth = width * 70 / 340
+        let detailColumnWidth = width * 50 / 340
 
         return ForEach(0..<maxCount, id: \.self) { i in
             HStack(spacing: 0) {
                 TableCell(
                     text: i == 0 ? (record.recordDate ?? "") : "",
-                    width: 70,
+                    width: dateColumnWidth,
                     height: 30
                 )
 
                 TableCell(
                     text: bs.indices.contains(i) ? (bs[i].recordTime ?? "-") : "-",
-                    width: 50,
+                    width: detailColumnWidth,
                     height: 30
                 )
 
                 TableCell(
                     text: "",
-                    width: 50,
+                    width: detailColumnWidth,
                     height: 30,
                     content: AnyView(sugarValueView(bs: bs, index: i))
                 )
 
                 TableCell(
                     text: ms.indices.contains(i) ? (ms[i].recordTime ?? "-") : "-",
-                    width: 50,
+                    width: detailColumnWidth,
                     height: 30
                 )
 
                 TableCell(
                     text: ms.indices.contains(i) ? (ms[i].mealStatus == "FULL" ? "O" : "△") : "-",
-                    width: 50,
+                    width: detailColumnWidth,
                     height: 30
                 )
 
@@ -163,7 +179,7 @@ struct PDFPreviewView: View {
                     text: i == 0 && !(record.insulin?.missedIndexes?.isEmpty ?? true)
                         ? "\(record.insulin?.missedIndexes?.count ?? 0)번 누락"
                         : (i == 0 ? "-" : ""),
-                    width: 70,
+                    width: dateColumnWidth,
                     height: 30
                 )
             }

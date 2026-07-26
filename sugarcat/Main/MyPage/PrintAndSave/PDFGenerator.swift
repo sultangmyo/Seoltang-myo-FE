@@ -25,6 +25,7 @@ enum PDFGenerator {
         let imageRenderer = ImageRenderer(
             content: content
                 .frame(width: pageWidth)
+                .fixedSize(horizontal: false, vertical: true)
                 .background(Color.white)
         )
 
