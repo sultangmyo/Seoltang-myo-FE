@@ -39,7 +39,7 @@ struct NicknameInputView: View {
                                 .focused($isFocused)
                                 .submitLabel(.done)
                                 .onSubmit {
-                                    if viewModel.isValidNickname { executeSubmit() }
+                                    isFocused = false
                                 }
                                 .padding(.horizontal, 16)
                                 .onChange(of: viewModel.nickname) { oldValue, newValue in
@@ -109,4 +109,3 @@ struct NicknameInputView_Previews: PreviewProvider {
         NicknameInputView(path: .constant(NavigationPath()))
     }
 }
-
