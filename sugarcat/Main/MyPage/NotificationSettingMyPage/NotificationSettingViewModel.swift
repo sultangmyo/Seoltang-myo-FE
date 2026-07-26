@@ -24,7 +24,7 @@ class NotificationSettingViewModel: ObservableObject {
     @Published var isSaving: Bool = false
     
     let category: NotificationCategory
-    
+
     init(category: NotificationCategory) {
         self.category = category
     }
@@ -55,11 +55,13 @@ class NotificationSettingViewModel: ObservableObject {
                 method: .get
             )
             
-            self.existingCount = fetchedData.count
-            let sortedSchedules = fetchedData.schedules.sorted { $0.sequence < $1.sequence }
-            
-            for i in 0..<min(sortedSchedules.count, existingTimes.count) {
-                self.existingTimes[i] = DateParser.parseTime(sortedSchedules[i].time)
+            self.existingCount = min(max(fetchedData.count, 1), existingTimes.count)
+            self.existingTimes = Array(repeating: nil, count: existingTimes.count)
+
+            for schedule in fetchedData.schedules {
+                let index = schedule.sequence - 1
+                guard existingTimes.indices.contains(index) else { continue }
+                self.existingTimes[index] = NotificationTimeParser.parse(schedule.time)
             }
         } catch {
             print("❌ 조회 실패: \(error)")
@@ -70,10 +72,12 @@ class NotificationSettingViewModel: ObservableObject {
     func saveDataToBackend(onSuccess: @escaping () -> Void) async {
         isSaving = true
         
-        
-        let schedules = existingTimes.prefix(existingCount).enumerated().compactMap { (index, date) -> CareScheduleDTO? in
-            guard let date = date else { return nil }
-            return CareScheduleDTO(sequence: index + 1, time: DateStringFormatter.timeString(from: date))
+        let schedules = existingTimes.prefix(existingCount).enumerated().compactMap { index, date -> CareScheduleDTO? in
+            guard let date else { return nil }
+            return CareScheduleDTO(
+                sequence: index + 1,
+                time: DateStringFormatter.timeString(from: date)
+            )
         }
         
         let requestBody = CareSettingDTO(count: existingCount, schedules: Array(schedules))

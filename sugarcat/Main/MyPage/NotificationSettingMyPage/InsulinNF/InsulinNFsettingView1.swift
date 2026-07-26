@@ -52,6 +52,7 @@ struct InsulinNFsettingView1: View {
                     Button(action: { currentStep = 2 }) { Text("다음") }
                         .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: false))
                         .padding(.bottom, 10)
+                        .padding(.horizontal, 16)
 
                 } else {
                     CommonTimePickerView(
@@ -72,6 +73,7 @@ struct InsulinNFsettingView1: View {
                     }
                     .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: viewModel.isSaving))
                     .padding(.bottom, 10)
+                    .padding(.horizontal, 16)
                 }
             }
         }
