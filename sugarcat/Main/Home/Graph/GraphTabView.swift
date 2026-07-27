@@ -94,8 +94,6 @@ private extension GraphTabView {
                 .frame(height: 250)
         } else if let errorMessage = viewModel.errorMessage {
             graphMessageView(message: errorMessage, showsRetryButton: true)
-        } else if hasNoData {
-            graphMessageView(message: "표시할 혈당 기록이 없어요.", showsRetryButton: false)
         } else {
             switch viewModel.selectedRange {
             case .day:
@@ -107,17 +105,6 @@ private extension GraphTabView {
             case .month:
                 HomeMonthChartView(points: viewModel.monthPoints)
             }
-        }
-    }
-
-    var hasNoData: Bool {
-        switch viewModel.selectedRange {
-        case .day:
-            return viewModel.dayPoints.isEmpty
-        case .week:
-            return !viewModel.weekPoints.contains { $0.hasRecord }
-        case .month:
-            return viewModel.monthPoints.isEmpty
         }
     }
 
