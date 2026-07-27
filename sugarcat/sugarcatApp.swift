@@ -21,50 +21,22 @@ struct sugarcatApp: App {
     @State private var appRoute: AppRoute = .launching
     @StateObject private var networkMonitor = NetworkMonitor()
     
-    //앱이 실행될때 카카오 SDK 세팅
+    // 앱이 실행될 때 카카오 SDK 세팅
     init() {
         KakaoSDK.initSDK(appKey: "b15f47e370edea963f1e81be22a5dd96")
     }
     
     private func requestLocalNetworkPermission() {
-           let url = URL(string: "http://172.19.30.146:8080")!
-           URLSession.shared.dataTask(with: url) { _, _, _ in }.resume()
-       }
+            guard let url = URL(string: BaseURL.local) else { return }
+            URLSession.shared.dataTask(with: url) { _, _, _ in }.resume()
+        }
 
-    //app delegate 로직 추가
+    // app delegate 로직 추가
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate
 
-        
     var body: some Scene {
         WindowGroup {
-            //            // 1. 기존 테스트 코드
-            //            OnBoardingContainerView(nextAction: {
-            //                            print("로그인 성공 -> 온보딩")
-            //                        }, finishAction: {
-            //                            print("이미 가입된 유저 -> 메인 화면")
-            //                        })
-            //                .onOpenURL { url in
-            //                    if (AuthApi.isKakaoTalkLoginUrl(url)) {
-            //                        _ = AuthController.handleOpenUrl(url: url)
-            //                    }
-            //                }
-            //                .onAppear(){
-            //                    requestLocalNetworkPermission()
-            //                }
-            //            //2. 매인 화면 테스트 코드
-            // MainTabView(logoutAction: { isLoggedIn = false})
-            //                .onOpenURL { url in
-            //                   if (AuthApi.isKakaoTalkLoginUrl(url)) {
-            //                        _ = AuthController.handleOpenUrl(url: url)
-            //                    }
-            //                }
-            //                .onAppear(){
-            //                   requestLocalNetworkPermission()
-            //                }
-            //        }
-            
-            //새롭게 제안하는 로직 (로그인이 되어있는 상태일 때,
             NetworkGateView(status: networkMonitor.status) {
                 Group {
                     switch appRoute {
@@ -73,6 +45,8 @@ struct sugarcatApp: App {
                     case .main:
                         MainTabView(
                             logoutAction: {
+                                // 로그아웃 시 토큰 정리 및 라우트 변경
+                                TokenManager.shared.clearTokens()
                                 appRoute = .login
                             }
                         )
@@ -107,10 +81,14 @@ struct sugarcatApp: App {
                 .onReceive(
                     NotificationCenter.default.publisher(for: .authSessionExpired)
                 ) { _ in
+                    // APIClient나 토큰 매니저에서 세션 만료 알림을 보낼 때 자동 로그인 화면으로 이동
+                    TokenManager.shared.clearTokens()
                     appRoute = .login
                 }
                 .task {
                     guard case .launching = appRoute else { return }
+                    
+                    // APIClient를 이용하는 LoginViewModel의 자동 로그인 체크 로직 수행
                     let result = await LoginViewModel().checkAutoLogin()
                     if result.isLoggedIn {
                         appRoute = result.isOnboardingCompleted ? .main : .onboarding
