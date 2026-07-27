@@ -21,7 +21,7 @@ struct OnboardingButtonStyle: ButtonStyle {
             }
         }
         .frame(height: 68)
-        .padding(.horizontal, 16) 
+//        .padding(.horizontal, 16) 
         // 버튼 클릭 시 시각적 피드백
         .opacity(configuration.isPressed ? 0.9 : 1.0)
         .scaleEffect(configuration.isPressed ? 0.98 : 1.0)

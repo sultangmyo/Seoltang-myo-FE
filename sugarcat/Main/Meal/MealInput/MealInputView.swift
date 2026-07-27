@@ -152,6 +152,7 @@ private extension MealInputView {
                     .foregroundColor(.textbg2)
             }
             .frame(height: 68)
+            .padding(.bottom, 10)
         }
         .disabled(selectedStatus == nil)
     }

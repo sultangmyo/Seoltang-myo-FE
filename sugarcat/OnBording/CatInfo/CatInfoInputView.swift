@@ -21,6 +21,8 @@ struct CatInfoInputView: View {
     }
     
     @FocusState private var focusedField: Field?
+    @State private var showBirthPicker = false
+    @State private var showDiagnosedPicker = false
     
     enum Field {
         case catName
@@ -50,6 +52,11 @@ struct CatInfoInputView: View {
                         placeholder: "0000.00.00",
                         isDisabled: viewModel.isBirthDateUnknown
                     )
+                    .onTapGesture {
+                        if !viewModel.isBirthDateUnknown {
+                            showBirthPicker = true
+                        }
+                    }
                     checkboxRow(
                         label: "생년월일을 모르겠어요.",
                         isChecked: $viewModel.isBirthDateUnknown
@@ -63,6 +70,11 @@ struct CatInfoInputView: View {
                         placeholder: "0000.00.00",
                         isDisabled: viewModel.isDiagnosedDateUnknown
                     )
+                    .onTapGesture {
+                        if !viewModel.isDiagnosedDateUnknown {
+                            showDiagnosedPicker = true
+                        }
+                    }
                     checkboxRow(
                         label: "진단 일자를 모르겠어요.",
                         isChecked: $viewModel.isDiagnosedDateUnknown
@@ -82,14 +94,21 @@ struct CatInfoInputView: View {
                 isValid: viewModel.isValid,
                 isLoading: false
             ))
+            .padding(.horizontal, 16)
+            .padding(.bottom, 10)
             .disabled(!viewModel.isValid)
-            .padding(.bottom, 40)
         }
         .navigationBarHidden(true)
         .background(Color.white)
         .onTapGesture { focusedField = nil }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showBirthPicker) {
+            datePickerSheet(date: $viewModel.birthDate, isPresented: $showBirthPicker)
+        }
+        .sheet(isPresented: $showDiagnosedPicker) {
+            datePickerSheet(date: $viewModel.diagnosedDate, isPresented: $showDiagnosedPicker)
+        }
     }
     
     
@@ -109,14 +128,21 @@ struct CatInfoInputView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color("gray2"), lineWidth: 1)
         )
-        .overlay {
-            if !isDisabled {
-                DatePicker("", selection: date, in: ...Date(), displayedComponents: .date)
-                    .labelsHidden()
-                    .datePickerStyle(.compact)
-                    .opacity(0.011)
+    }
+
+    @ViewBuilder
+    private func datePickerSheet(date: Binding<Date>, isPresented: Binding<Bool>) -> some View {
+        VStack {
+            DatePicker("", selection: date, in: ...Date(), displayedComponents: .date)
+                .datePickerStyle(.graphical)
+                .padding()
+
+            Button("확인") {
+                isPresented.wrappedValue = false
             }
+            .padding(.bottom, 20)
         }
+        .presentationDetents([.medium])
     }
     
     @ViewBuilder
@@ -149,5 +175,4 @@ struct CatInfoInputView: View {
         }
     }
 }
-
 

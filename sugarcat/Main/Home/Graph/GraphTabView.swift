@@ -87,17 +87,58 @@ private extension GraphTabView {
     // 선택된 탭에 따라 그래프 표시
     @ViewBuilder
     var graphContentView: some View {
+        if viewModel.isLoading {
+            ProgressView()
+                .tint(Color.primary0)
+                .frame(maxWidth: .infinity)
+                .frame(height: 250)
+        } else if let errorMessage = viewModel.errorMessage {
+            graphMessageView(message: errorMessage, showsRetryButton: true)
+        } else if hasNoData {
+            graphMessageView(message: "표시할 혈당 기록이 없어요.", showsRetryButton: false)
+        } else {
+            switch viewModel.selectedRange {
+            case .day:
+                HomeDayChartView(points: viewModel.dayPoints)
+
+            case .week:
+                HomeWeekChartView(points: viewModel.weekPoints)
+
+            case .month:
+                HomeMonthChartView(points: viewModel.monthPoints)
+            }
+        }
+    }
+
+    var hasNoData: Bool {
         switch viewModel.selectedRange {
         case .day:
-            HomeDayChartView(points: viewModel.dayPoints)
-            
-        // 리팩토링 할 예정입니다.
+            return viewModel.dayPoints.isEmpty
         case .week:
-            HomeWeekChartView(points: viewModel.weekPoints)
-            
+            return !viewModel.weekPoints.contains { $0.hasRecord }
         case .month:
-            HomeMonthChartView(points: viewModel.monthPoints)
+            return viewModel.monthPoints.isEmpty
         }
+    }
+
+    func graphMessageView(message: String, showsRetryButton: Bool) -> some View {
+        VStack(spacing: 12) {
+            Text(message)
+                .caption2R()
+                .foregroundStyle(Color.gray1)
+
+            if showsRetryButton {
+                Button("다시 시도") {
+                    Task {
+                        await viewModel.reloadSelectedGraph()
+                    }
+                }
+                .body2R()
+                .foregroundStyle(Color.primary0)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 250)
     }
 }
 

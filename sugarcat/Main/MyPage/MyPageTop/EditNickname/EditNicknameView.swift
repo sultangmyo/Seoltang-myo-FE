@@ -85,6 +85,7 @@ struct EditNicknameView: View {
             ))
             .disabled(!isValidNickname || viewModel.isLoading)
             .padding(.bottom, 40)
+            .padding(.horizontal, 16)
         }
         .background(Color.white)
         .ignoresSafeArea(edges: .bottom)

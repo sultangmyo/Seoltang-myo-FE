@@ -84,7 +84,7 @@ struct InviteCreateView: View {
             }
             .disabled(viewModel.isLoading)
             .padding(.horizontal, 16)
-            .padding(.bottom, 40)
+            .padding(.bottom, 10)
             
             
         }

@@ -39,7 +39,7 @@ struct NicknameInputView: View {
                                 .focused($isFocused)
                                 .submitLabel(.done)
                                 .onSubmit {
-                                    if viewModel.isValidNickname { executeSubmit() }
+                                    isFocused = false
                                 }
                                 .padding(.horizontal, 16)
                                 .onChange(of: viewModel.nickname) { oldValue, newValue in
@@ -67,6 +67,7 @@ struct NicknameInputView: View {
             ))
                         .disabled(!viewModel.isValidNickname || viewModel.isLoading)
                         .padding(.bottom, 40)
+                        .padding(.horizontal, 16)
                     }
                     .background(Color.white)
                     .ignoresSafeArea(edges: .bottom)
@@ -96,7 +97,7 @@ struct NicknameInputView: View {
                         .mainTitleB()
             Text("입력해주세요").mainTitleB().foregroundColor(Color("textbg1"))
         }
-        .padding(.top, 70)
+        .padding(.top, 54)
         .padding(.horizontal, 16)
     }
 }
@@ -108,4 +109,3 @@ struct NicknameInputView_Previews: PreviewProvider {
         NicknameInputView(path: .constant(NavigationPath()))
     }
 }
-

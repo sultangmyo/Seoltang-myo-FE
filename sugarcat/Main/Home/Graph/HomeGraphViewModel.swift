@@ -60,9 +60,9 @@ final class HomeGraphViewModel: ObservableObject {
             for: .bloodSugarRecordsDidUpdate
         )
         .sink { [weak self] _ in
-            // notification을 받으면 오늘 그래프 데이터를 다시 조회
+            // 기록이 변경되면 현재 보고 있는 범위의 그래프를 다시 조회
             Task { @MainActor in
-                await self?.loadTodayGraph()
+                await self?.reloadSelectedGraph()
             }
         }
         .store(in: &cancellables)
@@ -81,9 +81,7 @@ final class HomeGraphViewModel: ObservableObject {
             }
 
         case .week:
-            if weekPoints.isEmpty {
-                await loadWeeklyGraph()
-            }
+            await loadWeeklyGraph()
 
         case .month:
             if monthPoints.isEmpty {
@@ -122,6 +120,7 @@ final class HomeGraphViewModel: ObservableObject {
     func loadWeeklyGraph() async {
         isLoading = true
         errorMessage = nil
+        weekPoints = []
 
         do {
             // 현재 날짜가 포함된 주의 월요일 날짜를 구함
@@ -142,6 +141,17 @@ final class HomeGraphViewModel: ObservableObject {
             print("혈당 주간 그래프 조회 실패:", error)
         }
         isLoading = false
+    }
+
+    func reloadSelectedGraph() async {
+        switch selectedRange {
+        case .day:
+            await loadTodayGraph()
+        case .week:
+            await loadWeeklyGraph()
+        case .month:
+            await loadMonthlyGraph()
+        }
     }
     // 주 시작일(월요일)을 계산하는 함수
     private func startOfWeek(from date: Date) -> Date {

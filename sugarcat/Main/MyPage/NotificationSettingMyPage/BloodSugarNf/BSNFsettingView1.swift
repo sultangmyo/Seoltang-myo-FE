@@ -51,6 +51,7 @@ struct BSNFsettingView1: View {
                     Button(action: { currentStep = 2 }) { Text("다음") }
                         .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: false))
                         .padding(.bottom, 10)
+                        .padding(.horizontal, 16)
 
                 } else {
                     CommonTimePickerView(
@@ -62,27 +63,16 @@ struct BSNFsettingView1: View {
 
                     Spacer()
 
-                
-                    let dynamicSelection = viewModel.existingTimes.prefix(viewModel.existingCount)
-                    let isAllFilled = dynamicSelection.allSatisfy { $0 != nil }
-
-
                     Button(action: {
                         Task {
-                            if isAllFilled {
-                               
-                                await viewModel.saveDataToBackend { dismiss() }
-                            } else {
-                            
-                                dismiss()
-                            }
+                            await viewModel.saveDataToBackend { dismiss() }
                         }
                     }) {
-                       
-                        Text(isAllFilled ? "완료" : "건너뛰기")
+                        Text("완료")
                     }
                     .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: viewModel.isSaving))
                     .padding(.bottom, 10)
+                    .padding(.horizontal, 16)
                 }
             }
         }

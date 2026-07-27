@@ -47,7 +47,7 @@ struct CatInviteView: View {
             
             Spacer()
             
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
                 Button(action: {
                     path.removeLast()
                 }) {
@@ -117,7 +117,6 @@ struct CatInviteView: View {
                 .mainTitleB()
                 .foregroundColor(Color("textbg1"))
         }
-        .padding(.top, 20)
         .padding(.horizontal, 16)
     }
 }

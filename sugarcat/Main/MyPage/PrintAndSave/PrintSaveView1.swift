@@ -36,7 +36,13 @@ struct PrintSaveView1: View {
                         
                         // 데이터 조회 성공 시 이동 (데이터 전달)
                         await MainActor.run {
-                            path.append(MyPageRoute.pdfPreview(catName: "나비", records: fetchedRecords))
+                            path.append(
+                                MyPageRoute.pdfPreview(
+                                    catName: "나비",
+                                    records: fetchedRecords,
+                                    isMonthly: isMonthly
+                                )
+                            )
                         }
                     } catch {
                         print("데이터 조회 실패: \(error)")
@@ -46,9 +52,10 @@ struct PrintSaveView1: View {
             }
             .buttonStyle(OnboardingButtonStyle(isValid: true, isLoading: false))
             .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.bottom, 10)
         }
         .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .tabBar)
         .background(Color.white.ignoresSafeArea())
     }
     
