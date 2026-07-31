@@ -62,10 +62,10 @@ It enables blood glucose, insulin, and meal tracking, real-time data synchroniza
 - 네트워크 연결 여부에 따른 화면 처리
 
 ## 앱 화면
-<img width="300" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 12 55 18" src="https://github.com/user-attachments/assets/675aaae4-2182-4dde-adee-97e5743d2923" />
-<img width="300" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 12 54 39" src="https://github.com/user-attachments/assets/c2623c0a-1245-4aab-a92f-a4a00bcfd336" />
-<img width="300" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 14 00 36" src="https://github.com/user-attachments/assets/80b6c2a3-b2ca-4857-846c-77a0b45d8ad0" />
-<img width="300" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 14 01 22" src="https://github.com/user-attachments/assets/3d735f2b-b389-4bb6-a43f-7f9de7968885" />
+<img width="200" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 12 55 18" src="https://github.com/user-attachments/assets/675aaae4-2182-4dde-adee-97e5743d2923" />
+<img width="200" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 12 54 39" src="https://github.com/user-attachments/assets/c2623c0a-1245-4aab-a92f-a4a00bcfd336" />
+<img width="200" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 14 00 36" src="https://github.com/user-attachments/assets/80b6c2a3-b2ca-4857-846c-77a0b45d8ad0" />
+<img width="200" alt="Simulator Screenshot - iPhone 17 - 2026-07-26 at 14 01 22" src="https://github.com/user-attachments/assets/3d735f2b-b389-4bb6-a43f-7f9de7968885" />
 
 ## 기술 스택
 
