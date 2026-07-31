@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>설탕묘 | 당뇨묘 케어, 이제 가족이 함께 한곳에서</title>
+<style>
+  /* ===================== 컬러 시스템 (CSS 변수) ===================== */
+  :root{
+    --color-main: #3F7BFF;
+    --color-point1: #FFAF55;
+    --color-point2: #321E9E;
+    --color-bg-soft: #ECF2FF;
+    --color-white: #FFFFFF;
+    --color-text: #1C2340;        /* 진한 네이비 */
+    --color-text-sub: #5B6480;    /* 보조 텍스트 */
+
+    --shadow-card: 0 12px 30px rgba(63, 123, 255, 0.12);
+    --shadow-card-hover: 0 18px 40px rgba(63, 123, 255, 0.18);
+    --radius-lg: 28px;
+    --radius-md: 20px;
+    --radius-sm: 14px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body{
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+                 'Malgun Gothic', 'Segoe UI', sans-serif;
+    color: var(--color-text);
+    background: var(--color-white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  img, svg { display:block; max-width:100%; }
+  a { text-decoration:none; color:inherit; }
+  ul { list-style:none; }
+
+  .container{
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section{ padding: 120px 0; position: relative; }
+
+  /* ===================== 공통 타이포 ===================== */
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-main);
+    background: var(--color-bg-soft);
+    padding: 8px 16px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .section-title{
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    line-height: 1.35;
+    color: var(--color-text);
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+
+  .section-desc{
+    font-size: 17px;
+    color: var(--color-text-sub);
+    max-width: 620px;
+    line-height: 1.8;
+  }
+
+  .center{ text-align:center; margin-left:auto; margin-right:auto; }
+
+  /* ===================== 스크롤 리빌 애니메이션 ===================== */
+  .reveal{
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s cubic-bezier(.22,.68,.36,1), transform 0.8s cubic-bezier(.22,.68,.36,1);
+  }
+  .reveal.is-visible{
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1{ transition-delay: .12s; }
+  .reveal-delay-2{ transition-delay: .24s; }
+  .reveal-delay-3{ transition-delay: .36s; }
+  .reveal-delay-4{ transition-delay: .48s; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .reveal.is-visible{ transition:none; transform:none; opacity:1; }
+  }
+
+  /* ===================== 버튼 ===================== */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding: 16px 30px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    white-space: nowrap;
+  }
+  .btn-primary{
+    background: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 10px 24px rgba(63,123,255,0.35);
+  }
+  .btn-primary:hover{
+    background: #3369e0;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(63,123,255,0.42);
+  }
+  .btn-secondary{
+    background: var(--color-white);
+    color: var(--color-main);
+    border: 2px solid var(--color-main);
+  }
+  .btn-secondary:hover{
+    background: var(--color-bg-soft);
+    transform: translateY(-3px);
+  }
+  .btn-point{
+    background: var(--color-point1);
+    color: var(--color-white);
+    box-shadow: 0 10px 24px rgba(255,175,85,0.4);
+  }
+  .btn-point:hover{
+    background: #f59c37;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(255,175,85,0.48);
+  }
+
+  /* ===================== 네비게이션 ===================== */
+  .navbar{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(63,123,255,0.08);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 16px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:800;
+    font-size:20px;
+    color: var(--color-main);
+  }
+  /* 앱 로고 이미지 (사용자 추가) - SVG/PNG 모두 대응 */
+  .logo .app-logo{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    object-fit: contain;
+  }
+  .logo-mark{
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--color-main), var(--color-point2));
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:18px;
+  }
+  .nav-links{
+    display:flex;
+    gap:32px;
+    font-size:15px;
+    font-weight:600;
+    color: var(--color-text-sub);
+  }
+  .nav-links a:hover{ color: var(--color-main); }
+  .nav-cta{ display:flex; gap:10px; }
+  .nav-cta .btn{ padding: 10px 20px; font-size:14px; }
+
+  @media (max-width: 820px){
+    .nav-links{ display:none; }
+  }
+
+  /* ===================== HERO ===================== */
+  .hero{
+    padding: 180px 0 100px;
+    background: linear-gradient(180deg, var(--color-bg-soft) 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-blob{
+    position:absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.35;
+    z-index:0;
+  }
+  .hero-blob.b1{ width:340px; height:340px; background: var(--color-main); top:-80px; right:-60px; }
+  .hero-blob.b2{ width:260px; height:260px; background: var(--color-point1); bottom:-60px; left:-60px; opacity:0.25; }
+
+  .hero-inner{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items:center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title{
+    font-size: clamp(34px, 5vw, 54px);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+    color: var(--color-text);
+  }
+  .hero-title .accent{ color: var(--color-main); }
+
+  .hero-sub{
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 14px;
+  }
+  .hero-desc{
+    font-size: 16px;
+    color: var(--color-text-sub);
+    max-width: 480px;
+    margin-bottom: 34px;
+    line-height: 1.85;
+  }
+  .hero-btns{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 36px; }
+
+  .hero-tags{ display:flex; gap:10px; flex-wrap:wrap; }
+  .hero-tag{
+    font-size: 13px;
+    font-weight:700;
+    color: var(--color-point2);
+    background: #EFEBFF;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+
+  /* ===================== 앱 스크린 컨테이너 (구 휴대폰 목업) =====================
+     이미지 자체에 목업 프레임이 포함되어 있으므로, CSS 프레임은 제거.
+     이미지가 로드되지 않을 때만 placeholder가 보이도록 처리. */
+  .phone-mockup{
+    position: relative;
+    width: 260px;
+    margin: 0 auto;
+    transition: transform .4s ease;
+  }
+  .phone-mockup:hover{
+    transform: translateY(-8px);
+  }
+  .phone-screen{
+    position: relative;
+    width: 100%;
+  }
+
+  /* 실제 앱 스크린샷 이미지: 자기 원본 비율대로 자연스럽게 표시 (배경 안 비침) */
+  .phone-screen .app-screen-img{
+    display: block;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+  }
+
+  /* Placeholder: 이미지가 로드되지 않은 경우에만 보임 (기본은 숨김) */
+  .phone-screen .placeholder-content{
+    display: none;
+  }
+  .phone-screen.image-failed .placeholder-content{
+    display: flex;
+    aspect-ratio: 9 / 19.5;
+    background: var(--color-bg-soft);
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    color: var(--color-main);
+  }
+  .phone-screen .placeholder-icon{
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+  .phone-screen .placeholder-text{
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height:1.5;
+    color: var(--color-point2);
+  }
+  .phone-screen .placeholder-sub{
+    font-size: 11px;
+    color: var(--color-text-sub);
+    margin-top: 4px;
+  }
+
+  .hero-phone-wrap{ position: relative; }
+  .hero-phone-wrap .phone-mockup{ width: 300px; }
+  .hero-float-card{
+    position: absolute;
+    background: var(--color-white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    animation: floatY 3.4s ease-in-out infinite;
+    z-index: 3;
+  }
+  .hero-float-card.f1{ top: 8%; left: -10%; color: var(--color-main); animation-delay:0s; }
+  .hero-float-card.f2{ bottom: 12%; right: -8%; color: var(--color-point1); animation-delay: 1s; }
+  @keyframes floatY{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-12px); }
+  }
+
+  @media (max-width: 900px){
+    .hero-inner{ grid-template-columns: 1fr; }
+    .hero-desc{ max-width: 100%; }
+    .hero-float-card{ display:none; }
+  }
+
+  /* ===================== PROBLEM SECTION ===================== */
+  .problem{ background: var(--color-white); }
+  .bubble-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+  .bubble-card{
+    background: var(--color-bg-soft);
+    border-radius: var(--radius-md);
+    padding: 30px 26px;
+    position: relative;
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .bubble-card:hover{ transform: translateY(-6px); box-shadow: var(--shadow-card); }
+  .bubble-card::after{
+    content:"";
+    position:absolute;
+    bottom:-14px; left: 36px;
+    width: 24px; height: 24px;
+    background: var(--color-bg-soft);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  .bubble-quote{
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-point2);
+    margin-bottom: 10px;
+  }
+  .bubble-who{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-sub);
+  }
+  .problem-desc-box{
+    margin-top: 60px;
+    background: linear-gradient(135deg, var(--color-main), var(--color-point2));
+    border-radius: var(--radius-lg);
+    padding: 40px 44px;
+    color: var(--color-white);
+  }
+  .problem-desc-box p{ font-size: 16.5px; line-height: 1.9; opacity: 0.95; }
+
+  @media (max-width: 820px){
+    .bubble-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ===================== SOLUTION SECTION ===================== */
+  .solution{ background: var(--color-bg-soft); }
+  .solution-points{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 44px 0 56px;
+  }
+  .solution-point{
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: 26px;
+    box-shadow: var(--shadow-card);
+    transition: transform .3s ease;
+  }
+  .solution-point:hover{ transform: translateY(-6px); }
+  .solution-point .num{
+    display:inline-flex;
+    align-items:center; justify-content:center;
+    width:34px; height:34px;
+    border-radius: 10px;
+    background: var(--color-bg-soft);
+    color: var(--color-main);
+    font-weight:800;
+    margin-bottom: 14px;
+  }
+  .solution-point h3{ font-size:17px; font-weight:800; margin-bottom:8px; }
+  .solution-point p{ font-size: 14px; color: var(--color-text-sub); }
+
+  @media (max-width: 820px){
+    .solution-points{ grid-template-columns: 1fr; }
+  }
+
+  /* ===================== FEATURES SECTION ===================== */
+  .features{ background: var(--color-white); }
+  .feature-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items:center;
+    padding: 60px 0;
+    border-bottom: 1px solid #EEF1F8;
+  }
+  .feature-row:last-child{ border-bottom:none; }
+  .feature-row.reverse .feature-text{ order: 2; }
+  .feature-row.reverse .feature-visual{ order: 1; }
+
+  .feature-index{
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--color-point1);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  .feature-text h3{
+    font-size: 27px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    line-height:1.4;
+  }
+  .feature-text p{
+    font-size: 15.5px;
+    color: var(--color-text-sub);
+    line-height: 1.85;
+    max-width: 440px;
+  }
+  .feature-tag-list{
+    display:flex; gap:8px; margin-top: 20px; flex-wrap:wrap;
+  }
+  .feature-tag{
+    font-size:12.5px;
+    font-weight:700;
+    color: var(--color-main);
+    background: var(--color-bg-soft);
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  .feature-visual{ display:flex; justify-content:center; }
+
+  @media (max-width: 820px){
+    .feature-row, .feature-row.reverse{
+      grid-template-columns: 1fr;
+    }
+    .feature-row.reverse .feature-text,
+    .feature-row.reverse .feature-visual{ order: initial; }
+    .feature-text p{ max-width: 100%; }
+  }
+
+  /* ===================== BENEFIT SECTION ===================== */
+  .benefit{ background: var(--color-bg-soft); }
+  .benefit-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-top: 50px;
+  }
+  .benefit-card{
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: 30px 24px;
+    box-shadow: var(--shadow-card);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .benefit-card:hover{
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .benefit-icon{
+    width: 50px; height:50px;
+    border-radius: 14px;
+    background: var(--color-bg-soft);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+  .benefit-card h3{ font-size: 16.5px; font-weight:800; margin-bottom: 10px; }
+  .benefit-card p{ font-size: 13.8px; color: var(--color-text-sub); line-height:1.7; }
+
+  @media (max-width: 1000px){
+    .benefit-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px){
+    .benefit-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ===================== APP SCREENS SECTION ===================== */
+  .screens{ background: var(--color-white); }
+  .screens-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+    margin-top: 54px;
+  }
+  .screen-item{ text-align:center; }
+  .screen-item .phone-mockup{ width: 100%; max-width: 220px; }
+  .screen-name{
+    margin-top: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .screen-desc{
+    font-size: 12.5px;
+    color: var(--color-text-sub);
+    margin-top: 4px;
+  }
+
+  @media (max-width: 900px){
+    .screens-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px){
+    .screens-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ===================== CLOSING SECTION ===================== */
+  .closing{
+    background: linear-gradient(135deg, var(--color-point2), var(--color-main));
+    color: var(--color-white);
+    text-align:center;
+    position: relative;
+    overflow:hidden;
+  }
+  .closing::before{
+    content:"🐾";
+    position:absolute;
+    font-size: 220px;
+    opacity: 0.06;
+    top: -40px; left: -20px;
+    transform: rotate(-15deg);
+  }
+  .closing-title{
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 800;
+    margin-bottom: 16px;
+    line-height:1.5;
+    position:relative;
+  }
+  .closing-sub{
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 34px;
+    position:relative;
+  }
+  .closing .btn-point{
+    box-shadow: 0 10px 26px rgba(0,0,0,0.2);
+  }
+
+  /* ===================== FOOTER ===================== */
+  footer{
+    background: #171B2E;
+    color: rgba(255,255,255,0.6);
+    padding: 40px 0;
+    text-align:center;
+    font-size: 13px;
+  }
+  footer .foot-logo{
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* 반응형: 전체 섹션 패딩 축소 (모바일) */
+  @media (max-width: 640px){
+    section{ padding: 80px 0; }
+    .hero{ padding: 140px 0 70px; }
+    .problem-desc-box{ padding: 28px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <img src="images/app-logo.svg" alt="app-logo" class="app-logo">
+        설탕묘
+      </div>
+      <ul class="nav-links">
+        <li><a href="#problem">문제의식</a></li>
+        <li><a href="#solution">해결방식</a></li>
+        <li><a href="#features">핵심기능</a></li>
+        <li><a href="#benefit">기대효과</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="contributors.html" class="btn btn-primary">기여자 알아보기</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== 1. HERO SECTION ===================== -->
+  <section class="hero">
+    <div class="hero-blob b1"></div>
+    <div class="hero-blob b2"></div>
+    <div class="container hero-inner">
+      <div>
+        <span class="eyebrow reveal">🐾 여러 보호자가 함께하는 당뇨묘 케어</span>
+        <h1 class="hero-title reveal reveal-delay-1">
+          당뇨묘 케어,<br>
+          이제 <span class="accent">가족이 함께</span> 한곳에서
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          혈당 기록, 인슐린 투여, 식사 체크를 설탕묘에서 간편하게 관리하세요.
+        </p>
+        <p class="hero-desc reveal reveal-delay-2">
+          설탕묘는 여러 보호자가 함께 당뇨묘의 하루를 기록하고 확인할 수 있도록 돕는
+          반려묘 당뇨 관리 앱입니다.
+        </p>
+        <div class="hero-btns reveal reveal-delay-3">
+          <a href="#problem" class="btn btn-primary">앱 소개 보기</a>
+          <a href="#features" class="btn btn-secondary">주요 기능 확인하기</a>
+        </div>
+        <div class="hero-tags reveal reveal-delay-4">
+          <span class="hero-tag">#혈당기록</span>
+          <span class="hero-tag">#인슐린체크</span>
+          <span class="hero-tag">#식사기록</span>
+          <span class="hero-tag">#가족공유</span>
+        </div>
+      </div>
+
+      <div class="hero-phone-wrap reveal reveal-delay-2">
+        <div class="hero-float-card f1">💉 인슐린 투여 완료</div>
+        <div class="hero-float-card f2">🩸 혈당 128 mg/dL</div>
+        <!-- 앱 메인 화면 이미지 (목업 프레임 포함된 이미지 파일) -->
+        <div class="phone-mockup" data-app-screen="home">
+          <div class="phone-screen">
+            <img src="images/home-screen.png" alt="설탕묘 홈 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+            <div class="placeholder-content">
+              <div class="placeholder-icon">📱</div>
+              <div class="placeholder-text">앱 화면 이미지 삽입 영역</div>
+              <div class="placeholder-sub">설탕묘 메인 홈 화면</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 2. PROBLEM SECTION ===================== -->
+  <section class="problem" id="problem">
+    <div class="container">
+      <span class="eyebrow reveal">CAREGIVER'S WORRY</span>
+      <h2 class="section-title reveal reveal-delay-1">
+        여러 보호자가 함께 돌볼 때,<br>이런 순간 있지 않으셨나요?
+      </h2>
+      <p class="section-desc reveal reveal-delay-2">
+        당뇨묘 관리는 정해진 시간의 인슐린 투여, 혈당 측정, 식사 기록이 중요합니다.
+        하지만 여러 가족 구성원이 함께 돌보는 경우, 기록이 카카오톡, 메모장, 수첩 등으로
+        흩어져 정보 확인이 어려워질 수 있습니다.
+      </p>
+
+      <div class="bubble-grid">
+        <div class="bubble-card reveal reveal-delay-1">
+          <div class="bubble-quote">"인슐린은 누가 줬지?"</div>
+          <div class="bubble-who">— 저녁 8시, 퇴근길 가족</div>
+        </div>
+        <div class="bubble-card reveal reveal-delay-2">
+          <div class="bubble-quote">"혈당은 몇이었지?"</div>
+          <div class="bubble-who">— 병원 진료 직전</div>
+        </div>
+        <div class="bubble-card reveal reveal-delay-3">
+          <div class="bubble-quote">"식사는 했다고 단톡에 보냈나?"</div>
+          <div class="bubble-who">— 흩어진 카카오톡 대화방</div>
+        </div>
+      </div>
+
+      <div class="problem-desc-box reveal">
+        <p>
+          기록이 여러 곳에 흩어지면, 정말 필요한 순간에 확인이 어려워지고 같은 질문을
+          가족들끼리 반복하게 됩니다. 설탕묘는 이 흩어진 정보를 한곳으로 모으는 것에서
+          출발합니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3. SOLUTION SECTION ===================== -->
+  <section class="solution" id="solution">
+    <div class="container">
+      <span class="eyebrow reveal">HOW SULTANGMYO HELPS</span>
+      <h2 class="section-title reveal reveal-delay-1">
+        설탕묘가 흩어진 기록을<br>하나로 모아드립니다
+      </h2>
+      <p class="section-desc reveal reveal-delay-2">
+        설탕묘는 혈당, 인슐린, 식사 기록을 하나의 앱에서 관리할 수 있도록 하여
+        보호자들이 고양이의 상태를 더 쉽게 공유하고 확인할 수 있게 합니다.
+      </p>
+
+      <div class="solution-points">
+        <div class="solution-point reveal reveal-delay-1">
+          <div class="num">1</div>
+          <h3>흩어진 기록을 한곳에</h3>
+          <p>카카오톡, 메모장, 수첩에 흩어져 있던 기록을 앱 하나로 모읍니다.</p>
+        </div>
+        <div class="solution-point reveal reveal-delay-2">
+          <div class="num">2</div>
+          <h3>보호자 간 관리 상황 공유</h3>
+          <p>누가, 언제, 무엇을 했는지 가족 모두가 실시간으로 확인할 수 있습니다.</p>
+        </div>
+        <div class="solution-point reveal reveal-delay-3">
+          <div class="num">3</div>
+          <h3>반복적인 확인 부담 줄이기</h3>
+          <p>같은 질문을 반복하지 않아도 되니 마음의 부담이 줄어듭니다.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== 4. KEY FEATURES SECTION ===================== -->
+  <section class="features" id="features">
+    <div class="container">
+      <span class="eyebrow reveal">KEY FEATURES</span>
+      <h2 class="section-title reveal reveal-delay-1">설탕묘의 핵심 기능</h2>
+      <p class="section-desc reveal reveal-delay-2">
+        기록, 확인, 공유까지 — 당뇨묘 케어에 꼭 필요한 세 가지 기능을 담았습니다.
+      </p>
+
+      <!-- 기능 1. 혈당 기록 관리 -->
+      <div class="feature-row">
+        <div class="feature-text reveal">
+          <div class="feature-index">FEATURE 01</div>
+          <h3>혈당 기록을 한눈에</h3>
+          <p>
+            혈당 수치를 기록하고 이전 기록을 확인할 수 있어 당뇨묘의 상태 변화를
+            더 체계적으로 살펴볼 수 있습니다.
+          </p>
+          <div class="feature-tag-list">
+            <span class="feature-tag">혈당 그래프</span>
+            <span class="feature-tag">기록 히스토리</span>
+          </div>
+        </div>
+        <div class="feature-visual reveal reveal-delay-2">
+          <div class="phone-mockup" data-app-screen="glucose-log">
+            <div class="phone-screen">
+              <img src="images/glucose-log.png" alt="혈당 기록 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">🩸</div>
+                <div class="placeholder-text">혈당 기록 화면 이미지 삽입</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 기능 2. 인슐린 투여 체크 -->
+      <div class="feature-row reverse">
+        <div class="feature-text reveal">
+          <div class="feature-index">FEATURE 02</div>
+          <h3>인슐린 투여 여부를 함께 확인</h3>
+          <p>
+            정해진 시간에 인슐린을 투여했는지 확인하고, 누가 투여했는지
+            자동으로 기록됩니다.
+          </p>
+          <div class="feature-tag-list">
+            <span class="feature-tag">투여 알림</span>
+            <span class="feature-tag">담당자 기록</span>
+          </div>
+        </div>
+        <div class="feature-visual reveal reveal-delay-2">
+          <div class="phone-mockup" data-app-screen="insulin-check">
+            <div class="phone-screen">
+              <img src="images/insulin-check.png" alt="인슐린 체크 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">💉</div>
+                <div class="placeholder-text">인슐린 체크 화면 이미지 삽입</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 기능 3. 식사 기록 관리 -->
+      <div class="feature-row">
+        <div class="feature-text reveal">
+          <div class="feature-index">FEATURE 03</div>
+          <h3>식사 기록도 간편하게</h3>
+          <p>
+            식사 여부와 관련 정보를 기록하여 당뇨묘의 생활 패턴을
+            꾸준히 관리할 수 있습니다.
+          </p>
+          <div class="feature-tag-list">
+            <span class="feature-tag">식사 체크</span>
+            <span class="feature-tag">패턴 관리</span>
+          </div>
+        </div>
+        <div class="feature-visual reveal reveal-delay-2">
+          <div class="phone-mockup" data-app-screen="meal-log">
+            <div class="phone-screen">
+              <img src="images/meal-log.png" alt="식사 기록 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">🍽️</div>
+                <div class="placeholder-text">식사 기록 화면 이미지 삽입</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5. BENEFIT SECTION ===================== -->
+  <section class="benefit" id="benefit">
+    <div class="container">
+      <span class="eyebrow reveal">EXPECTED BENEFIT</span>
+      <h2 class="section-title reveal reveal-delay-1">설탕묘와 함께라면 달라지는 것들</h2>
+      <p class="section-desc reveal reveal-delay-2">
+        기록 하나가 쌓여 만드는 더 안정적인 당뇨묘 케어.
+      </p>
+
+      <div class="benefit-grid">
+        <div class="benefit-card reveal reveal-delay-1">
+          <div class="benefit-icon">📉</div>
+          <h3>기록 누락 감소</h3>
+          <p>혈당, 인슐린, 식사 기록을 한곳에 남겨 관리 공백을 줄일 수 있습니다.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-2">
+          <div class="benefit-icon">💬</div>
+          <h3>가족 간 소통 부담 감소</h3>
+          <p>누가 어떤 관리를 했는지 앱에서 확인할 수 있어 반복적인 확인을 줄일 수 있습니다.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-3">
+          <div class="benefit-icon">📊</div>
+          <h3>체계적인 건강 관리</h3>
+          <p>축적된 기록을 바탕으로 고양이의 상태를 더 명확하게 파악할 수 있습니다.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-4">
+          <div class="benefit-icon">🩺</div>
+          <h3>진료 상담 자료로 활용</h3>
+          <p>정리된 기록은 수의사와 상담할 때 고양이의 상태를 설명하는 데 도움이 될 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 6. APP SCREENS SECTION ===================== -->
+  <section class="screens">
+    <div class="container">
+      <span class="eyebrow reveal">APP SCREENS</span>
+      <h2 class="section-title reveal reveal-delay-1">설탕묘의 주요 화면</h2>
+      <p class="section-desc reveal reveal-delay-2">
+        실제 앱 화면을 미리 살펴보세요.
+      </p>
+
+      <div class="screens-grid">
+        <div class="screen-item reveal reveal-delay-1">
+          <div class="phone-mockup" data-app-screen="home-screen">
+            <div class="phone-screen">
+              <img src="images/home-screen.png" alt="홈 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">🏠</div>
+                <div class="placeholder-text">앱 화면 이미지</div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-name">홈 화면</div>
+          <div class="screen-desc">혈당 그래프와 인슐린 기록을 한번에</div>
+        </div>
+
+        <div class="screen-item reveal reveal-delay-2">
+          <div class="phone-mockup" data-app-screen="glucose-log">
+            <div class="phone-screen">
+              <img src="images/glucose-log.png" alt="혈당 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">🩸</div>
+                <div class="placeholder-text">앱 화면 이미지</div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-name">혈당 화면</div>
+          <div class="screen-desc">오늘의 혈당 수치를 한번에</div>
+        </div>
+
+        <div class="screen-item reveal reveal-delay-3">
+          <div class="phone-mockup" data-app-screen="screen-input_bs">
+            <div class="phone-screen">
+              <img src="images/screen-input_bs.png" alt="혈당 입력 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">💉</div>
+                <div class="placeholder-text">앱 화면 이미지</div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-name">혈당 입력 화면</div>
+          <div class="screen-desc">큰 키패드와 자유로운 시간 설정</div>
+        </div>
+
+        <div class="screen-item reveal reveal-delay-4">
+          <div class="phone-mockup" data-app-screen="meal-log">
+            <div class="phone-screen">
+              <img src="images/meal-log.png" alt="식사 기록 화면" class="app-screen-img" onerror="this.style.display='none'; this.parentElement.classList.add('image-failed');">
+              <div class="placeholder-content">
+                <div class="placeholder-icon">🍽️</div>
+                <div class="placeholder-text">앱 화면 이미지</div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-name">식사 기록 화면</div>
+          <div class="screen-desc">식사 여부와 패턴 관리</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 7. CLOSING SECTION ===================== -->
+  <section class="closing" id="closing">
+    <div class="container">
+      <h2 class="closing-title reveal">
+        설탕묘는 당뇨묘와 보호자의 하루를<br>조금 더 편안하게 만들기 위해 시작되었습니다.
+      </h2>
+      <p class="closing-sub reveal reveal-delay-1">
+        함께 기록하고, 함께 확인하며, 더 안정적인 당뇨묘 케어를 만들어갑니다.
+      </p>
+      <a href="https://apps.apple.com/kr/app/%EC%84%A4%ED%83%95%EB%AC%98/id6793892163" class="btn btn-point reveal reveal-delay-2">설탕묘 알아보기</a>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="container">
+      <div class="foot-logo">설탕묘</div>
+      <p>Copyright @ 2026 team.Godaemo, All rights reserved</p>
+    </div>
+  </footer>
+
+  <script>
+    // ===================== 스크롤 리빌 애니메이션 =====================
+    document.addEventListener('DOMContentLoaded', function () {
+      const revealEls = document.querySelectorAll('.reveal');
+
+      if (!('IntersectionObserver' in window)) {
+        revealEls.forEach(el => el.classList.add('is-visible'));
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => observer.observe(el));
+    });
+
+    // ===================== 네비게이션 부드러운 스크롤 =====================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId.length > 1) {
+          const target = document.querySelector(targetId);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

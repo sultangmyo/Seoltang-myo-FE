@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>설탕묘를 만든 사람들 | Contributors</title>
+<style>
+  /* ===================== 컬러 시스템 (메인 페이지와 동일) ===================== */
+  :root{
+    --color-main: #3F7BFF;
+    --color-point1: #FFAF55;
+    --color-point2: #321E9E;
+    --color-bg-soft: #ECF2FF;
+    --color-white: #FFFFFF;
+    --color-text: #1C2340;
+    --color-text-sub: #5B6480;
+
+    --shadow-card: 0 12px 30px rgba(63, 123, 255, 0.12);
+    --shadow-card-hover: 0 20px 44px rgba(63, 123, 255, 0.22);
+    --radius-lg: 28px;
+    --radius-md: 20px;
+    --radius-sm: 14px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body{
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+                 'Malgun Gothic', 'Segoe UI', sans-serif;
+    color: var(--color-text);
+    background: var(--color-white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration:none; color:inherit; }
+  ul { list-style:none; }
+
+  .container{
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-main);
+    background: var(--color-bg-soft);
+    padding: 8px 16px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ===================== 스크롤 리빌 애니메이션 ===================== */
+  .reveal{
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s cubic-bezier(.22,.68,.36,1), transform 0.8s cubic-bezier(.22,.68,.36,1);
+  }
+  .reveal.is-visible{ opacity: 1; transform: translateY(0); }
+  .reveal-delay-1{ transition-delay: .10s; }
+  .reveal-delay-2{ transition-delay: .20s; }
+  .reveal-delay-3{ transition-delay: .30s; }
+  .reveal-delay-4{ transition-delay: .40s; }
+  .reveal-delay-5{ transition-delay: .50s; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .reveal.is-visible{ transition:none; transform:none; opacity:1; }
+  }
+
+  /* ===================== 버튼 ===================== */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    white-space: nowrap;
+  }
+  .btn-primary{
+    background: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 10px 24px rgba(63,123,255,0.35);
+  }
+  .btn-primary:hover{
+    background: #3369e0;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(63,123,255,0.42);
+  }
+  .btn-ghost{
+    background: transparent;
+    color: var(--color-text-sub);
+    padding: 10px 18px;
+  }
+  .btn-ghost:hover{ color: var(--color-main); }
+
+  /* ===================== 네비게이션 ===================== */
+  .navbar{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(63,123,255,0.08);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 16px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:800;
+    font-size:20px;
+    color: var(--color-main);
+  }
+    /* 앱 로고 이미지 (사용자 추가) - SVG/PNG 모두 대응 */
+  .logo .app-logo{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    object-fit: contain;
+  }
+  .logo-mark{
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--color-main), var(--color-point2));
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:18px;
+  }
+  .nav-back{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    font-size:14px;
+    font-weight:600;
+    color: var(--color-text-sub);
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background .2s ease, color .2s ease;
+  }
+  .nav-back:hover{
+    background: var(--color-bg-soft);
+    color: var(--color-main);
+  }
+
+  /* ===================== HERO ===================== */
+  .hero{
+    padding: 180px 0 80px;
+    background: linear-gradient(180deg, var(--color-bg-soft) 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero-blob{
+    position:absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.28;
+    z-index:0;
+  }
+  .hero-blob.b1{ width:340px; height:340px; background: var(--color-main); top:-80px; right:-60px; }
+  .hero-blob.b2{ width:260px; height:260px; background: var(--color-point1); bottom:-40px; left:-60px; opacity:0.22; }
+
+  .hero-inner{ position: relative; z-index:1; }
+
+  .hero-title{
+    font-size: clamp(32px, 5vw, 50px);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .hero-title .accent{ color: var(--color-main); }
+  .hero-sub{
+    font-size: 17px;
+    color: var(--color-text-sub);
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.85;
+  }
+
+  .team-stats{
+    display: inline-flex;
+    gap: 40px;
+    margin-top: 40px;
+    padding: 20px 36px;
+    background: var(--color-white);
+    border-radius: 999px;
+    box-shadow: var(--shadow-card);
+  }
+  .team-stat{ text-align:center; }
+  .team-stat-num{
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-main);
+  }
+  .team-stat-label{
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-text-sub);
+    margin-top: 2px;
+  }
+  @media (max-width: 560px){
+    .team-stats{ gap: 24px; padding: 16px 24px; }
+    .team-stat-num{ font-size: 20px; }
+  }
+
+  /* ===================== 기여자 섹션 ===================== */
+  .contributors{
+    padding: 100px 0 140px;
+  }
+  .role-group{ margin-bottom: 80px; }
+  .role-group:last-child{ margin-bottom: 0; }
+
+  .role-header{
+    display:flex;
+    align-items:center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .role-badge{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 8px 16px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+  .role-badge.frontend{ background: rgba(63,123,255,0.12); color: var(--color-main); }
+  .role-badge.backend{ background: rgba(50,30,158,0.10); color: var(--color-point2); }
+  .role-badge.designer{ background: rgba(255,175,85,0.18); color: #cc7a1e; }
+
+  .role-title{
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-text);
+  }
+  .role-line{
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(63,123,255,0.2), transparent);
+  }
+
+  /* ===================== 기여자 카드 ===================== */
+  .card-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .card-grid.single{ grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+
+  .contributor-card{
+    background: var(--color-white);
+    border: 1px solid rgba(63,123,255,0.10);
+    border-radius: var(--radius-lg);
+    padding: 34px 30px;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .contributor-card::before{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--color-main);
+    opacity: 0.9;
+  }
+  .contributor-card.role-frontend::before{ background: var(--color-main); }
+  .contributor-card.role-backend::before{ background: var(--color-point2); }
+  .contributor-card.role-designer::before{ background: var(--color-point1); }
+
+  .contributor-card:hover{
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: rgba(63,123,255,0.25);
+  }
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+
+  /* 프로필 이미지 placeholder (나중에 <img>로 교체 가능) */
+  .avatar{
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--color-white);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .avatar.fe{ background: linear-gradient(135deg, var(--color-main), #6b98ff); }
+  .avatar.be{ background: linear-gradient(135deg, var(--color-point2), #5a3fcc); }
+  .avatar.de{ background: linear-gradient(135deg, var(--color-point1), #ffcb85); }
+
+  /* 실제 프로필 사진 (있으면 이니셜 위를 덮음) */
+  .avatar{ overflow: hidden; }
+  .avatar .profile-img{
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  /* 프로필 이미지가 들어갈 자리를 위한 라벨 (실제 이미지로 교체 시 이 span 대신 img 사용) */
+  .avatar span[data-placeholder]{
+    display:block;
+  }
+
+  .card-name-block .contributor-name{
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--color-text);
+  }
+  .card-name-block .contributor-role{
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-sub);
+  }
+
+  .contributor-bio{
+    font-size: 14.5px;
+    color: var(--color-text-sub);
+    line-height: 1.85;
+    margin-bottom: 20px;
+    min-height: 78px;
+  }
+
+  .skill-tags{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .skill-tag{
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--color-bg-soft);
+    color: var(--color-text);
+  }
+  .contributor-card.role-backend .skill-tag{
+    background: rgba(50,30,158,0.08);
+    color: var(--color-point2);
+  }
+  .contributor-card.role-designer .skill-tag{
+    background: rgba(255,175,85,0.15);
+    color: #a86414;
+  }
+
+  .contributor-links{
+    display:flex;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #F0F3FA;
+  }
+  .link-item{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-sub);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background .2s ease, color .2s ease;
+  }
+  .link-item:hover{
+    background: var(--color-bg-soft);
+    color: var(--color-main);
+  }
+  .link-item svg{
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-width: 720px){
+    .card-grid{ grid-template-columns: 1fr; }
+    .card-grid.single{ max-width: 100%; }
+    .role-title{ font-size: 18px; }
+    .contributor-bio{ min-height: auto; }
+  }
+
+  /* ===================== 하단 CTA ===================== */
+  .bottom-cta{
+    background: var(--color-bg-soft);
+    padding: 80px 0;
+    text-align: center;
+  }
+  .bottom-cta h2{
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .bottom-cta p{
+    font-size: 15px;
+    color: var(--color-text-sub);
+    margin-bottom: 28px;
+  }
+
+  /* ===================== 푸터 ===================== */
+  footer{
+    background: #171B2E;
+    color: rgba(255,255,255,0.6);
+    padding: 40px 0;
+    text-align:center;
+    font-size: 13px;
+  }
+  footer .foot-logo{
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo">
+        <img src="images/app-logo.svg" alt="app-logo" class="app-logo">
+        설탕묘
+      </div>
+      </a>
+      <a href="index.html" class="nav-back">← 메인으로 돌아가기</a>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-blob b1"></div>
+    <div class="hero-blob b2"></div>
+    <div class="container hero-inner">
+      <span class="eyebrow reveal">CONTRIBUTORS</span>
+      <h1 class="hero-title reveal reveal-delay-1">
+        설탕묘를 만든 <span class="accent">사람들</span>
+      </h1>
+      <p class="hero-sub reveal reveal-delay-2">
+        당뇨묘와 보호자의 하루를 조금 더 편안하게 만들기 위해<br>
+        각자의 자리에서 함께 손을 모은 다섯 명의 기여자를 소개합니다.
+      </p>
+
+      <div class="team-stats reveal reveal-delay-3">
+        <div class="team-stat">
+          <div class="team-stat-num">5</div>
+          <div class="team-stat-label">Contributors</div>
+        </div>
+        <div class="team-stat">
+          <div class="team-stat-num">2</div>
+          <div class="team-stat-label">Frontend</div>
+        </div>
+        <div class="team-stat">
+          <div class="team-stat-num">2</div>
+          <div class="team-stat-label">Backend</div>
+        </div>
+        <div class="team-stat">
+          <div class="team-stat-num">1</div>
+          <div class="team-stat-label">Designer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTRIBUTORS ===================== -->
+  <section class="contributors">
+    <div class="container">
+
+      <!-- ============ FRONTEND ============ -->
+      <div class="role-group">
+        <div class="role-header reveal">
+          <span class="role-badge frontend">💻 FRONTEND</span>
+          <h2 class="role-title">사용자가 만나는 화면을 만든 사람들</h2>
+          <span class="role-line"></span>
+        </div>
+
+        <div class="card-grid">
+          <!-- Frontend 1 -->
+          <article class="contributor-card role-frontend reveal reveal-delay-1">
+            <div class="card-top">
+              <!-- 프로필 이미지: 파일이 있으면 이니셜 위를 덮음. 없으면 자동으로 이니셜이 보임 -->
+              <div class="avatar fe" data-profile-image="frontend-1">
+                <span data-placeholder>C</span>
+                <img src="images/frontend-1.jpg" alt="Frontend 개발자 1" class="profile-img" onerror="this.style.display='none'">
+              </div>
+              <div class="card-name-block">
+                <div class="contributor-name">조수현</div>
+                <div class="contributor-role">Frontend Developer</div>
+              </div>
+            </div>
+            <p class="contributor-bio">
+              설탕묘의 첫인상을 책임진 프론트엔드 개발자. 사용자가 앱을 켰을 때
+              가장 먼저 만나는 화면을 편안하고 자연스럽게 만드는 것에 집중했습니다.
+            </p>
+            <div class="skill-tags">
+              <span class="skill-tag">swift</span>
+              <span class="skill-tag">소셜로그인</span>
+              <span class="skill-tag">pdfkit</span>
+            </div>
+            <div class="contributor-links">
+              <a class="link-item" href="https://github.com/SuHyun329">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2.01c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.17.91-.25 1.89-.38 2.86-.38.97 0 1.95.13 2.86.38 2.19-1.48 3.15-1.17 3.15-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56C20.21 21.4 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+                GitHub
+              </a>
+              <a class="link-item" href="mailto:cocoball329@gmail.com">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+                Email
+              </a>
+            </div>
+          </article>
+
+          <!-- Frontend 2 -->
+          <article class="contributor-card role-frontend reveal reveal-delay-2">
+            <div class="card-top">
+              <div class="avatar fe" data-profile-image="frontend-2">
+                <span data-placeholder>S</span>
+                <img src="images/frontend-2.jpg" alt="Frontend 개발자 2" class="profile-img" onerror="this.style.display='none'">
+              </div>
+              <div class="card-name-block">
+                <div class="contributor-name">서세린</div>
+                <div class="contributor-role">Frontend Developer</div>
+              </div>
+            </div>
+            <p class="contributor-bio">
+              혈당, 인슐린, 식사 기록 화면의 인터랙션을 담당한 프론트엔드 개발자.
+              매일 반복되는 케어 흐름이 몇 번의 터치로 끝나도록 다듬었습니다.
+            </p>
+            <div class="skill-tags">
+              <span class="skill-tag">swift</span>
+              <span class="skill-tag">swiftChart</span>
+              <span class="skill-tag">widgetKit</span>
+            </div>
+            <div class="contributor-links">
+              <a class="link-item" href="https://github.com/CerinSeo">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2.01c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.17.91-.25 1.89-.38 2.86-.38.97 0 1.95.13 2.86.38 2.19-1.48 3.15-1.17 3.15-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56C20.21 21.4 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+                GitHub
+              </a>
+              <a class="link-item" href="mailto:serinseodev@gmail.com">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+                Email
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ BACKEND ============ -->
+      <div class="role-group">
+        <div class="role-header reveal">
+          <span class="role-badge backend">⚙️ BACKEND</span>
+          <h2 class="role-title">기록이 안전하게 흐르도록 만든 사람들</h2>
+          <span class="role-line"></span>
+        </div>
+
+        <div class="card-grid">
+          <!-- Backend 1 -->
+          <article class="contributor-card role-backend reveal reveal-delay-1">
+            <div class="card-top">
+              <div class="avatar be" data-profile-image="backend-1">
+                <span data-placeholder>J</span>
+                <img src="images/backend-1.jpg" alt="Backend 개발자 1" class="profile-img" onerror="this.style.display='none'">
+              </div>
+              <div class="card-name-block">
+                <div class="contributor-name">정수진</div>
+                <div class="contributor-role">Backend Developer</div>
+              </div>
+            </div>
+            <p class="contributor-bio">
+              보호자 계정 관리, 공유 기능, 인슐린 알림 로직을 담당한 백엔드 개발자.
+              여러 사용자가 한 마리 고양이의 데이터를 함께 다루는 흐름을 정교하게 다졌습니다.
+            </p>
+            <div class="skill-tags">
+              <span class="skill-tag">APNs</span>
+              <span class="skill-tag">JWT 인증</span>
+              <span class="skill-tag">API 설계</span>
+              <span class="skill-tag">CI/CD</span>
+            </div>
+            <div class="contributor-links">
+              <a class="link-item" href="https://github.com/5ranke">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2.01c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.17.91-.25 1.89-.38 2.86-.38.97 0 1.95.13 2.86.38 2.19-1.48 3.15-1.17 3.15-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56C20.21 21.4 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+                GitHub
+              </a>
+              <a class="link-item" href="mailto:wjdtnwls0106@gmail.com">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+                Email
+              </a>
+            </div>
+          </article>
+
+          <!-- Backend 2 -->
+          <article class="contributor-card role-backend reveal reveal-delay-2">
+            <div class="card-top">
+              <div class="avatar be" data-profile-image="backend-2">
+                <span data-placeholder>K</span>
+                <img src="images/backend-2.jpg" alt="Backend 개발자 2" class="profile-img" onerror="this.style.display='none'">
+              </div>
+              <div class="card-name-block">
+                <div class="contributor-name">김희재</div>
+                <div class="contributor-role">Backend Developer</div>
+              </div>
+            </div>
+            <p class="contributor-bio">
+              보호자들 사이에서 기록이 실시간으로 오갈 수 있도록 데이터 구조와
+              API를 설계한 백엔드 개발자. 정확성과 안정성을 가장 우선에 두었습니다.
+            </p>
+            <div class="skill-tags">
+              <span class="skill-tag">Spring Boot</span>
+              <span class="skill-tag">sql</span>
+              <span class="skill-tag">CRUD</span>
+              
+            </div>
+            <div class="contributor-links">
+              <a class="link-item" href="https://github.com/meaningGitt">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56v-2.01c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.17.91-.25 1.89-.38 2.86-.38.97 0 1.95.13 2.86.38 2.19-1.48 3.15-1.17 3.15-1.17.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.56C20.21 21.4 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+                GitHub
+              </a>
+              <a class="link-item" href="mailto:a0104037a@gmail.com">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+                Email
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ============ DESIGNER ============ -->
+      <div class="role-group">
+        <div class="role-header reveal">
+          <span class="role-badge designer">🎨 DESIGNER</span>
+          <h2 class="role-title">따뜻한 인상을 그려낸 사람</h2>
+          <span class="role-line"></span>
+        </div>
+
+        <div class="card-grid single">
+          <!-- Designer 1 -->
+          <article class="contributor-card role-designer reveal reveal-delay-1">
+            <div class="card-top">
+              <div class="avatar de" data-profile-image="designer-1">
+                <span data-placeholder>K</span>
+                <img src="images/designer-1.jpg" alt="Designer 1" class="profile-img" onerror="this.style.display='none'">
+              </div>
+              <div class="card-name-block">
+                <div class="contributor-name">김혜서</div>
+                <div class="contributor-role">Product Designer</div>
+              </div>
+            </div>
+            <p class="contributor-bio">
+              설탕묘의 전반적인 브랜딩과 UI/UX를 담당한 디자이너.
+              전연령의 당뇨묘 보호자를 포용하는
+              친절한 UI를 만들어 냈습니다.
+            </p>
+            <div class="skill-tags">
+              <span class="skill-tag">Figma</span>
+              <span class="skill-tag">UI/UX Design</span>
+              <span class="skill-tag">Brand Identity</span>
+              <span class="skill-tag">Illustration</span>
+            </div>
+            <div class="contributor-links">
+              <!-- <a class="link-item" href="#">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 2h-7A3.5 3.5 0 0 0 5 5.5 3.5 3.5 0 0 0 7.05 8.7 3.5 3.5 0 0 0 5 11.9a3.5 3.5 0 0 0 2.05 3.2A3.5 3.5 0 0 0 5 18.3 3.5 3.5 0 0 0 8.5 21.8a3.5 3.5 0 0 0 3.5-3.5V15.4a3.5 3.5 0 0 0 5.55-2.8 3.5 3.5 0 0 0-2.05-3.2 3.5 3.5 0 0 0 2.05-3.2A3.5 3.5 0 0 0 15.5 2Zm-7 18.3a2.1 2.1 0 0 1-2.1-2.1 2.1 2.1 0 0 1 2.1-2.1h2.1v2.1a2.1 2.1 0 0 1-2.1 2.1Zm0-5.6a2.1 2.1 0 1 1 0-4.2h2.1v4.2Zm0-5.6a2.1 2.1 0 1 1 0-4.2h2.1v4.2Zm3.5-2.1a2.1 2.1 0 0 1 2.1-2.1 2.1 2.1 0 0 1 2.1 2.1 2.1 2.1 0 0 1-2.1 2.1h-2.1Zm2.1 8.4a2.1 2.1 0 1 1 2.1-2.1 2.1 2.1 0 0 1-2.1 2.1Z"/></svg>
+                Figma
+              </a> -->
+              <a class="link-item" href="mailto:being0825@gmail.com">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+                Email
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== 하단 CTA ===================== -->
+  <section class="bottom-cta">
+    <div class="container">
+      <h2 class="reveal">설탕묘가 궁금하셨다면</h2>
+      <p class="reveal reveal-delay-1">앱 소개 페이지에서 더 많은 이야기를 만나보세요.</p>
+      <a href="index.html" class="btn btn-primary reveal reveal-delay-2">앱 소개로 돌아가기</a>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="container">
+      <div class="foot-logo">설탕묘</div>
+      <p>Copyright @ 2026 team.Godaemo, All rights reserved</p>
+    </div>
+  </footer>
+
+  <script>
+    // ===================== 스크롤 리빌 애니메이션 =====================
+    document.addEventListener('DOMContentLoaded', function () {
+      const revealEls = document.querySelectorAll('.reveal');
+
+      if (!('IntersectionObserver' in window)) {
+        revealEls.forEach(el => el.classList.add('is-visible'));
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      revealEls.forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+</html>
