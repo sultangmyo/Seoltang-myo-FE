@@ -2,7 +2,7 @@
 서울여자대학교 졸업프로젝트 설탕묘 Frontend Repository
 
 ## 프로젝트 소개
-**설탕묘(SugarCat)**는 여러 보호자가 함께 당뇨묘를 돌보는 환경에서 발생하는 기록 누락과 정보 공유의 어려움을 해결하기 위해 개발한 iOS 애플리케이션입니다.
+설탕묘(SugarCat)는 여러 보호자가 함께 당뇨묘를 돌보는 환경에서 발생하는 기록 누락과 정보 공유의 어려움을 해결하기 위해 개발한 iOS 애플리케이션입니다.
 혈당, 인슐린, 식사 기록을 통합 관리하고, 보호자 간 실시간 데이터 공유와 시각화 기능을 제공합니다.
 SugarCat is an iOS application designed to help multiple caregivers collaboratively manage diabetic cats.
 It enables blood glucose, insulin, and meal tracking, real-time data synchronization between caregivers, visualized health trends, and medication reminders.
