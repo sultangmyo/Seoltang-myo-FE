@@ -155,20 +155,11 @@ struct MyPageNotificationSettingView: View {
                 viewModel[keyPath: keyPath]
             },
             set: { newValue in
-                guard viewModel.isSystemNotificationAuthorized else {
-                    if newValue {
-                        viewModel.showsSystemPermissionAlert = true
-                    }
-                    return
-                }
-
                 let previousValue = viewModel[keyPath: keyPath]
                 guard previousValue != newValue else { return }
 
-                viewModel[keyPath: keyPath] = newValue
-
                 Task {
-                    await viewModel.updateSetting(
+                    await viewModel.handleToggle(
                         type: type,
                         isEnabled: newValue,
                         previousValue: previousValue,
@@ -255,6 +246,45 @@ final class MyPageNotificationSettingViewModel: ObservableObject {
 
     func isUpdating(_ type: NotificationSettingType) -> Bool {
         updatingTypes.contains(type)
+    }
+
+    func handleToggle(
+        type: NotificationSettingType,
+        isEnabled: Bool,
+        previousValue: Bool,
+        keyPath: ReferenceWritableKeyPath<MyPageNotificationSettingViewModel, Bool>
+    ) async {
+        if isEnabled {
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+
+            switch settings.authorizationStatus {
+            case .notDetermined:
+                let granted = await NotificationManager.requestPermission()
+                isSystemNotificationAuthorized = granted
+
+                guard granted else {
+                    return
+                }
+            case .authorized, .provisional, .ephemeral:
+                isSystemNotificationAuthorized = true
+            case .denied:
+                isSystemNotificationAuthorized = false
+                showsSystemPermissionAlert = true
+                return
+            @unknown default:
+                isSystemNotificationAuthorized = false
+                showsSystemPermissionAlert = true
+                return
+            }
+        }
+
+        self[keyPath: keyPath] = isEnabled
+        await updateSetting(
+            type: type,
+            isEnabled: isEnabled,
+            previousValue: previousValue,
+            keyPath: keyPath
+        )
     }
 
     func updateSetting(

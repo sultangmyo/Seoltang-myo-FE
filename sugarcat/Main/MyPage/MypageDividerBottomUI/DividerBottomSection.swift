@@ -100,7 +100,7 @@ struct DividerBottomSection: View {
                     )
                     Spacer()
                     // 버전 적어 놨습니다.
-                    Text("v.1.0.1")
+                    Text("v.1.0.2")
                         .caption2R()
                         .foregroundColor(.gray1)
                 }
