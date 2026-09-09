@@ -9,13 +9,19 @@
 
 import Foundation
 
+enum NotificationSettingType: String, Hashable {
+    case insulin
+    case blood
+    case meal
+    case weekly
+}
+
 enum UserEndpoint {
    // MARK: - AUTH
    case userNicknameCheck
    case userNicknameEdit
    case userNotificationAllEdit
-    //type 말고 isEnabled 
-    case userNotificationEdit(type :Bool)
+   case userNotificationEdit(type: NotificationSettingType)
    case userNotificationCheck
     case userDelete
    
@@ -39,7 +45,7 @@ extension UserEndpoint {
           
        // 7.2 사용자 알림 개별 조회
        case .userNotificationEdit(let type):
-           return "/api/v1/users/me/notification?type=\(type)"
+           return "/api/v1/users/me/notification?type=\(type.rawValue)"
       
        }
    }

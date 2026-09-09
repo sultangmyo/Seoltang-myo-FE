@@ -52,7 +52,7 @@ struct UpdateAllNotificationRequest: Codable {
 
 // MARK: - 사용자 알림 개별 수정
 struct UpdateNotificationRequest: Codable {
-    let inEnabled: Bool
+    let isEnabled: Bool
 }
 // response dto
 // MessageResponseDTO를 재활용 합니다

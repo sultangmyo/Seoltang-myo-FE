@@ -13,11 +13,11 @@ enum BaseURL {
     // 로컬 테스트용
     static let local = "http://172.29.33.93:8080"
     
-    // 실제 서버 붙을 때 교체
-    static let production = ""
+    // 운영 서버
+    static let production = "https://api.sugarcat.site"
     
     // 현재 사용할 URL
-    static let current = local
+    static let current = production
 }
 
 enum APIError: Error {
