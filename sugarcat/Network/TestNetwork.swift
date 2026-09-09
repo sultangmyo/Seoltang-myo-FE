@@ -247,12 +247,11 @@ enum APIClient {
 }
 
 // 여러 API 요청이 동시에 401을 받아도 같은 refresh 작업을 공유한다.
-@MainActor
-private final class TokenRefreshCoordinator {
+
+private actor TokenRefreshCoordinator {
     private var refreshTask: Task<String, Error>?
 
     func validAccessToken(failedAccessToken: String?) async throws -> String {
-        // 대기하는 동안 다른 요청이 이미 갱신했다면 현재 토큰을 그대로 사용
         if let currentAccessToken = TokenManager.shared.getAccessToken(),
            currentAccessToken != failedAccessToken {
             return currentAccessToken
