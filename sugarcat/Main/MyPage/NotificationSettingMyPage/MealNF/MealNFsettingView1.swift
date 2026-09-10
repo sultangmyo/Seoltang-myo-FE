@@ -69,7 +69,7 @@ struct MealNFsettingView1: View {
                     // 시간 선택
                     CommonTimePickerView(
                         title: step2Title,
-                        category: "급여",
+                        category: "식사",
                         count: viewModel.existingCount,
                         selectedTimes: $viewModel.existingTimes
                     )

@@ -56,7 +56,7 @@ struct BSNFsettingView1: View {
                 } else {
                     CommonTimePickerView(
                         title: step2Title,
-                        category: "측정",
+                        category: "혈당",
                         count: viewModel.existingCount,
                         selectedTimes: $viewModel.existingTimes
                     )
