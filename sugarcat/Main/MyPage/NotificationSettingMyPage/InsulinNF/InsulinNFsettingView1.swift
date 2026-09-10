@@ -57,7 +57,7 @@ struct InsulinNFsettingView1: View {
                 } else {
                     CommonTimePickerView(
                         title: step2Title,
-                        category: "인슐린",
+                        category: "투여",
                         count: viewModel.existingCount,
                         selectedTimes: $viewModel.existingTimes
                     )
