@@ -11,9 +11,9 @@ struct CommonTimePickerView: View {
     let title: AttributedString
     let category: String
     let count: Int
-    
-    
+
     @Binding var selectedTimes: [Date?]
+    @State private var activeSelection: TimePickerSelection?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
@@ -35,32 +35,9 @@ struct CommonTimePickerView: View {
                         
                         Spacer()
                         
-                       
-                        ZStack(alignment: .trailing) {
-                            
-                           
-                            DatePicker(
-                                selection: Binding(
-                                    get: {
-                                     
-                                        selectedTimes.indices.contains(index) ? (selectedTimes[index] ?? Date()) : Date()
-                                    },
-                                    set: { newValue in
-                                        if selectedTimes.indices.contains(index) {
-                                            selectedTimes[index] = newValue
-                                        }
-                                    }
-                                ),
-                                displayedComponents: .hourAndMinute
-                            ){
-                                Text("")
-                            }
-                            .labelsHidden()
-                            .environment(\.locale, Locale(identifier: "en_US"))
-                            .opacity(0.011)
-                            .zIndex(2)
-                            
-                            
+                        Button {
+                            activeSelection = TimePickerSelection(index: index)
+                        } label: {
                             Group {
                                 if selectedTimes.indices.contains(index), let targetDate = selectedTimes[index] {
                                     Text(DateStringFormatter.displayTime12Hour(from: targetDate))
@@ -81,9 +58,10 @@ struct CommonTimePickerView: View {
                                         .cornerRadius(20)
                                 }
                             }
-                            .allowsHitTesting(false)
-                            .zIndex(1)
                         }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("\(index + 1)번째 \(category) 시간")
+                        .accessibilityHint("시간 선택 창을 엽니다")
                     }
                     .frame(height: 44)
                 }
@@ -101,9 +79,35 @@ struct CommonTimePickerView: View {
                 )
             }
         }
+        .sheet(item: $activeSelection) { selection in
+            TimeSelectionSheet(
+                title: "\(selection.index + 1)번째 \(category)",
+                selectedTime: selectedTimeBinding(for: selection.index)
+            )
+            .presentationDetents([.height(333)])
+            .presentationDragIndicator(.hidden)
+            .presentationCornerRadius(32)
+        }
     }
-    
 
+    private func selectedTimeBinding(for index: Int) -> Binding<Date?> {
+        Binding(
+            get: {
+                guard selectedTimes.indices.contains(index) else { return nil }
+                return selectedTimes[index]
+            },
+            set: { newValue in
+                guard selectedTimes.indices.contains(index) else { return }
+                selectedTimes[index] = newValue
+            }
+        )
+    }
+}
+
+private struct TimePickerSelection: Identifiable {
+    let index: Int
+
+    var id: Int { index }
 }
 
 #Preview {
