@@ -22,6 +22,8 @@ enum DDayFormatter {
         // 진단일 ~ 오늘까지의 날짜 차이(일 단위) 계산
         let days = calendar.dateComponents([.day], from: startOfTarget, to: startOfToday).day ?? 0
         
-        return "D+\(days)"
+        let positivedays = days + 1
+        
+        return "D+\(positivedays)"
     }
 }
