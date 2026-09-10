@@ -59,7 +59,7 @@ struct MyPageView: View {
             .navigationDestination(for: MyPageRoute.self) { route in
                 switch route {
                 case .printSave:
-                    PrintSaveView1(path: $path)
+                    PrintSaveView1(path: $path, catName: viewModel.catName)
                 case .pdfPreview(let catName, let records, let isMonthly): // 추가된 부분
                     PDFPreviewView(catName: catName, records: records, isMonthly: isMonthly)
                 case .notificationSetting:

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PrintSaveView1: View {
     @Binding var path: NavigationPath
+    let catName: String
     @State private var startDate = Date()
     @State private var endDate = Date()
     @State private var isMonthly = true
@@ -38,7 +39,7 @@ struct PrintSaveView1: View {
                         await MainActor.run {
                             path.append(
                                 MyPageRoute.pdfPreview(
-                                    catName: "나비",
+                                    catName: catName,
                                     records: fetchedRecords,
                                     isMonthly: isMonthly
                                 )
@@ -161,7 +162,7 @@ struct CheckboxView: View {
     struct PreviewContainer: View {
         @State private var path = NavigationPath()
         var body: some View {
-            PrintSaveView1(path: $path)
+            PrintSaveView1(path: $path, catName: "설탕이")
         }
     }
     return PreviewContainer()
